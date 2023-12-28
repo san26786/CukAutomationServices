@@ -19,25 +19,7 @@ namespace CukAutomationOperations.Model
         public string CreatedTime { get; set; }
         public string TemplateUrl { get; set; }
     }
-    public class Gift
-    {
-        public string ClearedBank { get; set; }
-        public string AmountInOriginatingCurrency { get; set; }
-        public string GiftType { get; set; }
-        public string PartnerGiftDate { get; set; }
-        public string PartnerGiftID { get; set; }
-        public string ReceipentID { get; set; }
-        public string SupporterGlobalID { get; set; }
-        public string GiftTransmittedtoGMCAttributeValue { get; set; }
-        public string GiftReceivedbyChildAttributeValue { get; set; }
-        public string GiftErrorMessageAttributeValue { get; set; }
-        public string ConstituentLookupID { get; set; }
-        public string DesignationName { get; set; }
-        public string UndeliverableGiftReason { get; set; }
-        public string GiftDelay { get; set; }
-        public string GiftDelayReason { get; set; }
-        public string UndeliverableGiftDate { get; set; }
-    }
+    
 
     public class Message
     {

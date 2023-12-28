@@ -54,6 +54,7 @@
       <xs:element minOccurs="0" name="Campaign" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Channel_Name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Child" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ChildBirthDate" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ComBlackbaudID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CommSupporter" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CommitmentId" nillable="true" type="xs:string" />
@@ -100,6 +101,7 @@
       <xs:element minOccurs="0" name="NeedKey" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="NeedRNID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="NeedStatus" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="OrgSupporterGroupLink" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Organisation" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Orphan" type="xs:boolean" />
       <xs:element minOccurs="0" name="PaymentMethod" nillable="true" type="xs:string" />
@@ -117,7 +119,12 @@
       <xs:element minOccurs="0" name="SponsorshipPlus" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="SupporterGroupID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="SupporterGroupName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="actionid" type="xs:int" />
       <xs:element minOccurs="0" name="childGlobalId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="childKey" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="childName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="childPersonalName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="gender" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="globalCommitmentId" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="globalCorrCommitmentId" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="supGrpGlobalId" nillable="true" type="xs:string" />
@@ -182,6 +189,38 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ArrayOfSupporterDataModel" nillable="true" type="tns:ArrayOfSupporterDataModel" />
+  <xs:complexType name="ICPDetailModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Facilities" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Interventionavailable" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NumberOfActiveMembers" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PartneredwithCompassion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="WeeklyChildAttendance" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="location" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ICPDetailModel" nillable="true" type="tns:ICPDetailModel" />
+  <xs:complexType name="ConstituentRevenueAndGiftAidTotalAmount">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="GiftAidTotalAmount" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RevenueTotalAmount" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConstituentRevenueAndGiftAidTotalAmount" nillable="true" type="tns:ConstituentRevenueAndGiftAidTotalAmount" />
+  <xs:complexType name="ArrayOfDonationModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DonationModel" nillable="true" type="tns:DonationModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDonationModel" nillable="true" type="tns:ArrayOfDonationModel" />
+  <xs:complexType name="DonationModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Amount" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Date" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DonationType" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DonationModel" nillable="true" type="tns:DonationModel" />
   <xs:complexType name="ArrayOfSupporterCommitmentModel">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="SupporterCommitmentModel" nillable="true" type="tns:SupporterCommitmentModel" />
@@ -309,6 +348,49 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="RecurringGiftModel" nillable="true" type="tns:RecurringGiftModel" />
+  <xs:complexType name="GetMessageList">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CommKitID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NeedID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Password" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SupporterGroupID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SuppoterID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Username" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="actionid" type="xs:int" />
+      <xs:element minOccurs="0" name="source" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="webAccToken" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetMessageList" nillable="true" type="tns:GetMessageList" />
+  <xs:complexType name="ArrayOfLettersFromChildModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="LettersFromChildModel" nillable="true" type="tns:LettersFromChildModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfLettersFromChildModel" nillable="true" type="tns:ArrayOfLettersFromChildModel" />
+  <xs:complexType name="LettersFromChildModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CorrespondenceID" type="xs:long" />
+      <xs:element minOccurs="0" name="DateProcessed" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FileID" type="xs:long" />
+      <xs:element minOccurs="0" name="FileName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="isFinalLetter" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="LettersFromChildModel" nillable="true" type="tns:LettersFromChildModel" />
+  <xs:complexType name="InitialRGData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Amount" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Designation" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Lookupid" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Needkey" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Source" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="actionid" type="xs:int" />
+      <xs:element minOccurs="0" name="boosterFlag" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InitialRGData" nillable="true" type="tns:InitialRGData" />
   <xs:complexType name="AmbassadorsModal">
     <xs:sequence>
       <xs:element minOccurs="0" name="Source" nillable="true" type="xs:string" />
@@ -322,27 +404,6 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="AmbassadorsModal" nillable="true" type="tns:AmbassadorsModal" />
-  <xs:complexType name="ArrayOfDonationModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="DonationModel" nillable="true" type="tns:DonationModel" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfDonationModel" nillable="true" type="tns:ArrayOfDonationModel" />
-  <xs:complexType name="DonationModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Amount" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Date" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="DonationType" nillable="true" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="DonationModel" nillable="true" type="tns:DonationModel" />
-  <xs:complexType name="ConstituentRevenueAndGiftAidTotalAmount">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="GiftAidTotalAmount" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="RevenueTotalAmount" nillable="true" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ConstituentRevenueAndGiftAidTotalAmount" nillable="true" type="tns:ConstituentRevenueAndGiftAidTotalAmount" />
   <xs:complexType name="CompassionTogether">
     <xs:sequence>
       <xs:element minOccurs="0" name="Source" nillable="true" type="xs:string" />

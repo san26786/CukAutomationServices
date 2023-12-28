@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="14f7c542-9838-49d8-b176-6060f058cf92" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="0d6efbc7-3b90-4d74-a990-83abd1b0ea1f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -22,26 +22,26 @@
     <MetadataSource Address="http://localhost/TcptR4Services/TCPTR4Service.svc?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="TCPTR4Service.xsd" MetadataType="Schema" ID="331937a0-65d4-4752-ba2b-dfd60cc7c9a1" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd14" />
-    <MetadataFile FileName="TCPTR4Service1.xsd" MetadataType="Schema" ID="78214cc6-e367-489c-a14b-4cf87cea8786" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd3" />
-    <MetadataFile FileName="TCPTR4Service2.xsd" MetadataType="Schema" ID="bd1f75b1-2170-4e66-8549-5b7690c3a8dd" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd7" />
-    <MetadataFile FileName="TCPTR4Service3.xsd" MetadataType="Schema" ID="1aa1b122-63d2-4b3f-8e8f-d437383a0e71" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd16" />
-    <MetadataFile FileName="TCPTR4Service4.xsd" MetadataType="Schema" ID="352a3ac4-5ec7-4cc9-b9c8-094cd6a0945e" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd11" />
-    <MetadataFile FileName="TCPTR4Service5.xsd" MetadataType="Schema" ID="dc07acd7-f13c-40ab-b29a-b7b8c9a0abb7" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd18" />
-    <MetadataFile FileName="TCPTR4Service6.xsd" MetadataType="Schema" ID="a3a2e0a5-ab5c-43a3-939b-1a81f3520aa9" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd2" />
-    <MetadataFile FileName="TCPTR4Service7.xsd" MetadataType="Schema" ID="c808df1c-6169-4aac-9fae-a46508c77e31" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd6" />
-    <MetadataFile FileName="TCPTR4Service8.xsd" MetadataType="Schema" ID="4b71154a-8fcf-44d4-aad5-73c23442e04a" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd12" />
-    <MetadataFile FileName="TCPTR4Service9.xsd" MetadataType="Schema" ID="5609fd17-2048-4d41-9807-adfa5baacbc6" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd9" />
-    <MetadataFile FileName="TCPTR4Service10.xsd" MetadataType="Schema" ID="73abc140-df38-49d1-8a0e-a5e61c70f7a1" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd1" />
-    <MetadataFile FileName="TCPTR4Service11.xsd" MetadataType="Schema" ID="9e11bc18-970f-46b2-9834-5e662886e613" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd5" />
-    <MetadataFile FileName="TCPTR4Service12.xsd" MetadataType="Schema" ID="fe4ab0d8-46b2-4004-9751-6d24e729842c" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd0" />
-    <MetadataFile FileName="TCPTR4Service13.xsd" MetadataType="Schema" ID="1184878f-ef3f-4aee-8e11-1edaf70606b7" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd13" />
-    <MetadataFile FileName="TCPTR4Service14.xsd" MetadataType="Schema" ID="3e4664fa-f2c0-4aeb-8bb5-98c71997b903" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd8" />
-    <MetadataFile FileName="TCPTR4Service15.xsd" MetadataType="Schema" ID="c4eab7de-8211-47af-a518-747cb215074a" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd15" />
-    <MetadataFile FileName="TCPTR4Service16.xsd" MetadataType="Schema" ID="5adf4b8f-a4a4-4485-9180-915b0b1b5161" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd10" />
-    <MetadataFile FileName="TCPTR4Service17.xsd" MetadataType="Schema" ID="118e0130-7286-406d-b88f-9608a34729ce" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd4" />
-    <MetadataFile FileName="TCPTR4Service18.xsd" MetadataType="Schema" ID="6429b5dc-c4ca-44b7-8089-79a885e908f7" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd17" />
-    <MetadataFile FileName="TCPTR4Service.wsdl" MetadataType="Wsdl" ID="11e541cd-60c9-4d0f-b265-3a9366b27e39" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?wsdl" />
+    <MetadataFile FileName="TCPTR4Service.xsd" MetadataType="Schema" ID="d71a345f-f72f-4fd0-9cd8-62c3fff8a98a" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd14" />
+    <MetadataFile FileName="TCPTR4Service1.xsd" MetadataType="Schema" ID="e9b9bd71-dee9-42ce-a68f-e9ef47c5f0d6" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd3" />
+    <MetadataFile FileName="TCPTR4Service2.xsd" MetadataType="Schema" ID="9100ff2a-3da3-4260-873e-cbc85c8c9778" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd7" />
+    <MetadataFile FileName="TCPTR4Service3.xsd" MetadataType="Schema" ID="67a857b5-08e6-41d1-ab73-1fdda510dbbe" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd16" />
+    <MetadataFile FileName="TCPTR4Service4.xsd" MetadataType="Schema" ID="7889247e-e81d-4ac5-bbdf-e457d32fb6a0" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd11" />
+    <MetadataFile FileName="TCPTR4Service5.xsd" MetadataType="Schema" ID="a9d1ea61-113b-4faa-aea4-f7e97ce14324" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd18" />
+    <MetadataFile FileName="TCPTR4Service6.xsd" MetadataType="Schema" ID="032ca92d-dca1-469f-9e66-e7caa430517b" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd2" />
+    <MetadataFile FileName="TCPTR4Service7.xsd" MetadataType="Schema" ID="367688ba-c729-4025-a451-fb505bd8de6f" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd6" />
+    <MetadataFile FileName="TCPTR4Service8.xsd" MetadataType="Schema" ID="e559bf1c-ead9-4086-bf4a-13798bd72659" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd12" />
+    <MetadataFile FileName="TCPTR4Service9.xsd" MetadataType="Schema" ID="dc524b82-7a7f-4919-b6d4-1e87c3ced069" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd9" />
+    <MetadataFile FileName="TCPTR4Service10.xsd" MetadataType="Schema" ID="747db57f-1b91-4ad4-8c5c-1ba73e862f9b" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd1" />
+    <MetadataFile FileName="TCPTR4Service11.xsd" MetadataType="Schema" ID="f8dd85c0-9b5c-408c-960c-f3a9b855aa23" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd5" />
+    <MetadataFile FileName="TCPTR4Service12.xsd" MetadataType="Schema" ID="2b52530a-6404-489b-af63-58873d0679cb" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd0" />
+    <MetadataFile FileName="TCPTR4Service13.xsd" MetadataType="Schema" ID="ba2ace5e-a009-4262-8d47-3f2155c360d1" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd13" />
+    <MetadataFile FileName="TCPTR4Service14.xsd" MetadataType="Schema" ID="84590eb3-6812-4caa-87de-6f8de1b9deae" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd8" />
+    <MetadataFile FileName="TCPTR4Service15.xsd" MetadataType="Schema" ID="b7d2450d-2bdd-43e5-a594-7dfd7bb152b0" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd15" />
+    <MetadataFile FileName="TCPTR4Service16.xsd" MetadataType="Schema" ID="a883fbde-2d1f-4505-b489-8d04a2622a8f" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd10" />
+    <MetadataFile FileName="TCPTR4Service17.xsd" MetadataType="Schema" ID="cc962490-78a9-4c94-a831-52d15d6983af" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd4" />
+    <MetadataFile FileName="TCPTR4Service18.xsd" MetadataType="Schema" ID="6bab5d07-9c3b-4a39-9def-3a4615734e01" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd17" />
+    <MetadataFile FileName="TCPTR4Service.wsdl" MetadataType="Wsdl" ID="4e29b22a-6279-4f5b-94c4-df2dfba2faea" SourceId="1" SourceUrl="http://localhost/TcptR4Services/TCPTR4Service.svc?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

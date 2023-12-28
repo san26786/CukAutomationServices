@@ -316,6 +316,19 @@ namespace CukAutomationOperations.Model
 
         [DataMember]
         public string OldChildNeedkey { get; set; }
+
+        [DataMember]
+        public string CC_TransactionId { get; set; }
+
+        [DataMember]
+        public string BatchName { get; set; }
+
+        [DataMember]
+        public string BatchDonorId { get; set; }
+
+        [DataMember]
+        public long NonSponsorDonationRecordId { get; set; }
+
     }
     public class RGDetails
     {

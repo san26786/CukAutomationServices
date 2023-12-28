@@ -38,8 +38,37 @@ namespace CukAutomationOperations.Model.AutomationBot
         public string MatchedOn { get; set; }
         public string PartnerOffice { get; set; }
         public string SponsorshipPlus { get; set; }
+        public string YearofBirth { get; set; }
+        public string Source { get; set; }
         public string DDPaymentChecks { get; set; }
         public IncidentThreadText ThreadObjects { get; set; }
+    }
+
+    public class CheckBotCompareModel
+    {
+        public string CountryOffice { get; set; }
+        public string ApplicationSource { get; set; }
+        public string SupporterType { get; set; }
+        public string NewSupporter { get; set; }
+        public string IsUnique { get; set; }
+        public string ExistingCommitments { get; set; }
+        public string UpdatesApplied { get; set; }
+        public string SupporterNameStatus { get; set; }
+        public string DigitalChoice { get; set; }
+        public string CountryOfResidence { get; set; }
+        public string PostalAddressStatus { get; set; }
+        public string PhoneNumberStatus { get; set; }
+        public string EmailAddressStatus { get; set; }
+        public string PaymentMethod { get; set; }
+        public string BankAccountStatus { get; set; }
+        public string SponsorshipPlus { get; set; }
+        public string AnnualGifts { get; set; }
+        public string GiftAidStatus { get; set; }
+        public string VulnerableCircumstances { get; set; }
+        public string SafeguardingConcern { get; set; }
+        public string SupporterLinked { get; set; }
+        public string SupporterStatus { get; set; }
+        public string ChildAvailability { get; set; }
     }
 
     public class IncidentThreadText
@@ -78,8 +107,6 @@ namespace CukAutomationOperations.Model.AutomationBot
         public string EmailAddressChanged { get; set; }
         public string TelephoneNumberChanged { get; set; }
         public string YearOfBirthChanged { get; set; }
-        public string DDPaymentChecks { get; set; }
-        public string ChangesToMakeComment { get; set; }
     }
 
     public class IncidentData
@@ -88,6 +115,7 @@ namespace CukAutomationOperations.Model.AutomationBot
         public string AccountNo { get; set; }
         public string SortCode { get; set; }
         public string LastName { get; set; }
+        public string FirstName { get; set; }
         public string ThreadText { get; set; }
         public IncidentThreadText ThreadData { get; set; }
         public string Category { get; set; }
@@ -96,7 +124,6 @@ namespace CukAutomationOperations.Model.AutomationBot
         public string country { get; set; }
         public string sponsorshipplus { get; set; }
         public string NeedKey { get; set; }
-        public string FirstName { get; set; }
         public string sponsorshipplustype { get; set; }
         public string bankaccountstatus { get; set; }
         public string newsupporter { get; set; }
@@ -121,6 +148,8 @@ namespace CukAutomationOperations.Model.AutomationBot
         public string safeguarding_concern { get; set; }
         public int bannerflagid { get; set; }
     }
+
+
 
 
 }

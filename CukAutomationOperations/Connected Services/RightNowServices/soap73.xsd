@@ -195,6 +195,7 @@
     <xs:attribute default="false" name="Category" type="xs:boolean" use="optional" />
     <xs:attribute default="false" name="Channel" type="xs:boolean" use="optional" />
     <xs:attribute default="false" name="ChatQueue" type="xs:boolean" use="optional" />
+    <xs:attribute default="false" name="CreatedByAccount" type="xs:boolean" use="optional" />
     <xs:attribute default="false" name="Disposition" type="xs:boolean" use="optional" />
     <xs:attribute default="false" name="FileAttachments" type="xs:boolean" use="optional" />
     <xs:attribute default="false" name="Language" type="xs:boolean" use="optional" />
@@ -206,6 +207,7 @@
     <xs:attribute default="false" name="Severity" type="xs:boolean" use="optional" />
     <xs:attribute default="false" name="SLAInstance" type="xs:boolean" use="optional" />
     <xs:attribute default="false" name="Subject" type="xs:boolean" use="optional" />
+    <xs:attribute default="false" name="UpdatedByAccount" type="xs:boolean" use="optional" />
   </xs:complexType>
   <xs:element name="IncidentResponseNullFields" type="rnn_v1_4:IncidentResponseNullFields" />
   <xs:complexType name="IncidentResponseNullFields">
@@ -420,6 +422,7 @@
   <xs:element name="StandardContentNullFields" type="rnn_v1_4:StandardContentNullFields" />
   <xs:complexType name="StandardContentNullFields">
     <xs:attribute default="false" name="AdminVisibleInterfaces" type="xs:boolean" use="optional" />
+    <xs:attribute default="false" name="Comment" type="xs:boolean" use="optional" />
     <xs:attribute default="false" name="ContentValues" type="xs:boolean" use="optional" />
     <xs:attribute default="false" name="Folder" type="xs:boolean" use="optional" />
     <xs:attribute default="false" name="HotKey" type="xs:boolean" use="optional" />

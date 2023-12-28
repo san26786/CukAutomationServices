@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="k4jRNq+qVtu/v2mIZb3aCU2z32w=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="1g2s7C8R34J1qhI4cO0YQVupsgk=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_IMainServices">
       <properties>
@@ -306,10 +306,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="BasicHttpsBinding_IMainServices" contract="MainWebService7.IMainServices" bindingType="basicHttpBinding" address="https://id53256/MainWebServices7/MainServices.svc" bindingConfiguration="BasicHttpsBinding_IMainServices">
+    <endpoint name="BasicHttpsBinding_IMainServices" contract="MainWebService7.IMainServices" bindingType="basicHttpBinding" address="https://id67228/MainWebServices7/MainServices.svc" bindingConfiguration="BasicHttpsBinding_IMainServices">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>https://id53256/MainWebServices7/MainServices.svc</serializedValue>
+          <serializedValue>https://id67228/MainWebServices7/MainServices.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

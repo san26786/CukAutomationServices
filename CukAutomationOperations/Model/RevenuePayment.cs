@@ -436,4 +436,6 @@ namespace CukAutomationOperations.Model
         public string Revenueid { get; set; }
     }
 
+    
+
 }

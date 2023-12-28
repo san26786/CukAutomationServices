@@ -49,20 +49,13 @@
   <xs:element name="Icpsearchresponselist" nillable="true" type="tns:Icpsearchresponselist" />
   <xs:complexType name="ICPReservationRNSearchModel">
     <xs:sequence>
-      <xs:element minOccurs="0" name="Age" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Beneficiary_GlobalID" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Beneficiary_LocalID" nillable="true" type="xs:string" />
       <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Country" nillable="true" type="q4:ArrayOfstring" />
-      <xs:element minOccurs="0" name="FullName" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Gender" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ICPId" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ICPName" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="ICP_Country" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ReservationID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ReservationStatus" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ShowAllReservations" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="SourceCode" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="takelimit" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ICPReservationRNSearchModel" nillable="true" type="tns:ICPReservationRNSearchModel" />
@@ -107,4 +100,19 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ICPReservationSearchFromRNResponse" nillable="true" type="tns:ICPReservationSearchFromRNResponse" />
+  <xs:complexType name="ICPReservationSearchFromRNModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Beneficiary_GlobalID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Beneficiary_LocalID" nillable="true" type="xs:string" />
+      <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Country" nillable="true" type="q5:ArrayOfstring" />
+      <xs:element minOccurs="0" name="ICPId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ICPName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ReservationID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ReservationStatus" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ShowAllReservations" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SourceCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="takelimit" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ICPReservationSearchFromRNModel" nillable="true" type="tns:ICPReservationSearchFromRNModel" />
 </xs:schema>

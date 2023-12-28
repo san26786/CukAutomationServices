@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="2lbxnSTciHBXj748zD+xaLCs20fSZnl3Y56/pwv/2KY=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="kGBdUuzfo4xrBXrLRlimQPgNROLNRo0B4ys1PKkyT54=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_ITCPTR4Service">
       <properties>
@@ -306,10 +306,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="BasicHttpsBinding_ITCPTR4Service" contract="TCPTR4Service.ITCPTR4Service" bindingType="basicHttpBinding" address="https://id53256/TcptR4Services/TCPTR4Service.svc" bindingConfiguration="BasicHttpsBinding_ITCPTR4Service">
+    <endpoint name="BasicHttpsBinding_ITCPTR4Service" contract="TCPTR4Service.ITCPTR4Service" bindingType="basicHttpBinding" address="https://id67228/TcptR4Services/TCPTR4Service.svc" bindingConfiguration="BasicHttpsBinding_ITCPTR4Service">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>https://id53256/TcptR4Services/TCPTR4Service.svc</serializedValue>
+          <serializedValue>https://id67228/TcptR4Services/TCPTR4Service.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

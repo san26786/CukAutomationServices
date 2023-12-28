@@ -91,7 +91,7 @@ namespace CukAutomationServices
             CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
             return obj.DeleteS2BCommDraft(SupporterID);
         }
-        
+
         public string UpsertS2BCommDraft(S2BCommDraftData s2bobj)
         {
             CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
@@ -103,7 +103,7 @@ namespace CukAutomationServices
             CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
             return obj.OptimizeGetS2BCommDraftTile(SupporterID);
         }
-
+        
         public void RunEntityOperation(EntityData entityObj)
         {
             CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
@@ -145,6 +145,49 @@ namespace CukAutomationServices
             obj.ResolveRateChangeEnquiries(RecordId);
         }
 
+        public void SyncS2BLookUpValFromBarcode()
+        {
+            CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
+            obj.SyncS2BLookUpValFromBarcode();
+        }
+        public void SendNotificationOperation(string Type, string Env)
+        {
+            CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
+            obj.SendNotificationOperation(Type, Env);
+        }
 
+        public void CreateOnlyConstituentProcess(long SupporterId, string CC_TransactionId)
+        {
+            CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
+            obj.CreateOnlyConstituentProcess(SupporterId, CC_TransactionId);
+        }
+        public string GetLookupIdOnSupporterId(long SupporterId)
+        {
+            CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
+            return obj.GetLookupIdOnSupporterId(SupporterId);
+        }
+
+        public void CreateOnlyConstituentProcessOtherPayments(OnlyConstituentDetails Obj)
+        {
+            CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
+            obj.CreateOnlyConstituentProcessOtherPayments(Obj);
+        }
+
+        public string getSupporterIdFromBlackbaudId(string lookupId)
+        {
+            CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
+            return obj.getSupIdFromBlackbaudId(lookupId);
+        }
+        public void TransferSupporterDetails(long recordId)
+        {
+            CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
+            obj.transferSupporterDetails(recordId);
+        }
+        public string SearchSupporterByParams(SearchSupporterModel Obj)
+        {
+            CukAutomationOperations.CukAutomationOperation obj = new CukAutomationOperations.CukAutomationOperation();
+            return obj.SearchSupporterByParams(Obj);
+
+        }
     }
 }

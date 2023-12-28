@@ -20,22 +20,22 @@ namespace CukAutomationOperations.Model
         public int Letters_sent_to_children { get; set; }
 
         // Celebration service V2 
-        public int Letters_sent_in_last_year { get; set; }
+        public int Letters_sent_in_last_year { get; set; }  
 
         public int B2S_Letters_Sent_Last_Year { get; set; }
         public int S2B_Letters_Sent_Last_Year { get; set; }
-        public int B2S_Letters_Sent_Previous_Year { get; set; }
+        public int B2S_Letters_Sent_Previous_Year { get; set; } 
         public int S2B_Letters_Sent_Previous_Year { get; set; }
         public long Changed_In_B2S_Letters { get; set; }
         public long Changed_In_S2B_Letters { get; set; }
 
-        public int Total_Of_Financial_Supp_In_Last_Year { get; set; }
-        public int No_Of_Gifts_In_Last_Year { get; set; }
-        public int Total_Of_Financial_Supp_In_Previous_Year { get; set; }
+        public int Total_Of_Financial_Supp_In_Last_Year { get; set; } 
+        public int No_Of_Gifts_In_Last_Year { get; set; } 
+        public int Total_Of_Financial_Supp_In_Previous_Year { get; set; } 
         public int No_Of_Gifts_In_Previous_Year { get; set; }
         public long Changed_In_Financial_Support { get; set; }
         public long Changed_In_No_Of_Gift { get; set; }
-
+        
         public string Slide7A_Text_1 { get; set; }
         public string Slide7A_Text_2 { get; set; }
         public string Slide7B_Text_1 { get; set; }

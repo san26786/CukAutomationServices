@@ -524,6 +524,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="SalesSettings" type="rno_v1_4:ContactSalesSettings" />
           <xs:element minOccurs="0" maxOccurs="1" name="ServiceSettings" type="rno_v1_4:ContactServiceSettings" />
           <xs:element minOccurs="0" maxOccurs="1" name="Source" type="rnb_v1_4:NamedIDHierarchy" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SupersededBy" nillable="true" type="rnb_v1_4:NamedID" />
           <xs:element minOccurs="0" maxOccurs="1" name="Title" nillable="true" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="ValidNullFields" nillable="true" type="rnn_v1_4:ContactNullFields" />
         </xs:sequence>
@@ -810,6 +811,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="StatusWithType" type="rno_v1_4:StatusWithType" />
           <xs:element minOccurs="0" maxOccurs="1" name="Subject" nillable="true" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="Threads" type="rno_v1_4:ThreadList" />
+          <xs:element minOccurs="0" maxOccurs="1" name="UpdatedByAccount" nillable="true" type="rnb_v1_4:NamedID" />
           <xs:element minOccurs="0" maxOccurs="1" name="ValidNullFields" nillable="true" type="rnn_v1_4:IncidentNullFields" />
         </xs:sequence>
       </xs:extension>
@@ -921,7 +923,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="IsDefault" nillable="true" type="xs:boolean" />
           <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="OutgoingEmailSettings" nillable="true" type="rno_v1_4:MailboxOutgoingEmailSettings" />
-          <xs:element minOccurs="0" maxOccurs="1" name="Type" nillable="true" type="rnb_v1_4:NamedID" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Type" type="rnb_v1_4:NamedID" />
           <xs:element minOccurs="0" maxOccurs="1" name="ValidNullFields" nillable="true" type="rnn_v1_4:MailboxNullFields" />
         </xs:sequence>
       </xs:extension>
@@ -1167,6 +1169,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="SalesSettings" type="rno_v1_4:OrganizationSalesSettings" />
           <xs:element minOccurs="0" maxOccurs="1" name="ServiceSettings" type="rno_v1_4:OrganizationServiceSettings" />
           <xs:element minOccurs="0" maxOccurs="1" name="Source" type="rnb_v1_4:NamedIDHierarchy" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SupersededBy" nillable="true" type="rnb_v1_4:NamedID" />
           <xs:element minOccurs="0" maxOccurs="1" name="ValidNullFields" nillable="true" type="rnn_v1_4:OrganizationNullFields" />
         </xs:sequence>
       </xs:extension>
@@ -1622,6 +1625,7 @@
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="AdminVisibleInterfaces" nillable="true" type="rnb_v1_4:NamedIDDeltaList" />
           <xs:element minOccurs="0" maxOccurs="1" name="Attributes" type="rno_v1_4:StandardContentAttributes" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Comment" nillable="true" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="ContentValues" nillable="true" type="rno_v1_4:StandardContentContentValueList" />
           <xs:element minOccurs="0" maxOccurs="1" name="DisplayOrder" type="xs:int" />
           <xs:element minOccurs="0" maxOccurs="1" name="Folder" nillable="true" type="rnb_v1_4:NamedIDHierarchy" />

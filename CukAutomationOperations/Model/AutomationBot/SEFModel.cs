@@ -86,12 +86,9 @@ namespace CukAutomationOperations.Model.AutomationBot
         public string BirthdayAmount { get; set; }
         public string sponsorshipplus { get; set; }
         public string ApplicationCode { get; set; }
-
-        public string MandateType { get; set; }
         public string dddateprefer { get; set; }
+        public string MandateType { get; set; }
         public string NewSupporter { get; set; }
-
-
     }
     public class SupporterData
     {
