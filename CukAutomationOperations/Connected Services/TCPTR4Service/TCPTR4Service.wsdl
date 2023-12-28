@@ -1,0 +1,2056 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="TCPTR4Service" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="BasicHttpsBinding_ITCPTR4Service_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict />
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/TcptR4Services.Model" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.BeneficiarySearch" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.BeneficiaryReleaseHold" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.BeneficiaryHold" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.AddChild" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.BeneficiaryReservation" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.DemandPlanning" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd11" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.ICPSearch" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd12" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.ChurchPartnerReservation" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd13" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.AddICP" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd14" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.ICPReleaseReservation" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd15" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.SupporterGift" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd16" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.Resubmission" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd17" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.Intervention" />
+      <xsd:import schemaLocation="http://localhost/TcptR4Services/TCPTR4Service.svc?xsd=xsd18" namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.BeneficiaryReleaseReservation" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ITCPTR4Service_beneficiarySearchByParamsDirect_InputMessage">
+    <wsdl:part name="parameters" element="tns:beneficiarySearchByParamsDirect" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_beneficiarySearchByParamsDirect_OutputMessage">
+    <wsdl:part name="parameters" element="tns:beneficiarySearchByParamsDirectResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_beneficiarySearchAndHold_InputMessage">
+    <wsdl:part name="parameters" element="tns:beneficiarySearchAndHold" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_beneficiarySearchAndHold_OutputMessage">
+    <wsdl:part name="parameters" element="tns:beneficiarySearchAndHoldResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_beneficiarySearchSEF_InputMessage">
+    <wsdl:part name="parameters" element="tns:beneficiarySearchSEF" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_beneficiarySearchSEF_OutputMessage">
+    <wsdl:part name="parameters" element="tns:beneficiarySearchSEFResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_HoldBeneficiaries_InputMessage">
+    <wsdl:part name="parameters" element="tns:HoldBeneficiaries" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_HoldBeneficiaries_OutputMessage">
+    <wsdl:part name="parameters" element="tns:HoldBeneficiariesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ReleaseBeneficiariesHold_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReleaseBeneficiariesHold" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ReleaseBeneficiariesHold_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReleaseBeneficiariesHoldResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_HoldAndImportBeneficiaries_InputMessage">
+    <wsdl:part name="parameters" element="tns:HoldAndImportBeneficiaries" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_HoldAndImportBeneficiaries_OutputMessage">
+    <wsdl:part name="parameters" element="tns:HoldAndImportBeneficiariesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ReleaseAndImportBeneficiaries_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReleaseAndImportBeneficiaries" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ReleaseAndImportBeneficiaries_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReleaseAndImportBeneficiariesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ReleaseBeneficiaries_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReleaseBeneficiaries" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ReleaseBeneficiaries_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReleaseBeneficiariesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_UpdateBenHoldSEF_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateBenHoldSEF" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_UpdateBenHoldSEF_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateBenHoldSEFResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_UpdateMultippleBenHold_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateMultippleBenHold" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_UpdateMultippleBenHold_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateMultippleBenHoldResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_createBeneficiaryReservation_InputMessage">
+    <wsdl:part name="parameters" element="tns:createBeneficiaryReservation" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_createBeneficiaryReservation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:createBeneficiaryReservationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_demandPlanning_InputMessage">
+    <wsdl:part name="parameters" element="tns:demandPlanning" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_demandPlanning_OutputMessage">
+    <wsdl:part name="parameters" element="tns:demandPlanningResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_AddChild_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddChild" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_AddChild_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddChildResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_icpSearchByParamsDirect_InputMessage">
+    <wsdl:part name="parameters" element="tns:icpSearchByParamsDirect" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_icpSearchByParamsDirect_OutputMessage">
+    <wsdl:part name="parameters" element="tns:icpSearchByParamsDirectResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ICPReservationsFromRN_InputMessage">
+    <wsdl:part name="parameters" element="tns:ICPReservationsFromRN" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ICPReservationsFromRN_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ICPReservationsFromRNResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_icpReservation_InputMessage">
+    <wsdl:part name="parameters" element="tns:icpReservation" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_icpReservation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:icpReservationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ReleaseICPReservation_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReleaseICPReservation" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ReleaseICPReservation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReleaseICPReservationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_specificBeneficiarySearch_InputMessage">
+    <wsdl:part name="parameters" element="tns:specificBeneficiarySearch" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_specificBeneficiarySearch_OutputMessage">
+    <wsdl:part name="parameters" element="tns:specificBeneficiarySearchResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_GetUKHoldedChild_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUKHoldedChild" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_GetUKHoldedChild_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUKHoldedChildResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_SupporterGiftsUploader_InputMessage">
+    <wsdl:part name="parameters" element="tns:SupporterGiftsUploader" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_SupporterGiftsUploader_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SupporterGiftsUploaderResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_FetchSupporterGroups_InputMessage">
+    <wsdl:part name="parameters" element="tns:FetchSupporterGroups" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_FetchSupporterGroups_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FetchSupporterGroupsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ResubmitSupporter_InputMessage">
+    <wsdl:part name="parameters" element="tns:ResubmitSupporter" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ResubmitSupporter_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ResubmitSupporterResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_FetchSponsorships_InputMessage">
+    <wsdl:part name="parameters" element="tns:FetchSponsorships" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_FetchSponsorships_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FetchSponsorshipsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_FetchCorrespondences_InputMessage">
+    <wsdl:part name="parameters" element="tns:FetchCorrespondences" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_FetchCorrespondences_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FetchCorrespondencesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ResubmitCorrespondeces_InputMessage">
+    <wsdl:part name="parameters" element="tns:ResubmitCorrespondeces" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ResubmitCorrespondeces_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ResubmitCorrespondecesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ResubmitSponsorship_InputMessage">
+    <wsdl:part name="parameters" element="tns:ResubmitSponsorship" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ResubmitSponsorship_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ResubmitSponsorshipResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_createInterventionHoldInGMC_InputMessage">
+    <wsdl:part name="parameters" element="tns:createInterventionHoldInGMC" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_createInterventionHoldInGMC_OutputMessage">
+    <wsdl:part name="parameters" element="tns:createInterventionHoldInGMCResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_SearchInterventions_InputMessage">
+    <wsdl:part name="parameters" element="tns:SearchInterventions" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_SearchInterventions_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SearchInterventionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_updateInterventionHold_InputMessage">
+    <wsdl:part name="parameters" element="tns:updateInterventionHold" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_updateInterventionHold_OutputMessage">
+    <wsdl:part name="parameters" element="tns:updateInterventionHoldResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_cancelInterventionHold_InputMessage">
+    <wsdl:part name="parameters" element="tns:cancelInterventionHold" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_cancelInterventionHold_OutputMessage">
+    <wsdl:part name="parameters" element="tns:cancelInterventionHoldResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_createInterventionCommitment_InputMessage">
+    <wsdl:part name="parameters" element="tns:createInterventionCommitment" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_createInterventionCommitment_OutputMessage">
+    <wsdl:part name="parameters" element="tns:createInterventionCommitmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_getInterventionHoldsFromRN_InputMessage">
+    <wsdl:part name="parameters" element="tns:getInterventionHoldsFromRN" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_getInterventionHoldsFromRN_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getInterventionHoldsFromRNResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_searchInterventionHoldById_InputMessage">
+    <wsdl:part name="parameters" element="tns:searchInterventionHoldById" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_searchInterventionHoldById_OutputMessage">
+    <wsdl:part name="parameters" element="tns:searchInterventionHoldByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CancelBeneficiaryHoldAdminFunction_InputMessage">
+    <wsdl:part name="parameters" element="tns:CancelBeneficiaryHoldAdminFunction" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CancelBeneficiaryHoldAdminFunction_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CancelBeneficiaryHoldAdminFunctionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_getBeneficiaryCountforAdhocDataRefresh_InputMessage">
+    <wsdl:part name="parameters" element="tns:getBeneficiaryCountforAdhocDataRefresh" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_getBeneficiaryCountforAdhocDataRefresh_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getBeneficiaryCountforAdhocDataRefreshResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_initiateBeneficiaryAdHocdatarefreshProcess_InputMessage">
+    <wsdl:part name="parameters" element="tns:initiateBeneficiaryAdHocdatarefreshProcess" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_initiateBeneficiaryAdHocdatarefreshProcess_OutputMessage">
+    <wsdl:part name="parameters" element="tns:initiateBeneficiaryAdHocdatarefreshProcessResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_SupporterCountToUpdateWebToken_InputMessage">
+    <wsdl:part name="parameters" element="tns:SupporterCountToUpdateWebToken" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_SupporterCountToUpdateWebToken_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SupporterCountToUpdateWebTokenResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_updateWebToken_InputMessage">
+    <wsdl:part name="parameters" element="tns:updateWebToken" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_updateWebToken_OutputMessage">
+    <wsdl:part name="parameters" element="tns:updateWebTokenResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_BeneficiaryReservationsFromRN_InputMessage">
+    <wsdl:part name="parameters" element="tns:BeneficiaryReservationsFromRN" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_BeneficiaryReservationsFromRN_OutputMessage">
+    <wsdl:part name="parameters" element="tns:BeneficiaryReservationsFromRNResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CancelBeneficiaryReservation_InputMessage">
+    <wsdl:part name="parameters" element="tns:CancelBeneficiaryReservation" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CancelBeneficiaryReservation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CancelBeneficiaryReservationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_updateBeneficiaryReservation_InputMessage">
+    <wsdl:part name="parameters" element="tns:updateBeneficiaryReservation" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_updateBeneficiaryReservation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:updateBeneficiaryReservationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doDDRProcess_InputMessage">
+    <wsdl:part name="parameters" element="tns:doDDRProcess" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doDDRProcess_OutputMessage">
+    <wsdl:part name="parameters" element="tns:doDDRProcessResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ResubmitSupporters_InputMessage">
+    <wsdl:part name="parameters" element="tns:ResubmitSupporters" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ResubmitSupporters_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ResubmitSupportersResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_FetchSupporters_InputMessage">
+    <wsdl:part name="parameters" element="tns:FetchSupporters" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_FetchSupporters_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FetchSupportersResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doBstandingOrder_InputMessage">
+    <wsdl:part name="parameters" element="tns:doBstandingOrder" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doBstandingOrder_OutputMessage">
+    <wsdl:part name="parameters" element="tns:doBstandingOrderResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doCAFProcess_InputMessage">
+    <wsdl:part name="parameters" element="tns:doCAFProcess" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doCAFProcess_OutputMessage">
+    <wsdl:part name="parameters" element="tns:doCAFProcessResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_DeleteCommitment_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCommitment" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_DeleteCommitment_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCommitmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doRateChangeProcess_InputMessage">
+    <wsdl:part name="parameters" element="tns:doRateChangeProcess" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doRateChangeProcess_OutputMessage">
+    <wsdl:part name="parameters" element="tns:doRateChangeProcessResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doStewardshipProcess_InputMessage">
+    <wsdl:part name="parameters" element="tns:doStewardshipProcess" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doStewardshipProcess_OutputMessage">
+    <wsdl:part name="parameters" element="tns:doStewardshipProcessResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ScrutinizeGMCOperation_InputMessage">
+    <wsdl:part name="parameters" element="tns:ScrutinizeGMCOperation" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ScrutinizeGMCOperation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ScrutinizeGMCOperationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_GetCommitmentBySupporterGroup_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCommitmentBySupporterGroup" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_GetCommitmentBySupporterGroup_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCommitmentBySupporterGroupResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_cancelRecurringGift_InputMessage">
+    <wsdl:part name="parameters" element="tns:cancelRecurringGift" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_cancelRecurringGift_OutputMessage">
+    <wsdl:part name="parameters" element="tns:cancelRecurringGiftResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForcancelRecurringGift_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForcancelRecurringGift" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForcancelRecurringGift_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForcancelRecurringGiftResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_FetchRGDetailsOnLookupID_InputMessage">
+    <wsdl:part name="parameters" element="tns:FetchRGDetailsOnLookupID" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_FetchRGDetailsOnLookupID_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FetchRGDetailsOnLookupIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_AuditLog_InputMessage">
+    <wsdl:part name="parameters" element="tns:AuditLog" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_AuditLog_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AuditLogResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForCoffee_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForCoffee" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForCoffee_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForCoffeeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_UpdateSchedChildDepartures_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateSchedChildDepartures" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_UpdateSchedChildDepartures_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateSchedChildDeparturesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doBacsProcess_InputMessage">
+    <wsdl:part name="parameters" element="tns:doBacsProcess" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doBacsProcess_OutputMessage">
+    <wsdl:part name="parameters" element="tns:doBacsProcessResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_Run8x8Process_InputMessage">
+    <wsdl:part name="parameters" element="tns:Run8x8Process" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_Run8x8Process_OutputMessage">
+    <wsdl:part name="parameters" element="tns:Run8x8ProcessResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateWelcomeJourneyEnqueryOperation_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateWelcomeJourneyEnqueryOperation" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateWelcomeJourneyEnqueryOperation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateWelcomeJourneyEnqueryOperationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doGDPRprocess_InputMessage">
+    <wsdl:part name="parameters" element="tns:doGDPRprocess" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_doGDPRprocess_OutputMessage">
+    <wsdl:part name="parameters" element="tns:doGDPRprocessResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_SendSMS_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendSMS" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_SendSMS_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendSMSResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_GetOtherRGOnLookupID_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetOtherRGOnLookupID" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_GetOtherRGOnLookupID_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetOtherRGOnLookupIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForSupPreferredName_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForSupPreferredName" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForSupPreferredName_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForSupPreferredNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForAmbassadors_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForAmbassadors" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForAmbassadors_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForAmbassadorsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_getConstituentDonationTableDetails_InputMessage">
+    <wsdl:part name="parameters" element="tns:getConstituentDonationTableDetails" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_getConstituentDonationTableDetails_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getConstituentDonationTableDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_getGiftaidtotalamountandrevenueperyear_InputMessage">
+    <wsdl:part name="parameters" element="tns:getGiftaidtotalamountandrevenueperyear" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_getGiftaidtotalamountandrevenueperyear_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getGiftaidtotalamountandrevenueperyearResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForCompassionTogether_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForCompassionTogether" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForCompassionTogether_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForCompassionTogetherResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ReportGenerator_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReportGenerator" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_ReportGenerator_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReportGeneratorResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForPhotoRequest_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForPhotoRequest" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_CreateIncidentForPhotoRequest_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateIncidentForPhotoRequestResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_calculateImpactDataForOrg_InputMessage">
+    <wsdl:part name="parameters" element="tns:calculateImpactDataForOrg" />
+  </wsdl:message>
+  <wsdl:message name="ITCPTR4Service_calculateImpactDataForOrg_OutputMessage">
+    <wsdl:part name="parameters" element="tns:calculateImpactDataForOrgResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ITCPTR4Service">
+    <wsdl:operation name="beneficiarySearchByParamsDirect">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/beneficiarySearchByParamsDirect" message="tns:ITCPTR4Service_beneficiarySearchByParamsDirect_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/beneficiarySearchByParamsDirectResponse" message="tns:ITCPTR4Service_beneficiarySearchByParamsDirect_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="beneficiarySearchAndHold">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/beneficiarySearchAndHold" message="tns:ITCPTR4Service_beneficiarySearchAndHold_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/beneficiarySearchAndHoldResponse" message="tns:ITCPTR4Service_beneficiarySearchAndHold_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="beneficiarySearchSEF">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/beneficiarySearchSEF" message="tns:ITCPTR4Service_beneficiarySearchSEF_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/beneficiarySearchSEFResponse" message="tns:ITCPTR4Service_beneficiarySearchSEF_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="HoldBeneficiaries">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/HoldBeneficiaries" message="tns:ITCPTR4Service_HoldBeneficiaries_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/HoldBeneficiariesResponse" message="tns:ITCPTR4Service_HoldBeneficiaries_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseBeneficiariesHold">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ReleaseBeneficiariesHold" message="tns:ITCPTR4Service_ReleaseBeneficiariesHold_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ReleaseBeneficiariesHoldResponse" message="tns:ITCPTR4Service_ReleaseBeneficiariesHold_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="HoldAndImportBeneficiaries">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/HoldAndImportBeneficiaries" message="tns:ITCPTR4Service_HoldAndImportBeneficiaries_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/HoldAndImportBeneficiariesResponse" message="tns:ITCPTR4Service_HoldAndImportBeneficiaries_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseAndImportBeneficiaries">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ReleaseAndImportBeneficiaries" message="tns:ITCPTR4Service_ReleaseAndImportBeneficiaries_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ReleaseAndImportBeneficiariesResponse" message="tns:ITCPTR4Service_ReleaseAndImportBeneficiaries_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseBeneficiaries">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ReleaseBeneficiaries" message="tns:ITCPTR4Service_ReleaseBeneficiaries_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ReleaseBeneficiariesResponse" message="tns:ITCPTR4Service_ReleaseBeneficiaries_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBenHoldSEF">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/UpdateBenHoldSEF" message="tns:ITCPTR4Service_UpdateBenHoldSEF_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/UpdateBenHoldSEFResponse" message="tns:ITCPTR4Service_UpdateBenHoldSEF_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMultippleBenHold">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/UpdateMultippleBenHold" message="tns:ITCPTR4Service_UpdateMultippleBenHold_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/UpdateMultippleBenHoldResponse" message="tns:ITCPTR4Service_UpdateMultippleBenHold_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="createBeneficiaryReservation">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/createBeneficiaryReservation" message="tns:ITCPTR4Service_createBeneficiaryReservation_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/createBeneficiaryReservationResponse" message="tns:ITCPTR4Service_createBeneficiaryReservation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="demandPlanning">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/demandPlanning" message="tns:ITCPTR4Service_demandPlanning_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/demandPlanningResponse" message="tns:ITCPTR4Service_demandPlanning_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddChild">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/AddChild" message="tns:ITCPTR4Service_AddChild_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/AddChildResponse" message="tns:ITCPTR4Service_AddChild_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="icpSearchByParamsDirect">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/icpSearchByParamsDirect" message="tns:ITCPTR4Service_icpSearchByParamsDirect_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/icpSearchByParamsDirectResponse" message="tns:ITCPTR4Service_icpSearchByParamsDirect_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ICPReservationsFromRN">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ICPReservationsFromRN" message="tns:ITCPTR4Service_ICPReservationsFromRN_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ICPReservationsFromRNResponse" message="tns:ITCPTR4Service_ICPReservationsFromRN_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="icpReservation">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/icpReservation" message="tns:ITCPTR4Service_icpReservation_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/icpReservationResponse" message="tns:ITCPTR4Service_icpReservation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseICPReservation">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ReleaseICPReservation" message="tns:ITCPTR4Service_ReleaseICPReservation_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ReleaseICPReservationResponse" message="tns:ITCPTR4Service_ReleaseICPReservation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="specificBeneficiarySearch">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/specificBeneficiarySearch" message="tns:ITCPTR4Service_specificBeneficiarySearch_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/specificBeneficiarySearchResponse" message="tns:ITCPTR4Service_specificBeneficiarySearch_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUKHoldedChild">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/GetUKHoldedChild" message="tns:ITCPTR4Service_GetUKHoldedChild_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/GetUKHoldedChildResponse" message="tns:ITCPTR4Service_GetUKHoldedChild_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SupporterGiftsUploader">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/SupporterGiftsUploader" message="tns:ITCPTR4Service_SupporterGiftsUploader_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/SupporterGiftsUploaderResponse" message="tns:ITCPTR4Service_SupporterGiftsUploader_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FetchSupporterGroups">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/FetchSupporterGroups" message="tns:ITCPTR4Service_FetchSupporterGroups_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/FetchSupporterGroupsResponse" message="tns:ITCPTR4Service_FetchSupporterGroups_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitSupporter">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ResubmitSupporter" message="tns:ITCPTR4Service_ResubmitSupporter_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ResubmitSupporterResponse" message="tns:ITCPTR4Service_ResubmitSupporter_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FetchSponsorships">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/FetchSponsorships" message="tns:ITCPTR4Service_FetchSponsorships_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/FetchSponsorshipsResponse" message="tns:ITCPTR4Service_FetchSponsorships_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FetchCorrespondences">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/FetchCorrespondences" message="tns:ITCPTR4Service_FetchCorrespondences_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/FetchCorrespondencesResponse" message="tns:ITCPTR4Service_FetchCorrespondences_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitCorrespondeces">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ResubmitCorrespondeces" message="tns:ITCPTR4Service_ResubmitCorrespondeces_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ResubmitCorrespondecesResponse" message="tns:ITCPTR4Service_ResubmitCorrespondeces_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitSponsorship">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ResubmitSponsorship" message="tns:ITCPTR4Service_ResubmitSponsorship_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ResubmitSponsorshipResponse" message="tns:ITCPTR4Service_ResubmitSponsorship_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="createInterventionHoldInGMC">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/createInterventionHoldInGMC" message="tns:ITCPTR4Service_createInterventionHoldInGMC_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/createInterventionHoldInGMCResponse" message="tns:ITCPTR4Service_createInterventionHoldInGMC_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchInterventions">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/SearchInterventions" message="tns:ITCPTR4Service_SearchInterventions_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/SearchInterventionsResponse" message="tns:ITCPTR4Service_SearchInterventions_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="updateInterventionHold">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/updateInterventionHold" message="tns:ITCPTR4Service_updateInterventionHold_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/updateInterventionHoldResponse" message="tns:ITCPTR4Service_updateInterventionHold_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="cancelInterventionHold">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/cancelInterventionHold" message="tns:ITCPTR4Service_cancelInterventionHold_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/cancelInterventionHoldResponse" message="tns:ITCPTR4Service_cancelInterventionHold_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="createInterventionCommitment">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/createInterventionCommitment" message="tns:ITCPTR4Service_createInterventionCommitment_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/createInterventionCommitmentResponse" message="tns:ITCPTR4Service_createInterventionCommitment_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getInterventionHoldsFromRN">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/getInterventionHoldsFromRN" message="tns:ITCPTR4Service_getInterventionHoldsFromRN_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/getInterventionHoldsFromRNResponse" message="tns:ITCPTR4Service_getInterventionHoldsFromRN_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="searchInterventionHoldById">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/searchInterventionHoldById" message="tns:ITCPTR4Service_searchInterventionHoldById_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/searchInterventionHoldByIdResponse" message="tns:ITCPTR4Service_searchInterventionHoldById_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelBeneficiaryHoldAdminFunction">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryHoldAdminFunction" message="tns:ITCPTR4Service_CancelBeneficiaryHoldAdminFunction_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryHoldAdminFunctionResponse" message="tns:ITCPTR4Service_CancelBeneficiaryHoldAdminFunction_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getBeneficiaryCountforAdhocDataRefresh">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/getBeneficiaryCountforAdhocDataRefresh" message="tns:ITCPTR4Service_getBeneficiaryCountforAdhocDataRefresh_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/getBeneficiaryCountforAdhocDataRefreshResponse" message="tns:ITCPTR4Service_getBeneficiaryCountforAdhocDataRefresh_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="initiateBeneficiaryAdHocdatarefreshProcess">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/initiateBeneficiaryAdHocdatarefreshProcess" message="tns:ITCPTR4Service_initiateBeneficiaryAdHocdatarefreshProcess_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/initiateBeneficiaryAdHocdatarefreshProcessResponse" message="tns:ITCPTR4Service_initiateBeneficiaryAdHocdatarefreshProcess_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SupporterCountToUpdateWebToken">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebToken" message="tns:ITCPTR4Service_SupporterCountToUpdateWebToken_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebTokenResponse" message="tns:ITCPTR4Service_SupporterCountToUpdateWebToken_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="updateWebToken">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/updateWebToken" message="tns:ITCPTR4Service_updateWebToken_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/updateWebTokenResponse" message="tns:ITCPTR4Service_updateWebToken_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="BeneficiaryReservationsFromRN">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/BeneficiaryReservationsFromRN" message="tns:ITCPTR4Service_BeneficiaryReservationsFromRN_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/BeneficiaryReservationsFromRNResponse" message="tns:ITCPTR4Service_BeneficiaryReservationsFromRN_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelBeneficiaryReservation">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservation" message="tns:ITCPTR4Service_CancelBeneficiaryReservation_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservationResponse" message="tns:ITCPTR4Service_CancelBeneficiaryReservation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="updateBeneficiaryReservation">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/updateBeneficiaryReservation" message="tns:ITCPTR4Service_updateBeneficiaryReservation_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/updateBeneficiaryReservationResponse" message="tns:ITCPTR4Service_updateBeneficiaryReservation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="doDDRProcess">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/doDDRProcess" message="tns:ITCPTR4Service_doDDRProcess_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/doDDRProcessResponse" message="tns:ITCPTR4Service_doDDRProcess_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitSupporters">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ResubmitSupporters" message="tns:ITCPTR4Service_ResubmitSupporters_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ResubmitSupportersResponse" message="tns:ITCPTR4Service_ResubmitSupporters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FetchSupporters">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/FetchSupporters" message="tns:ITCPTR4Service_FetchSupporters_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/FetchSupportersResponse" message="tns:ITCPTR4Service_FetchSupporters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="doBstandingOrder">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/doBstandingOrder" message="tns:ITCPTR4Service_doBstandingOrder_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/doBstandingOrderResponse" message="tns:ITCPTR4Service_doBstandingOrder_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="doCAFProcess">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/doCAFProcess" message="tns:ITCPTR4Service_doCAFProcess_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/doCAFProcessResponse" message="tns:ITCPTR4Service_doCAFProcess_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCommitment">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/DeleteCommitment" message="tns:ITCPTR4Service_DeleteCommitment_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/DeleteCommitmentResponse" message="tns:ITCPTR4Service_DeleteCommitment_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="doRateChangeProcess">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/doRateChangeProcess" message="tns:ITCPTR4Service_doRateChangeProcess_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/doRateChangeProcessResponse" message="tns:ITCPTR4Service_doRateChangeProcess_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="doStewardshipProcess">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/doStewardshipProcess" message="tns:ITCPTR4Service_doStewardshipProcess_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/doStewardshipProcessResponse" message="tns:ITCPTR4Service_doStewardshipProcess_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ScrutinizeGMCOperation">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ScrutinizeGMCOperation" message="tns:ITCPTR4Service_ScrutinizeGMCOperation_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ScrutinizeGMCOperationResponse" message="tns:ITCPTR4Service_ScrutinizeGMCOperation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCommitmentBySupporterGroup">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/GetCommitmentBySupporterGroup" message="tns:ITCPTR4Service_GetCommitmentBySupporterGroup_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/GetCommitmentBySupporterGroupResponse" message="tns:ITCPTR4Service_GetCommitmentBySupporterGroup_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="cancelRecurringGift">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/cancelRecurringGift" message="tns:ITCPTR4Service_cancelRecurringGift_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/cancelRecurringGiftResponse" message="tns:ITCPTR4Service_cancelRecurringGift_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForcancelRecurringGift">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForcancelRecurringGift" message="tns:ITCPTR4Service_CreateIncidentForcancelRecurringGift_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForcancelRecurringGiftResponse" message="tns:ITCPTR4Service_CreateIncidentForcancelRecurringGift_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FetchRGDetailsOnLookupID">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/FetchRGDetailsOnLookupID" message="tns:ITCPTR4Service_FetchRGDetailsOnLookupID_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/FetchRGDetailsOnLookupIDResponse" message="tns:ITCPTR4Service_FetchRGDetailsOnLookupID_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AuditLog">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/AuditLog" message="tns:ITCPTR4Service_AuditLog_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/AuditLogResponse" message="tns:ITCPTR4Service_AuditLog_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForCoffee">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffee" message="tns:ITCPTR4Service_CreateIncidentForCoffee_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffeeResponse" message="tns:ITCPTR4Service_CreateIncidentForCoffee_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSchedChildDepartures">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDepartures" message="tns:ITCPTR4Service_UpdateSchedChildDepartures_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDeparturesResponse" message="tns:ITCPTR4Service_UpdateSchedChildDepartures_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="doBacsProcess">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/doBacsProcess" message="tns:ITCPTR4Service_doBacsProcess_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/doBacsProcessResponse" message="tns:ITCPTR4Service_doBacsProcess_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Run8x8Process">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/Run8x8Process" message="tns:ITCPTR4Service_Run8x8Process_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/Run8x8ProcessResponse" message="tns:ITCPTR4Service_Run8x8Process_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateWelcomeJourneyEnqueryOperation">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateWelcomeJourneyEnqueryOperation" message="tns:ITCPTR4Service_CreateWelcomeJourneyEnqueryOperation_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateWelcomeJourneyEnqueryOperationResponse" message="tns:ITCPTR4Service_CreateWelcomeJourneyEnqueryOperation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="doGDPRprocess">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/doGDPRprocess" message="tns:ITCPTR4Service_doGDPRprocess_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/doGDPRprocessResponse" message="tns:ITCPTR4Service_doGDPRprocess_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendSMS">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/SendSMS" message="tns:ITCPTR4Service_SendSMS_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/SendSMSResponse" message="tns:ITCPTR4Service_SendSMS_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOtherRGOnLookupID">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupID" message="tns:ITCPTR4Service_GetOtherRGOnLookupID_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupIDResponse" message="tns:ITCPTR4Service_GetOtherRGOnLookupID_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForSupPreferredName">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForSupPreferredName" message="tns:ITCPTR4Service_CreateIncidentForSupPreferredName_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForSupPreferredNameResponse" message="tns:ITCPTR4Service_CreateIncidentForSupPreferredName_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForAmbassadors">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForAmbassadors" message="tns:ITCPTR4Service_CreateIncidentForAmbassadors_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForAmbassadorsResponse" message="tns:ITCPTR4Service_CreateIncidentForAmbassadors_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getConstituentDonationTableDetails">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetails" message="tns:ITCPTR4Service_getConstituentDonationTableDetails_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetailsResponse" message="tns:ITCPTR4Service_getConstituentDonationTableDetails_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getGiftaidtotalamountandrevenueperyear">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyear" message="tns:ITCPTR4Service_getGiftaidtotalamountandrevenueperyear_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyearResponse" message="tns:ITCPTR4Service_getGiftaidtotalamountandrevenueperyear_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForCompassionTogether">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForCompassionTogether" message="tns:ITCPTR4Service_CreateIncidentForCompassionTogether_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForCompassionTogetherResponse" message="tns:ITCPTR4Service_CreateIncidentForCompassionTogether_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportGenerator">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/ReportGenerator" message="tns:ITCPTR4Service_ReportGenerator_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/ReportGeneratorResponse" message="tns:ITCPTR4Service_ReportGenerator_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForPhotoRequest">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequest" message="tns:ITCPTR4Service_CreateIncidentForPhotoRequest_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequestResponse" message="tns:ITCPTR4Service_CreateIncidentForPhotoRequest_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="calculateImpactDataForOrg">
+      <wsdl:input wsaw:Action="http://tempuri.org/ITCPTR4Service/calculateImpactDataForOrg" message="tns:ITCPTR4Service_calculateImpactDataForOrg_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ITCPTR4Service/calculateImpactDataForOrgResponse" message="tns:ITCPTR4Service_calculateImpactDataForOrg_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ITCPTR4Service" type="tns:ITCPTR4Service">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="beneficiarySearchByParamsDirect">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/beneficiarySearchByParamsDirect" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="beneficiarySearchAndHold">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/beneficiarySearchAndHold" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="beneficiarySearchSEF">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/beneficiarySearchSEF" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HoldBeneficiaries">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/HoldBeneficiaries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseBeneficiariesHold">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ReleaseBeneficiariesHold" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HoldAndImportBeneficiaries">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/HoldAndImportBeneficiaries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseAndImportBeneficiaries">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ReleaseAndImportBeneficiaries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseBeneficiaries">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ReleaseBeneficiaries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBenHoldSEF">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/UpdateBenHoldSEF" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMultippleBenHold">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/UpdateMultippleBenHold" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createBeneficiaryReservation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/createBeneficiaryReservation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="demandPlanning">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/demandPlanning" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddChild">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/AddChild" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="icpSearchByParamsDirect">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/icpSearchByParamsDirect" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ICPReservationsFromRN">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ICPReservationsFromRN" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="icpReservation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/icpReservation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseICPReservation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ReleaseICPReservation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="specificBeneficiarySearch">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/specificBeneficiarySearch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUKHoldedChild">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/GetUKHoldedChild" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SupporterGiftsUploader">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/SupporterGiftsUploader" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchSupporterGroups">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/FetchSupporterGroups" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitSupporter">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ResubmitSupporter" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchSponsorships">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/FetchSponsorships" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchCorrespondences">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/FetchCorrespondences" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitCorrespondeces">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ResubmitCorrespondeces" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitSponsorship">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ResubmitSponsorship" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createInterventionHoldInGMC">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/createInterventionHoldInGMC" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchInterventions">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/SearchInterventions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateInterventionHold">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/updateInterventionHold" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelInterventionHold">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/cancelInterventionHold" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createInterventionCommitment">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/createInterventionCommitment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getInterventionHoldsFromRN">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/getInterventionHoldsFromRN" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchInterventionHoldById">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/searchInterventionHoldById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelBeneficiaryHoldAdminFunction">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryHoldAdminFunction" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBeneficiaryCountforAdhocDataRefresh">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/getBeneficiaryCountforAdhocDataRefresh" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="initiateBeneficiaryAdHocdatarefreshProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/initiateBeneficiaryAdHocdatarefreshProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SupporterCountToUpdateWebToken">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebToken" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateWebToken">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/updateWebToken" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BeneficiaryReservationsFromRN">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/BeneficiaryReservationsFromRN" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelBeneficiaryReservation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateBeneficiaryReservation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/updateBeneficiaryReservation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doDDRProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doDDRProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitSupporters">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ResubmitSupporters" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchSupporters">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/FetchSupporters" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doBstandingOrder">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doBstandingOrder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doCAFProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doCAFProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCommitment">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/DeleteCommitment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doRateChangeProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doRateChangeProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doStewardshipProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doStewardshipProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ScrutinizeGMCOperation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ScrutinizeGMCOperation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCommitmentBySupporterGroup">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/GetCommitmentBySupporterGroup" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelRecurringGift">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/cancelRecurringGift" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForcancelRecurringGift">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForcancelRecurringGift" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchRGDetailsOnLookupID">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/FetchRGDetailsOnLookupID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuditLog">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/AuditLog" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForCoffee">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffee" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSchedChildDepartures">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDepartures" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doBacsProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doBacsProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Run8x8Process">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/Run8x8Process" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateWelcomeJourneyEnqueryOperation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateWelcomeJourneyEnqueryOperation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGDPRprocess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doGDPRprocess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendSMS">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/SendSMS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOtherRGOnLookupID">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForSupPreferredName">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForSupPreferredName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForAmbassadors">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForAmbassadors" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConstituentDonationTableDetails">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGiftaidtotalamountandrevenueperyear">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyear" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForCompassionTogether">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForCompassionTogether" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportGenerator">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ReportGenerator" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForPhotoRequest">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="calculateImpactDataForOrg">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/calculateImpactDataForOrg" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BasicHttpsBinding_ITCPTR4Service" type="tns:ITCPTR4Service">
+    <wsp:PolicyReference URI="#BasicHttpsBinding_ITCPTR4Service_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="beneficiarySearchByParamsDirect">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/beneficiarySearchByParamsDirect" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="beneficiarySearchAndHold">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/beneficiarySearchAndHold" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="beneficiarySearchSEF">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/beneficiarySearchSEF" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HoldBeneficiaries">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/HoldBeneficiaries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseBeneficiariesHold">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ReleaseBeneficiariesHold" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HoldAndImportBeneficiaries">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/HoldAndImportBeneficiaries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseAndImportBeneficiaries">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ReleaseAndImportBeneficiaries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseBeneficiaries">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ReleaseBeneficiaries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBenHoldSEF">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/UpdateBenHoldSEF" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMultippleBenHold">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/UpdateMultippleBenHold" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createBeneficiaryReservation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/createBeneficiaryReservation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="demandPlanning">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/demandPlanning" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddChild">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/AddChild" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="icpSearchByParamsDirect">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/icpSearchByParamsDirect" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ICPReservationsFromRN">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ICPReservationsFromRN" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="icpReservation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/icpReservation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseICPReservation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ReleaseICPReservation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="specificBeneficiarySearch">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/specificBeneficiarySearch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUKHoldedChild">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/GetUKHoldedChild" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SupporterGiftsUploader">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/SupporterGiftsUploader" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchSupporterGroups">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/FetchSupporterGroups" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitSupporter">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ResubmitSupporter" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchSponsorships">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/FetchSponsorships" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchCorrespondences">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/FetchCorrespondences" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitCorrespondeces">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ResubmitCorrespondeces" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitSponsorship">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ResubmitSponsorship" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createInterventionHoldInGMC">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/createInterventionHoldInGMC" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchInterventions">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/SearchInterventions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateInterventionHold">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/updateInterventionHold" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelInterventionHold">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/cancelInterventionHold" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createInterventionCommitment">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/createInterventionCommitment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getInterventionHoldsFromRN">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/getInterventionHoldsFromRN" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchInterventionHoldById">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/searchInterventionHoldById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelBeneficiaryHoldAdminFunction">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryHoldAdminFunction" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBeneficiaryCountforAdhocDataRefresh">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/getBeneficiaryCountforAdhocDataRefresh" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="initiateBeneficiaryAdHocdatarefreshProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/initiateBeneficiaryAdHocdatarefreshProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SupporterCountToUpdateWebToken">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebToken" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateWebToken">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/updateWebToken" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BeneficiaryReservationsFromRN">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/BeneficiaryReservationsFromRN" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelBeneficiaryReservation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateBeneficiaryReservation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/updateBeneficiaryReservation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doDDRProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doDDRProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResubmitSupporters">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ResubmitSupporters" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchSupporters">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/FetchSupporters" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doBstandingOrder">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doBstandingOrder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doCAFProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doCAFProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCommitment">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/DeleteCommitment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doRateChangeProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doRateChangeProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doStewardshipProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doStewardshipProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ScrutinizeGMCOperation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ScrutinizeGMCOperation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCommitmentBySupporterGroup">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/GetCommitmentBySupporterGroup" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelRecurringGift">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/cancelRecurringGift" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForcancelRecurringGift">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForcancelRecurringGift" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchRGDetailsOnLookupID">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/FetchRGDetailsOnLookupID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuditLog">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/AuditLog" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForCoffee">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffee" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSchedChildDepartures">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDepartures" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doBacsProcess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doBacsProcess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Run8x8Process">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/Run8x8Process" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateWelcomeJourneyEnqueryOperation">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateWelcomeJourneyEnqueryOperation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doGDPRprocess">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/doGDPRprocess" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendSMS">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/SendSMS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOtherRGOnLookupID">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForSupPreferredName">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForSupPreferredName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForAmbassadors">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForAmbassadors" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConstituentDonationTableDetails">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGiftaidtotalamountandrevenueperyear">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyear" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForCompassionTogether">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForCompassionTogether" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportGenerator">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/ReportGenerator" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateIncidentForPhotoRequest">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="calculateImpactDataForOrg">
+      <soap:operation soapAction="http://tempuri.org/ITCPTR4Service/calculateImpactDataForOrg" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TCPTR4Service">
+    <wsdl:port name="BasicHttpBinding_ITCPTR4Service" binding="tns:BasicHttpBinding_ITCPTR4Service">
+      <soap:address location="http://localhost/TcptR4Services/TCPTR4Service.svc" />
+    </wsdl:port>
+    <wsdl:port name="BasicHttpsBinding_ITCPTR4Service" binding="tns:BasicHttpsBinding_ITCPTR4Service">
+      <soap:address location="https://id53256/TcptR4Services/TCPTR4Service.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
