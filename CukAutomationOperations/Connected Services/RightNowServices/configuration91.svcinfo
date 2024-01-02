@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="dtpOgGqXundaRZ36rpnKn0gLZ3g=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="JxRYPdkPFionfaxI4DqXy3xDw/AmIzJbvBz3UVM4aI0=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="customBinding" name="RightNowSyncBinding">
       <properties>

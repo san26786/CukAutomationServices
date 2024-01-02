@@ -131,9 +131,6 @@ namespace CukAutomationOperations.TCPTR4Service {
         private string[] multipleCountriesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string[] multipleIcpIdsField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string nameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -625,19 +622,6 @@ namespace CukAutomationOperations.TCPTR4Service {
                 if ((object.ReferenceEquals(this.multipleCountriesField, value) != true)) {
                     this.multipleCountriesField = value;
                     this.RaisePropertyChanged("multipleCountries");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string[] multipleIcpIds {
-            get {
-                return this.multipleIcpIdsField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.multipleIcpIdsField, value) != true)) {
-                    this.multipleIcpIdsField = value;
-                    this.RaisePropertyChanged("multipleIcpIds");
                 }
             }
         }
@@ -1588,8 +1572,6 @@ namespace CukAutomationOperations.TCPTR4Service {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.SupporterGroupModel))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.SponsorshipModel[]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.SponsorshipModel))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.CorrespondenceModel[]))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.CorrespondenceModel))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.IcpSearchRequestModel))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.Response1))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.Icpsearchresponselist[]))]
@@ -1597,6 +1579,7 @@ namespace CukAutomationOperations.TCPTR4Service {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.ICPReservationRNSearchModel))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNResponse[]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNResponse))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNModel))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.ReservationCancelRequestList1[]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.ReservationCancelRequestList1))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.BenReservationReleaseResponse))]
@@ -1626,16 +1609,21 @@ namespace CukAutomationOperations.TCPTR4Service {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.RecurringGifts))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.SupporterDataModel))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.SupporterDataModel[]))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.ICPDetailModel))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.ConstituentRevenueAndGiftAidTotalAmount))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.DonationModel[]))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.DonationModel))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.SupporterCommitmentModel[]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.SupporterCommitmentModel))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.cancelRecurringGift[]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.cancelRecurringGift))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.RecurringGiftModel[]))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.RecurringGiftModel))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.GetMessageList))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.LettersFromChildModel[]))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.LettersFromChildModel))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.InitialRGData))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.AmbassadorsModal))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.DonationModel[]))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.DonationModel))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.ConstituentRevenueAndGiftAidTotalAmount))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.CompassionTogether))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.ImpactData))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(CukAutomationOperations.TCPTR4Service.AddICPRequest[]))]
@@ -1704,6 +1692,9 @@ namespace CukAutomationOperations.TCPTR4Service {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string HoldIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string HoldStatusField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string HoldYieldRateField;
@@ -1846,6 +1837,19 @@ namespace CukAutomationOperations.TCPTR4Service {
                 if ((object.ReferenceEquals(this.HoldIDField, value) != true)) {
                     this.HoldIDField = value;
                     this.RaisePropertyChanged("HoldID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string HoldStatus {
+            get {
+                return this.HoldStatusField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.HoldStatusField, value) != true)) {
+                    this.HoldStatusField = value;
+                    this.RaisePropertyChanged("HoldStatus");
                 }
             }
         }
@@ -2740,259 +2744,6 @@ namespace CukAutomationOperations.TCPTR4Service {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="CorrespondenceModel", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.Resubmission")]
-    [System.SerializableAttribute()]
-    public partial class CorrespondenceModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CancelCardField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CancelLetterField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CardFromField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CardMessageField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CardToField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CommKitIDField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string FinalLetterURLField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private long IdField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string LetterFromField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string LetterMessageField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string LetterToField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private long NeedField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ReceivedDateField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string SupporterGroupField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CancelCard {
-            get {
-                return this.CancelCardField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CancelCardField, value) != true)) {
-                    this.CancelCardField = value;
-                    this.RaisePropertyChanged("CancelCard");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CancelLetter {
-            get {
-                return this.CancelLetterField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CancelLetterField, value) != true)) {
-                    this.CancelLetterField = value;
-                    this.RaisePropertyChanged("CancelLetter");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CardFrom {
-            get {
-                return this.CardFromField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CardFromField, value) != true)) {
-                    this.CardFromField = value;
-                    this.RaisePropertyChanged("CardFrom");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CardMessage {
-            get {
-                return this.CardMessageField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CardMessageField, value) != true)) {
-                    this.CardMessageField = value;
-                    this.RaisePropertyChanged("CardMessage");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CardTo {
-            get {
-                return this.CardToField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CardToField, value) != true)) {
-                    this.CardToField = value;
-                    this.RaisePropertyChanged("CardTo");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CommKitID {
-            get {
-                return this.CommKitIDField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CommKitIDField, value) != true)) {
-                    this.CommKitIDField = value;
-                    this.RaisePropertyChanged("CommKitID");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string FinalLetterURL {
-            get {
-                return this.FinalLetterURLField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.FinalLetterURLField, value) != true)) {
-                    this.FinalLetterURLField = value;
-                    this.RaisePropertyChanged("FinalLetterURL");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public long Id {
-            get {
-                return this.IdField;
-            }
-            set {
-                if ((this.IdField.Equals(value) != true)) {
-                    this.IdField = value;
-                    this.RaisePropertyChanged("Id");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string LetterFrom {
-            get {
-                return this.LetterFromField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.LetterFromField, value) != true)) {
-                    this.LetterFromField = value;
-                    this.RaisePropertyChanged("LetterFrom");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string LetterMessage {
-            get {
-                return this.LetterMessageField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.LetterMessageField, value) != true)) {
-                    this.LetterMessageField = value;
-                    this.RaisePropertyChanged("LetterMessage");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string LetterTo {
-            get {
-                return this.LetterToField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.LetterToField, value) != true)) {
-                    this.LetterToField = value;
-                    this.RaisePropertyChanged("LetterTo");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public long Need {
-            get {
-                return this.NeedField;
-            }
-            set {
-                if ((this.NeedField.Equals(value) != true)) {
-                    this.NeedField = value;
-                    this.RaisePropertyChanged("Need");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string ReceivedDate {
-            get {
-                return this.ReceivedDateField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ReceivedDateField, value) != true)) {
-                    this.ReceivedDateField = value;
-                    this.RaisePropertyChanged("ReceivedDate");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string SupporterGroup {
-            get {
-                return this.SupporterGroupField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.SupporterGroupField, value) != true)) {
-                    this.SupporterGroupField = value;
-                    this.RaisePropertyChanged("SupporterGroup");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="IcpSearchRequestModel", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.ICPSearch")]
     [System.SerializableAttribute()]
     public partial class IcpSearchRequestModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
@@ -3472,31 +3223,13 @@ namespace CukAutomationOperations.TCPTR4Service {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string AgeField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string Beneficiary_GlobalIDField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string Beneficiary_LocalIDField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string[] CountryField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string FullNameField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string GenderField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ICPIdField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ICPNameField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ICP_CountryField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ReservationIDField;
@@ -3510,9 +3243,6 @@ namespace CukAutomationOperations.TCPTR4Service {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string SourceCodeField;
         
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string takelimitField;
-        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -3520,45 +3250,6 @@ namespace CukAutomationOperations.TCPTR4Service {
             }
             set {
                 this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Age {
-            get {
-                return this.AgeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.AgeField, value) != true)) {
-                    this.AgeField = value;
-                    this.RaisePropertyChanged("Age");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Beneficiary_GlobalID {
-            get {
-                return this.Beneficiary_GlobalIDField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.Beneficiary_GlobalIDField, value) != true)) {
-                    this.Beneficiary_GlobalIDField = value;
-                    this.RaisePropertyChanged("Beneficiary_GlobalID");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Beneficiary_LocalID {
-            get {
-                return this.Beneficiary_LocalIDField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.Beneficiary_LocalIDField, value) != true)) {
-                    this.Beneficiary_LocalIDField = value;
-                    this.RaisePropertyChanged("Beneficiary_LocalID");
-                }
             }
         }
         
@@ -3571,32 +3262,6 @@ namespace CukAutomationOperations.TCPTR4Service {
                 if ((object.ReferenceEquals(this.CountryField, value) != true)) {
                     this.CountryField = value;
                     this.RaisePropertyChanged("Country");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string FullName {
-            get {
-                return this.FullNameField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.FullNameField, value) != true)) {
-                    this.FullNameField = value;
-                    this.RaisePropertyChanged("FullName");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Gender {
-            get {
-                return this.GenderField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.GenderField, value) != true)) {
-                    this.GenderField = value;
-                    this.RaisePropertyChanged("Gender");
                 }
             }
         }
@@ -3623,19 +3288,6 @@ namespace CukAutomationOperations.TCPTR4Service {
                 if ((object.ReferenceEquals(this.ICPNameField, value) != true)) {
                     this.ICPNameField = value;
                     this.RaisePropertyChanged("ICPName");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string ICP_Country {
-            get {
-                return this.ICP_CountryField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ICP_CountryField, value) != true)) {
-                    this.ICP_CountryField = value;
-                    this.RaisePropertyChanged("ICP_Country");
                 }
             }
         }
@@ -3688,19 +3340,6 @@ namespace CukAutomationOperations.TCPTR4Service {
                 if ((object.ReferenceEquals(this.SourceCodeField, value) != true)) {
                     this.SourceCodeField = value;
                     this.RaisePropertyChanged("SourceCode");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string takelimit {
-            get {
-                return this.takelimitField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.takelimitField, value) != true)) {
-                    this.takelimitField = value;
-                    this.RaisePropertyChanged("takelimit");
                 }
             }
         }
@@ -4210,6 +3849,195 @@ namespace CukAutomationOperations.TCPTR4Service {
                 if ((object.ReferenceEquals(this.UnsponsoredScoreField, value) != true)) {
                     this.UnsponsoredScoreField = value;
                     this.RaisePropertyChanged("UnsponsoredScore");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ICPReservationSearchFromRNModel", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model.ICPSearch")]
+    [System.SerializableAttribute()]
+    public partial class ICPReservationSearchFromRNModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string Beneficiary_GlobalIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string Beneficiary_LocalIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string[] CountryField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ICPIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ICPNameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ReservationIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ReservationStatusField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ShowAllReservationsField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SourceCodeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string takelimitField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Beneficiary_GlobalID {
+            get {
+                return this.Beneficiary_GlobalIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.Beneficiary_GlobalIDField, value) != true)) {
+                    this.Beneficiary_GlobalIDField = value;
+                    this.RaisePropertyChanged("Beneficiary_GlobalID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Beneficiary_LocalID {
+            get {
+                return this.Beneficiary_LocalIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.Beneficiary_LocalIDField, value) != true)) {
+                    this.Beneficiary_LocalIDField = value;
+                    this.RaisePropertyChanged("Beneficiary_LocalID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string[] Country {
+            get {
+                return this.CountryField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CountryField, value) != true)) {
+                    this.CountryField = value;
+                    this.RaisePropertyChanged("Country");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ICPId {
+            get {
+                return this.ICPIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ICPIdField, value) != true)) {
+                    this.ICPIdField = value;
+                    this.RaisePropertyChanged("ICPId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ICPName {
+            get {
+                return this.ICPNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ICPNameField, value) != true)) {
+                    this.ICPNameField = value;
+                    this.RaisePropertyChanged("ICPName");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ReservationID {
+            get {
+                return this.ReservationIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ReservationIDField, value) != true)) {
+                    this.ReservationIDField = value;
+                    this.RaisePropertyChanged("ReservationID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ReservationStatus {
+            get {
+                return this.ReservationStatusField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ReservationStatusField, value) != true)) {
+                    this.ReservationStatusField = value;
+                    this.RaisePropertyChanged("ReservationStatus");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ShowAllReservations {
+            get {
+                return this.ShowAllReservationsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ShowAllReservationsField, value) != true)) {
+                    this.ShowAllReservationsField = value;
+                    this.RaisePropertyChanged("ShowAllReservations");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string SourceCode {
+            get {
+                return this.SourceCodeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SourceCodeField, value) != true)) {
+                    this.SourceCodeField = value;
+                    this.RaisePropertyChanged("SourceCode");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string takelimit {
+            get {
+                return this.takelimitField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.takelimitField, value) != true)) {
+                    this.takelimitField = value;
+                    this.RaisePropertyChanged("takelimit");
                 }
             }
         }
@@ -5825,6 +5653,9 @@ namespace CukAutomationOperations.TCPTR4Service {
         private string ChildField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ChildBirthDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ComBlackbaudIDField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -5963,6 +5794,9 @@ namespace CukAutomationOperations.TCPTR4Service {
         private string NeedStatusField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string OrgSupporterGroupLinkField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string OrganisationField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -6014,7 +5848,22 @@ namespace CukAutomationOperations.TCPTR4Service {
         private string SupporterGroupNameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int actionidField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string childGlobalIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string childKeyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string childNameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string childPersonalNameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string gender1Field;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string globalCommitmentIdField;
@@ -6239,6 +6088,19 @@ namespace CukAutomationOperations.TCPTR4Service {
                 if ((object.ReferenceEquals(this.ChildField, value) != true)) {
                     this.ChildField = value;
                     this.RaisePropertyChanged("Child");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ChildBirthDate {
+            get {
+                return this.ChildBirthDateField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ChildBirthDateField, value) != true)) {
+                    this.ChildBirthDateField = value;
+                    this.RaisePropertyChanged("ChildBirthDate");
                 }
             }
         }
@@ -6842,6 +6704,19 @@ namespace CukAutomationOperations.TCPTR4Service {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string OrgSupporterGroupLink {
+            get {
+                return this.OrgSupporterGroupLinkField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OrgSupporterGroupLinkField, value) != true)) {
+                    this.OrgSupporterGroupLinkField = value;
+                    this.RaisePropertyChanged("OrgSupporterGroupLink");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string Organisation {
             get {
                 return this.OrganisationField;
@@ -7063,6 +6938,19 @@ namespace CukAutomationOperations.TCPTR4Service {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int actionid {
+            get {
+                return this.actionidField;
+            }
+            set {
+                if ((this.actionidField.Equals(value) != true)) {
+                    this.actionidField = value;
+                    this.RaisePropertyChanged("actionid");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string childGlobalId {
             get {
                 return this.childGlobalIdField;
@@ -7071,6 +6959,58 @@ namespace CukAutomationOperations.TCPTR4Service {
                 if ((object.ReferenceEquals(this.childGlobalIdField, value) != true)) {
                     this.childGlobalIdField = value;
                     this.RaisePropertyChanged("childGlobalId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string childKey {
+            get {
+                return this.childKeyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.childKeyField, value) != true)) {
+                    this.childKeyField = value;
+                    this.RaisePropertyChanged("childKey");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string childName {
+            get {
+                return this.childNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.childNameField, value) != true)) {
+                    this.childNameField = value;
+                    this.RaisePropertyChanged("childName");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string childPersonalName {
+            get {
+                return this.childPersonalNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.childPersonalNameField, value) != true)) {
+                    this.childPersonalNameField = value;
+                    this.RaisePropertyChanged("childPersonalName");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Name="gender")]
+        public string gender1 {
+            get {
+                return this.gender1Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.gender1Field, value) != true)) {
+                    this.gender1Field = value;
+                    this.RaisePropertyChanged("gender1");
                 }
             }
         }
@@ -7744,6 +7684,269 @@ namespace CukAutomationOperations.TCPTR4Service {
                 if ((object.ReferenceEquals(this.street1Field, value) != true)) {
                     this.street1Field = value;
                     this.RaisePropertyChanged("street1");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ICPDetailModel", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model")]
+    [System.SerializableAttribute()]
+    public partial class ICPDetailModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string FacilitiesField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string InterventionavailableField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NumberOfActiveMembersField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PartneredwithCompassionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string WeeklyChildAttendanceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string locationField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Facilities {
+            get {
+                return this.FacilitiesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.FacilitiesField, value) != true)) {
+                    this.FacilitiesField = value;
+                    this.RaisePropertyChanged("Facilities");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Interventionavailable {
+            get {
+                return this.InterventionavailableField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.InterventionavailableField, value) != true)) {
+                    this.InterventionavailableField = value;
+                    this.RaisePropertyChanged("Interventionavailable");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string NumberOfActiveMembers {
+            get {
+                return this.NumberOfActiveMembersField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NumberOfActiveMembersField, value) != true)) {
+                    this.NumberOfActiveMembersField = value;
+                    this.RaisePropertyChanged("NumberOfActiveMembers");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string PartneredwithCompassion {
+            get {
+                return this.PartneredwithCompassionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PartneredwithCompassionField, value) != true)) {
+                    this.PartneredwithCompassionField = value;
+                    this.RaisePropertyChanged("PartneredwithCompassion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string WeeklyChildAttendance {
+            get {
+                return this.WeeklyChildAttendanceField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.WeeklyChildAttendanceField, value) != true)) {
+                    this.WeeklyChildAttendanceField = value;
+                    this.RaisePropertyChanged("WeeklyChildAttendance");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string location {
+            get {
+                return this.locationField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.locationField, value) != true)) {
+                    this.locationField = value;
+                    this.RaisePropertyChanged("location");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ConstituentRevenueAndGiftAidTotalAmount", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model")]
+    [System.SerializableAttribute()]
+    public partial class ConstituentRevenueAndGiftAidTotalAmount : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string GiftAidTotalAmountField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string RevenueTotalAmountField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string GiftAidTotalAmount {
+            get {
+                return this.GiftAidTotalAmountField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.GiftAidTotalAmountField, value) != true)) {
+                    this.GiftAidTotalAmountField = value;
+                    this.RaisePropertyChanged("GiftAidTotalAmount");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string RevenueTotalAmount {
+            get {
+                return this.RevenueTotalAmountField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.RevenueTotalAmountField, value) != true)) {
+                    this.RevenueTotalAmountField = value;
+                    this.RaisePropertyChanged("RevenueTotalAmount");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="DonationModel", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model")]
+    [System.SerializableAttribute()]
+    public partial class DonationModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AmountField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DonationTypeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Amount {
+            get {
+                return this.AmountField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AmountField, value) != true)) {
+                    this.AmountField = value;
+                    this.RaisePropertyChanged("Amount");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Date {
+            get {
+                return this.DateField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DateField, value) != true)) {
+                    this.DateField = value;
+                    this.RaisePropertyChanged("Date");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DonationType {
+            get {
+                return this.DonationTypeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DonationTypeField, value) != true)) {
+                    this.DonationTypeField = value;
+                    this.RaisePropertyChanged("DonationType");
                 }
             }
         }
@@ -9351,6 +9554,445 @@ namespace CukAutomationOperations.TCPTR4Service {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="GetMessageList", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model")]
+    [System.SerializableAttribute()]
+    public partial class GetMessageList : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CommKitIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NeedIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PasswordField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SupporterGroupIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SuppoterIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UsernameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int actionidField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string sourceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string webAccTokenField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CommKitID {
+            get {
+                return this.CommKitIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CommKitIDField, value) != true)) {
+                    this.CommKitIDField = value;
+                    this.RaisePropertyChanged("CommKitID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string NeedID {
+            get {
+                return this.NeedIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NeedIDField, value) != true)) {
+                    this.NeedIDField = value;
+                    this.RaisePropertyChanged("NeedID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Password {
+            get {
+                return this.PasswordField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PasswordField, value) != true)) {
+                    this.PasswordField = value;
+                    this.RaisePropertyChanged("Password");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string SupporterGroupID {
+            get {
+                return this.SupporterGroupIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SupporterGroupIDField, value) != true)) {
+                    this.SupporterGroupIDField = value;
+                    this.RaisePropertyChanged("SupporterGroupID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string SuppoterID {
+            get {
+                return this.SuppoterIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SuppoterIDField, value) != true)) {
+                    this.SuppoterIDField = value;
+                    this.RaisePropertyChanged("SuppoterID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Username {
+            get {
+                return this.UsernameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UsernameField, value) != true)) {
+                    this.UsernameField = value;
+                    this.RaisePropertyChanged("Username");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int actionid {
+            get {
+                return this.actionidField;
+            }
+            set {
+                if ((this.actionidField.Equals(value) != true)) {
+                    this.actionidField = value;
+                    this.RaisePropertyChanged("actionid");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string source {
+            get {
+                return this.sourceField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.sourceField, value) != true)) {
+                    this.sourceField = value;
+                    this.RaisePropertyChanged("source");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string webAccToken {
+            get {
+                return this.webAccTokenField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.webAccTokenField, value) != true)) {
+                    this.webAccTokenField = value;
+                    this.RaisePropertyChanged("webAccToken");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="LettersFromChildModel", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model")]
+    [System.SerializableAttribute()]
+    public partial class LettersFromChildModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private long CorrespondenceIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DateProcessedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private long FileIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string FileNameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TypeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string isFinalLetterField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public long CorrespondenceID {
+            get {
+                return this.CorrespondenceIDField;
+            }
+            set {
+                if ((this.CorrespondenceIDField.Equals(value) != true)) {
+                    this.CorrespondenceIDField = value;
+                    this.RaisePropertyChanged("CorrespondenceID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DateProcessed {
+            get {
+                return this.DateProcessedField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DateProcessedField, value) != true)) {
+                    this.DateProcessedField = value;
+                    this.RaisePropertyChanged("DateProcessed");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public long FileID {
+            get {
+                return this.FileIDField;
+            }
+            set {
+                if ((this.FileIDField.Equals(value) != true)) {
+                    this.FileIDField = value;
+                    this.RaisePropertyChanged("FileID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string FileName {
+            get {
+                return this.FileNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.FileNameField, value) != true)) {
+                    this.FileNameField = value;
+                    this.RaisePropertyChanged("FileName");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Type {
+            get {
+                return this.TypeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TypeField, value) != true)) {
+                    this.TypeField = value;
+                    this.RaisePropertyChanged("Type");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string isFinalLetter {
+            get {
+                return this.isFinalLetterField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.isFinalLetterField, value) != true)) {
+                    this.isFinalLetterField = value;
+                    this.RaisePropertyChanged("isFinalLetter");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="InitialRGData", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model")]
+    [System.SerializableAttribute()]
+    public partial class InitialRGData : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AmountField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DesignationField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string LookupidField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NeedkeyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SourceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int actionidField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string boosterFlagField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Amount {
+            get {
+                return this.AmountField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AmountField, value) != true)) {
+                    this.AmountField = value;
+                    this.RaisePropertyChanged("Amount");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Designation {
+            get {
+                return this.DesignationField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DesignationField, value) != true)) {
+                    this.DesignationField = value;
+                    this.RaisePropertyChanged("Designation");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Lookupid {
+            get {
+                return this.LookupidField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.LookupidField, value) != true)) {
+                    this.LookupidField = value;
+                    this.RaisePropertyChanged("Lookupid");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Needkey {
+            get {
+                return this.NeedkeyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NeedkeyField, value) != true)) {
+                    this.NeedkeyField = value;
+                    this.RaisePropertyChanged("Needkey");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Source {
+            get {
+                return this.SourceField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SourceField, value) != true)) {
+                    this.SourceField = value;
+                    this.RaisePropertyChanged("Source");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int actionid {
+            get {
+                return this.actionidField;
+            }
+            set {
+                if ((this.actionidField.Equals(value) != true)) {
+                    this.actionidField = value;
+                    this.RaisePropertyChanged("actionid");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string boosterFlag {
+            get {
+                return this.boosterFlagField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.boosterFlagField, value) != true)) {
+                    this.boosterFlagField = value;
+                    this.RaisePropertyChanged("boosterFlag");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="AmbassadorsModal", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model")]
     [System.SerializableAttribute()]
     public partial class AmbassadorsModal : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
@@ -9492,144 +10134,6 @@ namespace CukAutomationOperations.TCPTR4Service {
                 if ((object.ReferenceEquals(this.surnameField, value) != true)) {
                     this.surnameField = value;
                     this.RaisePropertyChanged("surname");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="DonationModel", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model")]
-    [System.SerializableAttribute()]
-    public partial class DonationModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string AmountField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string DateField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string DonationTypeField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Amount {
-            get {
-                return this.AmountField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.AmountField, value) != true)) {
-                    this.AmountField = value;
-                    this.RaisePropertyChanged("Amount");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Date {
-            get {
-                return this.DateField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.DateField, value) != true)) {
-                    this.DateField = value;
-                    this.RaisePropertyChanged("Date");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string DonationType {
-            get {
-                return this.DonationTypeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.DonationTypeField, value) != true)) {
-                    this.DonationTypeField = value;
-                    this.RaisePropertyChanged("DonationType");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ConstituentRevenueAndGiftAidTotalAmount", Namespace="http://schemas.datacontract.org/2004/07/TcptR4DataOperations.Model")]
-    [System.SerializableAttribute()]
-    public partial class ConstituentRevenueAndGiftAidTotalAmount : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string GiftAidTotalAmountField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string RevenueTotalAmountField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string GiftAidTotalAmount {
-            get {
-                return this.GiftAidTotalAmountField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.GiftAidTotalAmountField, value) != true)) {
-                    this.GiftAidTotalAmountField = value;
-                    this.RaisePropertyChanged("GiftAidTotalAmount");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string RevenueTotalAmount {
-            get {
-                return this.RevenueTotalAmountField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.RevenueTotalAmountField, value) != true)) {
-                    this.RevenueTotalAmountField = value;
-                    this.RaisePropertyChanged("RevenueTotalAmount");
                 }
             }
         }
@@ -13095,18 +13599,6 @@ namespace CukAutomationOperations.TCPTR4Service {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/FetchSponsorships", ReplyAction="http://tempuri.org/ITCPTR4Service/FetchSponsorshipsResponse")]
         System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.SponsorshipModel[]> FetchSponsorshipsAsync(string type);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/FetchCorrespondences", ReplyAction="http://tempuri.org/ITCPTR4Service/FetchCorrespondencesResponse")]
-        CukAutomationOperations.TCPTR4Service.CorrespondenceModel[] FetchCorrespondences(string type);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/FetchCorrespondences", ReplyAction="http://tempuri.org/ITCPTR4Service/FetchCorrespondencesResponse")]
-        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.CorrespondenceModel[]> FetchCorrespondencesAsync(string type);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/ResubmitCorrespondeces", ReplyAction="http://tempuri.org/ITCPTR4Service/ResubmitCorrespondecesResponse")]
-        string ResubmitCorrespondeces(CukAutomationOperations.TCPTR4Service.CorrespondenceModel data);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/ResubmitCorrespondeces", ReplyAction="http://tempuri.org/ITCPTR4Service/ResubmitCorrespondecesResponse")]
-        System.Threading.Tasks.Task<string> ResubmitCorrespondecesAsync(CukAutomationOperations.TCPTR4Service.CorrespondenceModel data);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/ResubmitSponsorship", ReplyAction="http://tempuri.org/ITCPTR4Service/ResubmitSponsorshipResponse")]
         string ResubmitSponsorship(string type, CukAutomationOperations.TCPTR4Service.SponsorshipModel data);
         
@@ -13155,6 +13647,12 @@ namespace CukAutomationOperations.TCPTR4Service {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/searchInterventionHoldById", ReplyAction="http://tempuri.org/ITCPTR4Service/searchInterventionHoldByIdResponse")]
         System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.InterventionHoldList1> searchInterventionHoldByIdAsync(int InterventionRNID);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/FetchICPReservation", ReplyAction="http://tempuri.org/ITCPTR4Service/FetchICPReservationResponse")]
+        void FetchICPReservation();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/FetchICPReservation", ReplyAction="http://tempuri.org/ITCPTR4Service/FetchICPReservationResponse")]
+        System.Threading.Tasks.Task FetchICPReservationAsync();
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryHoldAdminFunction", ReplyAction="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryHoldAdminFunctionResponse")]
         CukAutomationOperations.TCPTR4Service.BeneficiaryHoldReleaseResponse CancelBeneficiaryHoldAdminFunction(CukAutomationOperations.TCPTR4Service.Beneficiaryholdreleaserequestlist[] childreleaseobj);
         
@@ -13175,29 +13673,23 @@ namespace CukAutomationOperations.TCPTR4Service {
             "nse")]
         System.Threading.Tasks.Task<string> initiateBeneficiaryAdHocdatarefreshProcessAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebToken", ReplyAction="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebTokenResponse")]
-        int SupporterCountToUpdateWebToken();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebToken", ReplyAction="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebTokenResponse")]
-        System.Threading.Tasks.Task<int> SupporterCountToUpdateWebTokenAsync();
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/updateWebToken", ReplyAction="http://tempuri.org/ITCPTR4Service/updateWebTokenResponse")]
         string updateWebToken();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/updateWebToken", ReplyAction="http://tempuri.org/ITCPTR4Service/updateWebTokenResponse")]
         System.Threading.Tasks.Task<string> updateWebTokenAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/BeneficiaryReservationsFromRN", ReplyAction="http://tempuri.org/ITCPTR4Service/BeneficiaryReservationsFromRNResponse")]
-        CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNResponse[] BeneficiaryReservationsFromRN(CukAutomationOperations.TCPTR4Service.ICPReservationRNSearchModel icpSearchObj);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebToken", ReplyAction="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebTokenResponse")]
+        int SupporterCountToUpdateWebToken();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebToken", ReplyAction="http://tempuri.org/ITCPTR4Service/SupporterCountToUpdateWebTokenResponse")]
+        System.Threading.Tasks.Task<int> SupporterCountToUpdateWebTokenAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/BeneficiaryReservationsFromRN", ReplyAction="http://tempuri.org/ITCPTR4Service/BeneficiaryReservationsFromRNResponse")]
-        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNResponse[]> BeneficiaryReservationsFromRNAsync(CukAutomationOperations.TCPTR4Service.ICPReservationRNSearchModel icpSearchObj);
+        CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNResponse[] BeneficiaryReservationsFromRN(CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNModel icpSearchObj);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservation", ReplyAction="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservationResponse")]
-        CukAutomationOperations.TCPTR4Service.BenReservationReleaseResponse CancelBeneficiaryReservation(CukAutomationOperations.TCPTR4Service.ReservationCancelRequestList1[] childreleaseobj);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservation", ReplyAction="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservationResponse")]
-        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.BenReservationReleaseResponse> CancelBeneficiaryReservationAsync(CukAutomationOperations.TCPTR4Service.ReservationCancelRequestList1[] childreleaseobj);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/BeneficiaryReservationsFromRN", ReplyAction="http://tempuri.org/ITCPTR4Service/BeneficiaryReservationsFromRNResponse")]
+        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNResponse[]> BeneficiaryReservationsFromRNAsync(CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNModel icpSearchObj);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/updateBeneficiaryReservation", ReplyAction="http://tempuri.org/ITCPTR4Service/updateBeneficiaryReservationResponse")]
         CukAutomationOperations.TCPTR4Service.Response3 updateBeneficiaryReservation(CukAutomationOperations.TCPTR4Service.Globalpartnerreservationrequestlist1[] benReserveRequest, CukAutomationOperations.TCPTR4Service.AddChildRequest[] childreserveobj);
@@ -13205,23 +13697,11 @@ namespace CukAutomationOperations.TCPTR4Service {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/updateBeneficiaryReservation", ReplyAction="http://tempuri.org/ITCPTR4Service/updateBeneficiaryReservationResponse")]
         System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.Response3> updateBeneficiaryReservationAsync(CukAutomationOperations.TCPTR4Service.Globalpartnerreservationrequestlist1[] benReserveRequest, CukAutomationOperations.TCPTR4Service.AddChildRequest[] childreserveobj);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doDDRProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doDDRProcessResponse")]
-        bool doDDRProcess(string base64data, string date);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservation", ReplyAction="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservationResponse")]
+        CukAutomationOperations.TCPTR4Service.BenReservationReleaseResponse CancelBeneficiaryReservation(CukAutomationOperations.TCPTR4Service.ReservationCancelRequestList1[] childreleaseobj);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doDDRProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doDDRProcessResponse")]
-        System.Threading.Tasks.Task<bool> doDDRProcessAsync(string base64data, string date);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/ResubmitSupporters", ReplyAction="http://tempuri.org/ITCPTR4Service/ResubmitSupportersResponse")]
-        bool ResubmitSupporters(CukAutomationOperations.TCPTR4Service.SupporterDataModel data1, string type);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/ResubmitSupporters", ReplyAction="http://tempuri.org/ITCPTR4Service/ResubmitSupportersResponse")]
-        System.Threading.Tasks.Task<bool> ResubmitSupportersAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel data1, string type);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/FetchSupporters", ReplyAction="http://tempuri.org/ITCPTR4Service/FetchSupportersResponse")]
-        CukAutomationOperations.TCPTR4Service.SupporterDataModel[] FetchSupporters(string type);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/FetchSupporters", ReplyAction="http://tempuri.org/ITCPTR4Service/FetchSupportersResponse")]
-        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.SupporterDataModel[]> FetchSupportersAsync(string type);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservation", ReplyAction="http://tempuri.org/ITCPTR4Service/CancelBeneficiaryReservationResponse")]
+        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.BenReservationReleaseResponse> CancelBeneficiaryReservationAsync(CukAutomationOperations.TCPTR4Service.ReservationCancelRequestList1[] childreleaseobj);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doBstandingOrder", ReplyAction="http://tempuri.org/ITCPTR4Service/doBstandingOrderResponse")]
         bool doBstandingOrder(string base64data, string beforedays, string afterdays, string filename);
@@ -13229,23 +13709,59 @@ namespace CukAutomationOperations.TCPTR4Service {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doBstandingOrder", ReplyAction="http://tempuri.org/ITCPTR4Service/doBstandingOrderResponse")]
         System.Threading.Tasks.Task<bool> doBstandingOrderAsync(string base64data, string beforedays, string afterdays, string filename);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/ResubmitSupporters", ReplyAction="http://tempuri.org/ITCPTR4Service/ResubmitSupportersResponse")]
+        string ResubmitSupporters(CukAutomationOperations.TCPTR4Service.SupporterDataModel data1, string type);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/ResubmitSupporters", ReplyAction="http://tempuri.org/ITCPTR4Service/ResubmitSupportersResponse")]
+        System.Threading.Tasks.Task<string> ResubmitSupportersAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel data1, string type);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/FetchSupporters", ReplyAction="http://tempuri.org/ITCPTR4Service/FetchSupportersResponse")]
+        CukAutomationOperations.TCPTR4Service.SupporterDataModel[] FetchSupporters(string type);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/FetchSupporters", ReplyAction="http://tempuri.org/ITCPTR4Service/FetchSupportersResponse")]
+        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.SupporterDataModel[]> FetchSupportersAsync(string type);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doWhatEverYouWant", ReplyAction="http://tempuri.org/ITCPTR4Service/doWhatEverYouWantResponse")]
+        void doWhatEverYouWant();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doWhatEverYouWant", ReplyAction="http://tempuri.org/ITCPTR4Service/doWhatEverYouWantResponse")]
+        System.Threading.Tasks.Task doWhatEverYouWantAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getICPDetails", ReplyAction="http://tempuri.org/ITCPTR4Service/getICPDetailsResponse")]
+        CukAutomationOperations.TCPTR4Service.ICPDetailModel getICPDetails(string ICPDetails);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getICPDetails", ReplyAction="http://tempuri.org/ITCPTR4Service/getICPDetailsResponse")]
+        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.ICPDetailModel> getICPDetailsAsync(string ICPDetails);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyear", ReplyAction="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyearResponse")]
+        CukAutomationOperations.TCPTR4Service.ConstituentRevenueAndGiftAidTotalAmount getGiftaidtotalamountandrevenueperyear(string BBID);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyear", ReplyAction="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyearResponse")]
+        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.ConstituentRevenueAndGiftAidTotalAmount> getGiftaidtotalamountandrevenueperyearAsync(string BBID);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doDDRProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doDDRProcessResponse")]
+        bool doDDRProcess(string base64data, string date);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doDDRProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doDDRProcessResponse")]
+        System.Threading.Tasks.Task<bool> doDDRProcessAsync(string base64data, string date);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doCAFProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doCAFProcessResponse")]
         bool doCAFProcess(string base64data, string beforedays, string afterdays, string filename);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doCAFProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doCAFProcessResponse")]
         System.Threading.Tasks.Task<bool> doCAFProcessAsync(string base64data, string beforedays, string afterdays, string filename);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/DeleteCommitment", ReplyAction="http://tempuri.org/ITCPTR4Service/DeleteCommitmentResponse")]
-        bool DeleteCommitment(string CommitmentID);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/DeleteCommitment", ReplyAction="http://tempuri.org/ITCPTR4Service/DeleteCommitmentResponse")]
-        System.Threading.Tasks.Task<bool> DeleteCommitmentAsync(string CommitmentID);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doRateChangeProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doRateChangeProcessResponse")]
         bool doRateChangeProcess(string base64data, string identifier);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doRateChangeProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doRateChangeProcessResponse")]
         System.Threading.Tasks.Task<bool> doRateChangeProcessAsync(string base64data, string identifier);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetails", ReplyAction="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetailsResponse")]
+        CukAutomationOperations.TCPTR4Service.DonationModel[] getConstituentDonationTableDetails(string lookupid);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetails", ReplyAction="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetailsResponse")]
+        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.DonationModel[]> getConstituentDonationTableDetailsAsync(string lookupid);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doStewardshipProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doStewardshipProcessResponse")]
         bool doStewardshipProcess(string base64data, string filename);
@@ -13283,23 +13799,17 @@ namespace CukAutomationOperations.TCPTR4Service {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/FetchRGDetailsOnLookupID", ReplyAction="http://tempuri.org/ITCPTR4Service/FetchRGDetailsOnLookupIDResponse")]
         System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.RecurringGiftModel[]> FetchRGDetailsOnLookupIDAsync(string lookupid, string GroupType, string SupporterGroupID);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/AuditLog", ReplyAction="http://tempuri.org/ITCPTR4Service/AuditLogResponse")]
-        void AuditLog();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getdataDone", ReplyAction="http://tempuri.org/ITCPTR4Service/getdataDoneResponse")]
+        void getdataDone();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/AuditLog", ReplyAction="http://tempuri.org/ITCPTR4Service/AuditLogResponse")]
-        System.Threading.Tasks.Task AuditLogAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getdataDone", ReplyAction="http://tempuri.org/ITCPTR4Service/getdataDoneResponse")]
+        System.Threading.Tasks.Task getdataDoneAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffee", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffeeResponse")]
-        long CreateIncidentForCoffee(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateConstituent", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateConstituentResponse")]
+        void CreateConstituent();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffee", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffeeResponse")]
-        System.Threading.Tasks.Task<long> CreateIncidentForCoffeeAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDepartures", ReplyAction="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDeparturesResponse")]
-        void UpdateSchedChildDepartures(string SchedChildDeparturesID, string finalgift, string finalletter);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDepartures", ReplyAction="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDeparturesResponse")]
-        System.Threading.Tasks.Task UpdateSchedChildDeparturesAsync(string SchedChildDeparturesID, string finalgift, string finalletter);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateConstituent", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateConstituentResponse")]
+        System.Threading.Tasks.Task CreateConstituentAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doBacsProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doBacsProcessResponse")]
         bool doBacsProcess(string base64data);
@@ -13307,11 +13817,11 @@ namespace CukAutomationOperations.TCPTR4Service {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doBacsProcess", ReplyAction="http://tempuri.org/ITCPTR4Service/doBacsProcessResponse")]
         System.Threading.Tasks.Task<bool> doBacsProcessAsync(string base64data);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/Run8x8Process", ReplyAction="http://tempuri.org/ITCPTR4Service/Run8x8ProcessResponse")]
-        void Run8x8Process();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/GetLettersFromChild", ReplyAction="http://tempuri.org/ITCPTR4Service/GetLettersFromChildResponse")]
+        CukAutomationOperations.TCPTR4Service.LettersFromChildModel[] GetLettersFromChild(CukAutomationOperations.TCPTR4Service.GetMessageList getmessagelistobj);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/Run8x8Process", ReplyAction="http://tempuri.org/ITCPTR4Service/Run8x8ProcessResponse")]
-        System.Threading.Tasks.Task Run8x8ProcessAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/GetLettersFromChild", ReplyAction="http://tempuri.org/ITCPTR4Service/GetLettersFromChildResponse")]
+        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.LettersFromChildModel[]> GetLettersFromChildAsync(CukAutomationOperations.TCPTR4Service.GetMessageList getmessagelistobj);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateWelcomeJourneyEnqueryOperation", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateWelcomeJourneyEnqueryOperationResponse")]
         void CreateWelcomeJourneyEnqueryOperation();
@@ -13319,23 +13829,23 @@ namespace CukAutomationOperations.TCPTR4Service {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateWelcomeJourneyEnqueryOperation", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateWelcomeJourneyEnqueryOperationResponse")]
         System.Threading.Tasks.Task CreateWelcomeJourneyEnqueryOperationAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doGDPRprocess", ReplyAction="http://tempuri.org/ITCPTR4Service/doGDPRprocessResponse")]
-        bool doGDPRprocess(string base64data, int ScopeId);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffee", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffeeResponse")]
+        long CreateIncidentForCoffee(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doGDPRprocess", ReplyAction="http://tempuri.org/ITCPTR4Service/doGDPRprocessResponse")]
-        System.Threading.Tasks.Task<bool> doGDPRprocessAsync(string base64data, int ScopeId);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffee", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForCoffeeResponse")]
+        System.Threading.Tasks.Task<long> CreateIncidentForCoffeeAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/SendSMS", ReplyAction="http://tempuri.org/ITCPTR4Service/SendSMSResponse")]
-        string SendSMS(string message, string phoneNo);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/SyncNeedForSMS", ReplyAction="http://tempuri.org/ITCPTR4Service/SyncNeedForSMSResponse")]
+        void SyncNeedForSMS();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/SendSMS", ReplyAction="http://tempuri.org/ITCPTR4Service/SendSMSResponse")]
-        System.Threading.Tasks.Task<string> SendSMSAsync(string message, string phoneNo);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/SyncNeedForSMS", ReplyAction="http://tempuri.org/ITCPTR4Service/SyncNeedForSMSResponse")]
+        System.Threading.Tasks.Task SyncNeedForSMSAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupID", ReplyAction="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupIDResponse")]
-        CukAutomationOperations.TCPTR4Service.RecurringGiftModel[] GetOtherRGOnLookupID(string lookupid);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDepartures", ReplyAction="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDeparturesResponse")]
+        void UpdateSchedChildDepartures(string SchedChildDeparturesID, string finalgift, string finalletter);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupID", ReplyAction="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupIDResponse")]
-        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.RecurringGiftModel[]> GetOtherRGOnLookupIDAsync(string lookupid);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDepartures", ReplyAction="http://tempuri.org/ITCPTR4Service/UpdateSchedChildDeparturesResponse")]
+        System.Threading.Tasks.Task UpdateSchedChildDeparturesAsync(string SchedChildDeparturesID, string finalgift, string finalletter);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForSupPreferredName", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForSupPreferredNameResponse")]
         long CreateIncidentForSupPreferredName(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData);
@@ -13343,23 +13853,71 @@ namespace CukAutomationOperations.TCPTR4Service {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForSupPreferredName", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForSupPreferredNameResponse")]
         System.Threading.Tasks.Task<long> CreateIncidentForSupPreferredNameAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/RunCheckBot", ReplyAction="http://tempuri.org/ITCPTR4Service/RunCheckBotResponse")]
+        void RunCheckBot();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/RunCheckBot", ReplyAction="http://tempuri.org/ITCPTR4Service/RunCheckBotResponse")]
+        System.Threading.Tasks.Task RunCheckBotAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/Run8x8Process", ReplyAction="http://tempuri.org/ITCPTR4Service/Run8x8ProcessResponse")]
+        void Run8x8Process();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/Run8x8Process", ReplyAction="http://tempuri.org/ITCPTR4Service/Run8x8ProcessResponse")]
+        System.Threading.Tasks.Task Run8x8ProcessAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/TestBacs", ReplyAction="http://tempuri.org/ITCPTR4Service/TestBacsResponse")]
+        void TestBacs();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/TestBacs", ReplyAction="http://tempuri.org/ITCPTR4Service/TestBacsResponse")]
+        System.Threading.Tasks.Task TestBacsAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doGDPRprocess", ReplyAction="http://tempuri.org/ITCPTR4Service/doGDPRprocessResponse")]
+        bool doGDPRprocess(string base64data, int ScopeId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/doGDPRprocess", ReplyAction="http://tempuri.org/ITCPTR4Service/doGDPRprocessResponse")]
+        System.Threading.Tasks.Task<bool> doGDPRprocessAsync(string base64data, int ScopeId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/DoWork", ReplyAction="http://tempuri.org/ITCPTR4Service/DoWorkResponse")]
+        void DoWork();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/DoWork", ReplyAction="http://tempuri.org/ITCPTR4Service/DoWorkResponse")]
+        System.Threading.Tasks.Task DoWorkAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/SendSMS", ReplyAction="http://tempuri.org/ITCPTR4Service/SendSMSResponse")]
+        string SendSMS(string message, string origin);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/SendSMS", ReplyAction="http://tempuri.org/ITCPTR4Service/SendSMSResponse")]
+        System.Threading.Tasks.Task<string> SendSMSAsync(string message, string origin);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupID", ReplyAction="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupIDResponse")]
+        CukAutomationOperations.TCPTR4Service.RecurringGiftModel[] GetOtherRGOnLookupID(string lookupid);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupID", ReplyAction="http://tempuri.org/ITCPTR4Service/GetOtherRGOnLookupIDResponse")]
+        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.RecurringGiftModel[]> GetOtherRGOnLookupIDAsync(string lookupid);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateRGBatch", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateRGBatchResponse")]
+        void CreateRGBatch(CukAutomationOperations.TCPTR4Service.InitialRGData Data);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateRGBatch", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateRGBatchResponse")]
+        System.Threading.Tasks.Task CreateRGBatchAsync(CukAutomationOperations.TCPTR4Service.InitialRGData Data);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForAmbassadors", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForAmbassadorsResponse")]
         long CreateIncidentForAmbassadors(CukAutomationOperations.TCPTR4Service.AmbassadorsModal ambassadorsdata);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForAmbassadors", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForAmbassadorsResponse")]
         System.Threading.Tasks.Task<long> CreateIncidentForAmbassadorsAsync(CukAutomationOperations.TCPTR4Service.AmbassadorsModal ambassadorsdata);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetails", ReplyAction="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetailsResponse")]
-        CukAutomationOperations.TCPTR4Service.DonationModel[] getConstituentDonationTableDetails(string lookupid);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CheckSponsroshipStartToday", ReplyAction="http://tempuri.org/ITCPTR4Service/CheckSponsroshipStartTodayResponse")]
+        bool CheckSponsroshipStartToday(string SponsorshipId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetails", ReplyAction="http://tempuri.org/ITCPTR4Service/getConstituentDonationTableDetailsResponse")]
-        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.DonationModel[]> getConstituentDonationTableDetailsAsync(string lookupid);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CheckSponsroshipStartToday", ReplyAction="http://tempuri.org/ITCPTR4Service/CheckSponsroshipStartTodayResponse")]
+        System.Threading.Tasks.Task<bool> CheckSponsroshipStartTodayAsync(string SponsorshipId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyear", ReplyAction="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyearResponse")]
-        CukAutomationOperations.TCPTR4Service.ConstituentRevenueAndGiftAidTotalAmount getGiftaidtotalamountandrevenueperyear(string BBID);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequest", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequestResponse")]
+        long CreateIncidentForPhotoRequest(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyear", ReplyAction="http://tempuri.org/ITCPTR4Service/getGiftaidtotalamountandrevenueperyearResponse")]
-        System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.ConstituentRevenueAndGiftAidTotalAmount> getGiftaidtotalamountandrevenueperyearAsync(string BBID);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequest", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequestResponse")]
+        System.Threading.Tasks.Task<long> CreateIncidentForPhotoRequestAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForCompassionTogether", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForCompassionTogetherResponse")]
         long CreateIncidentForCompassionTogether(CukAutomationOperations.TCPTR4Service.CompassionTogether compassiontogether);
@@ -13372,12 +13930,6 @@ namespace CukAutomationOperations.TCPTR4Service {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/ReportGenerator", ReplyAction="http://tempuri.org/ITCPTR4Service/ReportGeneratorResponse")]
         System.Threading.Tasks.Task<long> ReportGeneratorAsync();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequest", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequestResponse")]
-        long CreateIncidentForPhotoRequest(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequest", ReplyAction="http://tempuri.org/ITCPTR4Service/CreateIncidentForPhotoRequestResponse")]
-        System.Threading.Tasks.Task<long> CreateIncidentForPhotoRequestAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ITCPTR4Service/calculateImpactDataForOrg", ReplyAction="http://tempuri.org/ITCPTR4Service/calculateImpactDataForOrgResponse")]
         CukAutomationOperations.TCPTR4Service.ImpactData calculateImpactDataForOrg(long OrgID);
@@ -13597,22 +14149,6 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.FetchSponsorshipsAsync(type);
         }
         
-        public CukAutomationOperations.TCPTR4Service.CorrespondenceModel[] FetchCorrespondences(string type) {
-            return base.Channel.FetchCorrespondences(type);
-        }
-        
-        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.CorrespondenceModel[]> FetchCorrespondencesAsync(string type) {
-            return base.Channel.FetchCorrespondencesAsync(type);
-        }
-        
-        public string ResubmitCorrespondeces(CukAutomationOperations.TCPTR4Service.CorrespondenceModel data) {
-            return base.Channel.ResubmitCorrespondeces(data);
-        }
-        
-        public System.Threading.Tasks.Task<string> ResubmitCorrespondecesAsync(CukAutomationOperations.TCPTR4Service.CorrespondenceModel data) {
-            return base.Channel.ResubmitCorrespondecesAsync(data);
-        }
-        
         public string ResubmitSponsorship(string type, CukAutomationOperations.TCPTR4Service.SponsorshipModel data) {
             return base.Channel.ResubmitSponsorship(type, data);
         }
@@ -13677,6 +14213,14 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.searchInterventionHoldByIdAsync(InterventionRNID);
         }
         
+        public void FetchICPReservation() {
+            base.Channel.FetchICPReservation();
+        }
+        
+        public System.Threading.Tasks.Task FetchICPReservationAsync() {
+            return base.Channel.FetchICPReservationAsync();
+        }
+        
         public CukAutomationOperations.TCPTR4Service.BeneficiaryHoldReleaseResponse CancelBeneficiaryHoldAdminFunction(CukAutomationOperations.TCPTR4Service.Beneficiaryholdreleaserequestlist[] childreleaseobj) {
             return base.Channel.CancelBeneficiaryHoldAdminFunction(childreleaseobj);
         }
@@ -13701,14 +14245,6 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.initiateBeneficiaryAdHocdatarefreshProcessAsync();
         }
         
-        public int SupporterCountToUpdateWebToken() {
-            return base.Channel.SupporterCountToUpdateWebToken();
-        }
-        
-        public System.Threading.Tasks.Task<int> SupporterCountToUpdateWebTokenAsync() {
-            return base.Channel.SupporterCountToUpdateWebTokenAsync();
-        }
-        
         public string updateWebToken() {
             return base.Channel.updateWebToken();
         }
@@ -13717,20 +14253,20 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.updateWebTokenAsync();
         }
         
-        public CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNResponse[] BeneficiaryReservationsFromRN(CukAutomationOperations.TCPTR4Service.ICPReservationRNSearchModel icpSearchObj) {
+        public int SupporterCountToUpdateWebToken() {
+            return base.Channel.SupporterCountToUpdateWebToken();
+        }
+        
+        public System.Threading.Tasks.Task<int> SupporterCountToUpdateWebTokenAsync() {
+            return base.Channel.SupporterCountToUpdateWebTokenAsync();
+        }
+        
+        public CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNResponse[] BeneficiaryReservationsFromRN(CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNModel icpSearchObj) {
             return base.Channel.BeneficiaryReservationsFromRN(icpSearchObj);
         }
         
-        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNResponse[]> BeneficiaryReservationsFromRNAsync(CukAutomationOperations.TCPTR4Service.ICPReservationRNSearchModel icpSearchObj) {
+        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNResponse[]> BeneficiaryReservationsFromRNAsync(CukAutomationOperations.TCPTR4Service.ICPReservationSearchFromRNModel icpSearchObj) {
             return base.Channel.BeneficiaryReservationsFromRNAsync(icpSearchObj);
-        }
-        
-        public CukAutomationOperations.TCPTR4Service.BenReservationReleaseResponse CancelBeneficiaryReservation(CukAutomationOperations.TCPTR4Service.ReservationCancelRequestList1[] childreleaseobj) {
-            return base.Channel.CancelBeneficiaryReservation(childreleaseobj);
-        }
-        
-        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.BenReservationReleaseResponse> CancelBeneficiaryReservationAsync(CukAutomationOperations.TCPTR4Service.ReservationCancelRequestList1[] childreleaseobj) {
-            return base.Channel.CancelBeneficiaryReservationAsync(childreleaseobj);
         }
         
         public CukAutomationOperations.TCPTR4Service.Response3 updateBeneficiaryReservation(CukAutomationOperations.TCPTR4Service.Globalpartnerreservationrequestlist1[] benReserveRequest, CukAutomationOperations.TCPTR4Service.AddChildRequest[] childreserveobj) {
@@ -13741,19 +14277,27 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.updateBeneficiaryReservationAsync(benReserveRequest, childreserveobj);
         }
         
-        public bool doDDRProcess(string base64data, string date) {
-            return base.Channel.doDDRProcess(base64data, date);
+        public CukAutomationOperations.TCPTR4Service.BenReservationReleaseResponse CancelBeneficiaryReservation(CukAutomationOperations.TCPTR4Service.ReservationCancelRequestList1[] childreleaseobj) {
+            return base.Channel.CancelBeneficiaryReservation(childreleaseobj);
         }
         
-        public System.Threading.Tasks.Task<bool> doDDRProcessAsync(string base64data, string date) {
-            return base.Channel.doDDRProcessAsync(base64data, date);
+        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.BenReservationReleaseResponse> CancelBeneficiaryReservationAsync(CukAutomationOperations.TCPTR4Service.ReservationCancelRequestList1[] childreleaseobj) {
+            return base.Channel.CancelBeneficiaryReservationAsync(childreleaseobj);
         }
         
-        public bool ResubmitSupporters(CukAutomationOperations.TCPTR4Service.SupporterDataModel data1, string type) {
+        public bool doBstandingOrder(string base64data, string beforedays, string afterdays, string filename) {
+            return base.Channel.doBstandingOrder(base64data, beforedays, afterdays, filename);
+        }
+        
+        public System.Threading.Tasks.Task<bool> doBstandingOrderAsync(string base64data, string beforedays, string afterdays, string filename) {
+            return base.Channel.doBstandingOrderAsync(base64data, beforedays, afterdays, filename);
+        }
+        
+        public string ResubmitSupporters(CukAutomationOperations.TCPTR4Service.SupporterDataModel data1, string type) {
             return base.Channel.ResubmitSupporters(data1, type);
         }
         
-        public System.Threading.Tasks.Task<bool> ResubmitSupportersAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel data1, string type) {
+        public System.Threading.Tasks.Task<string> ResubmitSupportersAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel data1, string type) {
             return base.Channel.ResubmitSupportersAsync(data1, type);
         }
         
@@ -13765,12 +14309,36 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.FetchSupportersAsync(type);
         }
         
-        public bool doBstandingOrder(string base64data, string beforedays, string afterdays, string filename) {
-            return base.Channel.doBstandingOrder(base64data, beforedays, afterdays, filename);
+        public void doWhatEverYouWant() {
+            base.Channel.doWhatEverYouWant();
         }
         
-        public System.Threading.Tasks.Task<bool> doBstandingOrderAsync(string base64data, string beforedays, string afterdays, string filename) {
-            return base.Channel.doBstandingOrderAsync(base64data, beforedays, afterdays, filename);
+        public System.Threading.Tasks.Task doWhatEverYouWantAsync() {
+            return base.Channel.doWhatEverYouWantAsync();
+        }
+        
+        public CukAutomationOperations.TCPTR4Service.ICPDetailModel getICPDetails(string ICPDetails) {
+            return base.Channel.getICPDetails(ICPDetails);
+        }
+        
+        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.ICPDetailModel> getICPDetailsAsync(string ICPDetails) {
+            return base.Channel.getICPDetailsAsync(ICPDetails);
+        }
+        
+        public CukAutomationOperations.TCPTR4Service.ConstituentRevenueAndGiftAidTotalAmount getGiftaidtotalamountandrevenueperyear(string BBID) {
+            return base.Channel.getGiftaidtotalamountandrevenueperyear(BBID);
+        }
+        
+        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.ConstituentRevenueAndGiftAidTotalAmount> getGiftaidtotalamountandrevenueperyearAsync(string BBID) {
+            return base.Channel.getGiftaidtotalamountandrevenueperyearAsync(BBID);
+        }
+        
+        public bool doDDRProcess(string base64data, string date) {
+            return base.Channel.doDDRProcess(base64data, date);
+        }
+        
+        public System.Threading.Tasks.Task<bool> doDDRProcessAsync(string base64data, string date) {
+            return base.Channel.doDDRProcessAsync(base64data, date);
         }
         
         public bool doCAFProcess(string base64data, string beforedays, string afterdays, string filename) {
@@ -13781,20 +14349,20 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.doCAFProcessAsync(base64data, beforedays, afterdays, filename);
         }
         
-        public bool DeleteCommitment(string CommitmentID) {
-            return base.Channel.DeleteCommitment(CommitmentID);
-        }
-        
-        public System.Threading.Tasks.Task<bool> DeleteCommitmentAsync(string CommitmentID) {
-            return base.Channel.DeleteCommitmentAsync(CommitmentID);
-        }
-        
         public bool doRateChangeProcess(string base64data, string identifier) {
             return base.Channel.doRateChangeProcess(base64data, identifier);
         }
         
         public System.Threading.Tasks.Task<bool> doRateChangeProcessAsync(string base64data, string identifier) {
             return base.Channel.doRateChangeProcessAsync(base64data, identifier);
+        }
+        
+        public CukAutomationOperations.TCPTR4Service.DonationModel[] getConstituentDonationTableDetails(string lookupid) {
+            return base.Channel.getConstituentDonationTableDetails(lookupid);
+        }
+        
+        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.DonationModel[]> getConstituentDonationTableDetailsAsync(string lookupid) {
+            return base.Channel.getConstituentDonationTableDetailsAsync(lookupid);
         }
         
         public bool doStewardshipProcess(string base64data, string filename) {
@@ -13845,28 +14413,20 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.FetchRGDetailsOnLookupIDAsync(lookupid, GroupType, SupporterGroupID);
         }
         
-        public void AuditLog() {
-            base.Channel.AuditLog();
+        public void getdataDone() {
+            base.Channel.getdataDone();
         }
         
-        public System.Threading.Tasks.Task AuditLogAsync() {
-            return base.Channel.AuditLogAsync();
+        public System.Threading.Tasks.Task getdataDoneAsync() {
+            return base.Channel.getdataDoneAsync();
         }
         
-        public long CreateIncidentForCoffee(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData) {
-            return base.Channel.CreateIncidentForCoffee(supporterData);
+        public void CreateConstituent() {
+            base.Channel.CreateConstituent();
         }
         
-        public System.Threading.Tasks.Task<long> CreateIncidentForCoffeeAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData) {
-            return base.Channel.CreateIncidentForCoffeeAsync(supporterData);
-        }
-        
-        public void UpdateSchedChildDepartures(string SchedChildDeparturesID, string finalgift, string finalletter) {
-            base.Channel.UpdateSchedChildDepartures(SchedChildDeparturesID, finalgift, finalletter);
-        }
-        
-        public System.Threading.Tasks.Task UpdateSchedChildDeparturesAsync(string SchedChildDeparturesID, string finalgift, string finalletter) {
-            return base.Channel.UpdateSchedChildDeparturesAsync(SchedChildDeparturesID, finalgift, finalletter);
+        public System.Threading.Tasks.Task CreateConstituentAsync() {
+            return base.Channel.CreateConstituentAsync();
         }
         
         public bool doBacsProcess(string base64data) {
@@ -13877,12 +14437,12 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.doBacsProcessAsync(base64data);
         }
         
-        public void Run8x8Process() {
-            base.Channel.Run8x8Process();
+        public CukAutomationOperations.TCPTR4Service.LettersFromChildModel[] GetLettersFromChild(CukAutomationOperations.TCPTR4Service.GetMessageList getmessagelistobj) {
+            return base.Channel.GetLettersFromChild(getmessagelistobj);
         }
         
-        public System.Threading.Tasks.Task Run8x8ProcessAsync() {
-            return base.Channel.Run8x8ProcessAsync();
+        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.LettersFromChildModel[]> GetLettersFromChildAsync(CukAutomationOperations.TCPTR4Service.GetMessageList getmessagelistobj) {
+            return base.Channel.GetLettersFromChildAsync(getmessagelistobj);
         }
         
         public void CreateWelcomeJourneyEnqueryOperation() {
@@ -13893,28 +14453,28 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.CreateWelcomeJourneyEnqueryOperationAsync();
         }
         
-        public bool doGDPRprocess(string base64data, int ScopeId) {
-            return base.Channel.doGDPRprocess(base64data, ScopeId);
+        public long CreateIncidentForCoffee(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData) {
+            return base.Channel.CreateIncidentForCoffee(supporterData);
         }
         
-        public System.Threading.Tasks.Task<bool> doGDPRprocessAsync(string base64data, int ScopeId) {
-            return base.Channel.doGDPRprocessAsync(base64data, ScopeId);
+        public System.Threading.Tasks.Task<long> CreateIncidentForCoffeeAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData) {
+            return base.Channel.CreateIncidentForCoffeeAsync(supporterData);
         }
         
-        public string SendSMS(string message, string phoneNo) {
-            return base.Channel.SendSMS(message, phoneNo);
+        public void SyncNeedForSMS() {
+            base.Channel.SyncNeedForSMS();
         }
         
-        public System.Threading.Tasks.Task<string> SendSMSAsync(string message, string phoneNo) {
-            return base.Channel.SendSMSAsync(message, phoneNo);
+        public System.Threading.Tasks.Task SyncNeedForSMSAsync() {
+            return base.Channel.SyncNeedForSMSAsync();
         }
         
-        public CukAutomationOperations.TCPTR4Service.RecurringGiftModel[] GetOtherRGOnLookupID(string lookupid) {
-            return base.Channel.GetOtherRGOnLookupID(lookupid);
+        public void UpdateSchedChildDepartures(string SchedChildDeparturesID, string finalgift, string finalletter) {
+            base.Channel.UpdateSchedChildDepartures(SchedChildDeparturesID, finalgift, finalletter);
         }
         
-        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.RecurringGiftModel[]> GetOtherRGOnLookupIDAsync(string lookupid) {
-            return base.Channel.GetOtherRGOnLookupIDAsync(lookupid);
+        public System.Threading.Tasks.Task UpdateSchedChildDeparturesAsync(string SchedChildDeparturesID, string finalgift, string finalletter) {
+            return base.Channel.UpdateSchedChildDeparturesAsync(SchedChildDeparturesID, finalgift, finalletter);
         }
         
         public long CreateIncidentForSupPreferredName(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData) {
@@ -13925,6 +14485,70 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.CreateIncidentForSupPreferredNameAsync(supporterData);
         }
         
+        public void RunCheckBot() {
+            base.Channel.RunCheckBot();
+        }
+        
+        public System.Threading.Tasks.Task RunCheckBotAsync() {
+            return base.Channel.RunCheckBotAsync();
+        }
+        
+        public void Run8x8Process() {
+            base.Channel.Run8x8Process();
+        }
+        
+        public System.Threading.Tasks.Task Run8x8ProcessAsync() {
+            return base.Channel.Run8x8ProcessAsync();
+        }
+        
+        public void TestBacs() {
+            base.Channel.TestBacs();
+        }
+        
+        public System.Threading.Tasks.Task TestBacsAsync() {
+            return base.Channel.TestBacsAsync();
+        }
+        
+        public bool doGDPRprocess(string base64data, int ScopeId) {
+            return base.Channel.doGDPRprocess(base64data, ScopeId);
+        }
+        
+        public System.Threading.Tasks.Task<bool> doGDPRprocessAsync(string base64data, int ScopeId) {
+            return base.Channel.doGDPRprocessAsync(base64data, ScopeId);
+        }
+        
+        public void DoWork() {
+            base.Channel.DoWork();
+        }
+        
+        public System.Threading.Tasks.Task DoWorkAsync() {
+            return base.Channel.DoWorkAsync();
+        }
+        
+        public string SendSMS(string message, string origin) {
+            return base.Channel.SendSMS(message, origin);
+        }
+        
+        public System.Threading.Tasks.Task<string> SendSMSAsync(string message, string origin) {
+            return base.Channel.SendSMSAsync(message, origin);
+        }
+        
+        public CukAutomationOperations.TCPTR4Service.RecurringGiftModel[] GetOtherRGOnLookupID(string lookupid) {
+            return base.Channel.GetOtherRGOnLookupID(lookupid);
+        }
+        
+        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.RecurringGiftModel[]> GetOtherRGOnLookupIDAsync(string lookupid) {
+            return base.Channel.GetOtherRGOnLookupIDAsync(lookupid);
+        }
+        
+        public void CreateRGBatch(CukAutomationOperations.TCPTR4Service.InitialRGData Data) {
+            base.Channel.CreateRGBatch(Data);
+        }
+        
+        public System.Threading.Tasks.Task CreateRGBatchAsync(CukAutomationOperations.TCPTR4Service.InitialRGData Data) {
+            return base.Channel.CreateRGBatchAsync(Data);
+        }
+        
         public long CreateIncidentForAmbassadors(CukAutomationOperations.TCPTR4Service.AmbassadorsModal ambassadorsdata) {
             return base.Channel.CreateIncidentForAmbassadors(ambassadorsdata);
         }
@@ -13933,20 +14557,20 @@ namespace CukAutomationOperations.TCPTR4Service {
             return base.Channel.CreateIncidentForAmbassadorsAsync(ambassadorsdata);
         }
         
-        public CukAutomationOperations.TCPTR4Service.DonationModel[] getConstituentDonationTableDetails(string lookupid) {
-            return base.Channel.getConstituentDonationTableDetails(lookupid);
+        public bool CheckSponsroshipStartToday(string SponsorshipId) {
+            return base.Channel.CheckSponsroshipStartToday(SponsorshipId);
         }
         
-        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.DonationModel[]> getConstituentDonationTableDetailsAsync(string lookupid) {
-            return base.Channel.getConstituentDonationTableDetailsAsync(lookupid);
+        public System.Threading.Tasks.Task<bool> CheckSponsroshipStartTodayAsync(string SponsorshipId) {
+            return base.Channel.CheckSponsroshipStartTodayAsync(SponsorshipId);
         }
         
-        public CukAutomationOperations.TCPTR4Service.ConstituentRevenueAndGiftAidTotalAmount getGiftaidtotalamountandrevenueperyear(string BBID) {
-            return base.Channel.getGiftaidtotalamountandrevenueperyear(BBID);
+        public long CreateIncidentForPhotoRequest(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData) {
+            return base.Channel.CreateIncidentForPhotoRequest(supporterData);
         }
         
-        public System.Threading.Tasks.Task<CukAutomationOperations.TCPTR4Service.ConstituentRevenueAndGiftAidTotalAmount> getGiftaidtotalamountandrevenueperyearAsync(string BBID) {
-            return base.Channel.getGiftaidtotalamountandrevenueperyearAsync(BBID);
+        public System.Threading.Tasks.Task<long> CreateIncidentForPhotoRequestAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData) {
+            return base.Channel.CreateIncidentForPhotoRequestAsync(supporterData);
         }
         
         public long CreateIncidentForCompassionTogether(CukAutomationOperations.TCPTR4Service.CompassionTogether compassiontogether) {
@@ -13963,14 +14587,6 @@ namespace CukAutomationOperations.TCPTR4Service {
         
         public System.Threading.Tasks.Task<long> ReportGeneratorAsync() {
             return base.Channel.ReportGeneratorAsync();
-        }
-        
-        public long CreateIncidentForPhotoRequest(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData) {
-            return base.Channel.CreateIncidentForPhotoRequest(supporterData);
-        }
-        
-        public System.Threading.Tasks.Task<long> CreateIncidentForPhotoRequestAsync(CukAutomationOperations.TCPTR4Service.SupporterDataModel supporterData) {
-            return base.Channel.CreateIncidentForPhotoRequestAsync(supporterData);
         }
         
         public CukAutomationOperations.TCPTR4Service.ImpactData calculateImpactDataForOrg(long OrgID) {

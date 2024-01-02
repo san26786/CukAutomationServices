@@ -8,11 +8,11 @@ namespace CukAutomationOperations.Model
 {
     public class Constant
     {
-        public const string HOSTNAME = "https://compassionuk.org/";
-        public const string ONEVIEW_HOSTNAME = "https://oneview.org.uk/";
+        public const string HOSTNAME = "http://cukwebsite.co.uk/";
+        public const string ONEVIEW_HOSTNAME = "http://cukwebsite.co.uk/oneview/";
         public const string SIGNATURE = ONEVIEW_HOSTNAME + "AdvanceNotice/img/Signature.png?123";
         public const string DIRECTDEBITLOGO = ONEVIEW_HOSTNAME + "AdvanceNotice/img/direct-debit-logo.png?123";
         public const string TICK = ONEVIEW_HOSTNAME + "AdvanceNotice/img/tick.png?123";
-        public const int MAX_EXISTING_COMMITMENTS = 3;
+        public const int MAX_EXISTING_COMMITMENTS = 4;
     }
 }

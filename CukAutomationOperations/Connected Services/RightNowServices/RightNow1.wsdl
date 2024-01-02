@@ -2,7 +2,7 @@
 <wsdl:definitions xmlns:rno_v1_4="urn:objects.ws.rightnow.com/v1_4" xmlns:rnm_v1_4="urn:messages.ws.rightnow.com/v1_4" xmlns:rna_v1_4="urn:metadata.ws.rightnow.com/v1_4" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:rnn_v1_4="urn:nullfields.ws.rightnow.com/v1_4" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:rnb_v1_4="urn:base.ws.rightnow.com/v1_4" xmlns:rng_v1_4="urn:generic.ws.rightnow.com/v1_4" xmlns:rnw_v1_4="urn:wsdl.ws.rightnow.com/v1_4" xmlns:rnf_v1_4="urn:faults.ws.rightnow.com/v1_4" xmlns="http://schemas.xmlsoap.org/wsdl/" name="RightNow" targetNamespace="urn:wsdl.ws.rightnow.com/v1_4" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:documentation>
     <version>1.4</version>
-    <wsdlRevision>1.4.20.5</wsdlRevision>
+    <wsdlRevision>1.4.22.11</wsdlRevision>
   </wsdl:documentation>
   <wsp:Policy xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="SyncPolicy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
     <wsp:ExactlyOne>
@@ -254,6 +254,12 @@
   <wsdl:message name="BulkTransferSubObjectsResponse">
     <wsdl:part name="parameters" element="rnm_v1_4:BulkTransferSubObjectsResponse" />
   </wsdl:message>
+  <wsdl:message name="SupersedeObjectsRequest">
+    <wsdl:part name="parameters" element="rnm_v1_4:SupersedeObjects" />
+  </wsdl:message>
+  <wsdl:message name="SupersedeObjectsResponse">
+    <wsdl:part name="parameters" element="rnm_v1_4:SupersedeObjectsResponse" />
+  </wsdl:message>
   <wsdl:message name="BatchRequest">
     <wsdl:part name="parameters" element="rnm_v1_4:Batch" />
   </wsdl:message>
@@ -432,6 +438,14 @@
     <wsdl:operation name="BulkTransferSubObjects">
       <wsdl:input message="rnw_v1_4:BulkTransferSubObjectsRequest" />
       <wsdl:output message="rnw_v1_4:BulkTransferSubObjectsResponse" />
+      <wsdl:fault name="APIAccessErrorFault" message="rnw_v1_4:APIAccessErrorFault" />
+      <wsdl:fault name="RequestErrorFault" message="rnw_v1_4:RequestErrorFault" />
+      <wsdl:fault name="ServerErrorFault" message="rnw_v1_4:ServerErrorFault" />
+      <wsdl:fault name="UnexpectedErrorFault" message="rnw_v1_4:UnexpectedErrorFault" />
+    </wsdl:operation>
+    <wsdl:operation name="SupersedeObjects">
+      <wsdl:input message="rnw_v1_4:SupersedeObjectsRequest" />
+      <wsdl:output message="rnw_v1_4:SupersedeObjectsResponse" />
       <wsdl:fault name="APIAccessErrorFault" message="rnw_v1_4:APIAccessErrorFault" />
       <wsdl:fault name="RequestErrorFault" message="rnw_v1_4:RequestErrorFault" />
       <wsdl:fault name="ServerErrorFault" message="rnw_v1_4:ServerErrorFault" />
@@ -639,6 +653,14 @@
     <wsdl:operation name="BulkTransferSubObjects">
       <wsdl:input message="rnw_v1_4:BulkTransferSubObjectsRequest" />
       <wsdl:output message="rnw_v1_4:BulkTransferSubObjectsResponse" />
+      <wsdl:fault name="APIAccessErrorFault" message="rnw_v1_4:APIAccessErrorFault" />
+      <wsdl:fault name="RequestErrorFault" message="rnw_v1_4:RequestErrorFault" />
+      <wsdl:fault name="ServerErrorFault" message="rnw_v1_4:ServerErrorFault" />
+      <wsdl:fault name="UnexpectedErrorFault" message="rnw_v1_4:UnexpectedErrorFault" />
+    </wsdl:operation>
+    <wsdl:operation name="SupersedeObjects">
+      <wsdl:input message="rnw_v1_4:SupersedeObjectsRequest" />
+      <wsdl:output message="rnw_v1_4:SupersedeObjectsResponse" />
       <wsdl:fault name="APIAccessErrorFault" message="rnw_v1_4:APIAccessErrorFault" />
       <wsdl:fault name="RequestErrorFault" message="rnw_v1_4:RequestErrorFault" />
       <wsdl:fault name="ServerErrorFault" message="rnw_v1_4:ServerErrorFault" />
@@ -1062,6 +1084,30 @@
     </wsdl:operation>
     <wsdl:operation name="BulkTransferSubObjects">
       <soap:operation soapAction="BulkTransferSubObjects" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+        <soap:header message="rnw_v1_4:ClientInfoHeader" part="request_header" use="literal" />
+        <soap:header message="rnw_v1_4:APIAccessRequestHeader" part="api_request_header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="rnw_v1_4:APIAccessResponseHeader" part="response_header" use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="APIAccessErrorFault">
+        <soap:fault use="literal" name="APIAccessErrorFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="RequestErrorFault">
+        <soap:fault use="literal" name="RequestErrorFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="ServerErrorFault">
+        <soap:fault use="literal" name="ServerErrorFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="UnexpectedErrorFault">
+        <soap:fault use="literal" name="UnexpectedErrorFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SupersedeObjects">
+      <soap:operation soapAction="SupersedeObjects" style="document" />
       <wsdl:input>
         <soap:body use="literal" parts="parameters" />
         <soap:header message="rnw_v1_4:ClientInfoHeader" part="request_header" use="literal" />
@@ -1681,6 +1727,30 @@
     </wsdl:operation>
     <wsdl:operation name="BulkTransferSubObjects">
       <soap:operation soapAction="BulkTransferSubObjects" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+        <soap:header message="rnw_v1_4:ClientInfoHeader" part="request_header" use="literal" />
+        <soap:header message="rnw_v1_4:APIAccessRequestHeader" part="api_request_header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="rnw_v1_4:APIAccessResponseHeader" part="response_header" use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="APIAccessErrorFault">
+        <soap:fault use="literal" name="APIAccessErrorFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="RequestErrorFault">
+        <soap:fault use="literal" name="RequestErrorFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="ServerErrorFault">
+        <soap:fault use="literal" name="ServerErrorFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="UnexpectedErrorFault">
+        <soap:fault use="literal" name="UnexpectedErrorFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SupersedeObjects">
+      <soap:operation soapAction="SupersedeObjects" style="document" />
       <wsdl:input>
         <soap:body use="literal" parts="parameters" />
         <soap:header message="rnw_v1_4:ClientInfoHeader" part="request_header" use="literal" />

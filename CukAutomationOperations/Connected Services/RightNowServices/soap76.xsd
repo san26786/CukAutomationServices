@@ -67,6 +67,7 @@
       <xs:element name="SuppressExternalEvents" type="xs:boolean" />
       <xs:element name="SuppressRules" type="xs:boolean" />
       <xs:element minOccurs="0" name="ReturnExpandedSoapFaults" type="xs:boolean" />
+      <xs:element minOccurs="0" name="AuditFieldsSpecified" type="xs:boolean" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="CreateResponse" type="rnm_v1_4:CreateResponseMsg" />
@@ -275,6 +276,15 @@
   <xs:complexType name="TransferSubObjectsResponseMsg" />
   <xs:element name="BulkTransferSubObjectsResponse" type="rnm_v1_4:BulkTransferSubObjectsResponseMsg" />
   <xs:complexType name="BulkTransferSubObjectsResponseMsg" />
+  <xs:element name="SupersedeObjects" type="rnm_v1_4:SupersedeObjectsMsg" />
+  <xs:complexType name="SupersedeObjectsMsg">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="DestinationRNObject" type="rnb_v1_4:RNObject" />
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="SourceRNObjects" type="rnb_v1_4:RNObject" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SupersedeObjectsResponse" type="rnm_v1_4:SupersedeObjectsResponseMsg" />
+  <xs:complexType name="SupersedeObjectsResponseMsg" />
   <xs:element name="GetMetaData" type="rnm_v1_4:GetMetaDataMsg" />
   <xs:complexType name="GetMetaDataMsg" />
   <xs:element name="GetMetaDataResponse" type="rnm_v1_4:GetMetaDataResponseMsg" />
@@ -381,6 +391,7 @@
         <xs:element name="SendMailingToContactMsg" type="rnm_v1_4:SendMailingToContactMsg" />
         <xs:element name="TransferSubObjectsMsg" type="rnm_v1_4:TransferSubObjectsMsg" />
         <xs:element name="BulkTransferSubObjectsMsg" type="rnm_v1_4:BulkTransferSubObjectsMsg" />
+        <xs:element name="SupersedeObjectsMsg" type="rnm_v1_4:SupersedeObjectsMsg" />
         <xs:element name="GetMetaDataMsg" type="rnm_v1_4:GetMetaDataMsg" />
         <xs:element name="GetMetaDataForClassMsg" type="rnm_v1_4:GetMetaDataForClassMsg" />
         <xs:element name="GetMetaDataForOperationMsg" type="rnm_v1_4:GetMetaDataForOperationMsg" />
@@ -410,6 +421,7 @@
       <xs:element name="GetMetaDataResponseMsg" type="rnm_v1_4:GetMetaDataResponseMsg" />
       <xs:element name="TransferSubObjectsResponseMsg" type="rnm_v1_4:TransferSubObjectsResponseMsg" />
       <xs:element name="BulkTransferSubObjectsResponseMsg" type="rnm_v1_4:BulkTransferSubObjectsResponseMsg" />
+      <xs:element name="SupersedeObjectsResponseMsg" type="rnm_v1_4:SupersedeObjectsResponseMsg" />
       <xs:element name="GetMetaDataForClassResponseMsg" type="rnm_v1_4:GetMetaDataForClassResponseMsg" />
       <xs:element name="GetMetaDataForOperationResponseMsg" type="rnm_v1_4:GetMetaDataForOperationResponseMsg" />
       <xs:element name="GetMetaDataLastChangeTimeResponseMsg" type="rnm_v1_4:GetMetaDataLastChangeTimeResponseMsg" />

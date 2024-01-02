@@ -41,29 +41,4 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="SponsorshipModel" nillable="true" type="tns:SponsorshipModel" />
-  <xs:complexType name="ArrayOfCorrespondenceModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="CorrespondenceModel" nillable="true" type="tns:CorrespondenceModel" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfCorrespondenceModel" nillable="true" type="tns:ArrayOfCorrespondenceModel" />
-  <xs:complexType name="CorrespondenceModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="CancelCard" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="CancelLetter" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="CardFrom" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="CardMessage" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="CardTo" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="CommKitID" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="FinalLetterURL" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Id" type="xs:long" />
-      <xs:element minOccurs="0" name="LetterFrom" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="LetterMessage" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="LetterTo" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Need" type="xs:long" />
-      <xs:element minOccurs="0" name="ReceivedDate" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="SupporterGroup" nillable="true" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="CorrespondenceModel" nillable="true" type="tns:CorrespondenceModel" />
 </xs:schema>

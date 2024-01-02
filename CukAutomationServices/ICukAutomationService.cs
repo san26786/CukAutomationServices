@@ -55,8 +55,8 @@ namespace CukAutomationServices
         string UpsertS2BCommDraft(S2BCommDraftData s2bobj);
 
         [OperationContract]
-        Message GetS2BCommDraftTile(long SupporterID);
-
+        Message GetS2BCommDraftTile(long SupporterID); 
+        
         [OperationContract]
         void RunEntityOperation(EntityData entityObj);
 
@@ -79,5 +79,31 @@ namespace CukAutomationServices
         [OperationContract]
         void ResolveRateChangeEnquiries(long RecordId);
 
+        [OperationContract]
+        void SendNotificationOperation(string Type, string Env);
+
+        [OperationContract]
+        void SyncS2BLookUpValFromBarcode();
+
+        [OperationContract]
+        void CreateOnlyConstituentProcess(long SupporterId, string CC_TransactionId);
+
+
+        [OperationContract]
+        string GetLookupIdOnSupporterId(long SupporterId);
+
+
+        [OperationContract]
+        void CreateOnlyConstituentProcessOtherPayments(OnlyConstituentDetails Obj);
+
+        [OperationContract]
+        string getSupporterIdFromBlackbaudId(string lookupId);
+
+
+        [OperationContract]
+        void TransferSupporterDetails(long recordId);
+
+        [OperationContract]
+        string SearchSupporterByParams(SearchSupporterModel Obj);
     }
 }

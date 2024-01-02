@@ -64,6 +64,7 @@ namespace CukAutomationOperations.Model
         public string SupporterGroupAddressSalutation { get; set; }
         public OrganisationDetails OrgData { get; set; }
     }
+
     public class AdvanceNoticeIncident
     {
         public long ContactID { get; set; }
@@ -75,7 +76,6 @@ namespace CukAutomationOperations.Model
         public string Type { get; set; }
         public string TemplateType { get; set; }
         public string Office { get; set; }
-
         public string DDRef { get; set; }
     }
 
@@ -87,6 +87,7 @@ namespace CukAutomationOperations.Model
         public int RecordId { get; set; }
         public string Currency { get; set; }
         public string AdvanceNoticeDateSent { get; set; }
+
         public string RevenueId { get; set; }
     }
 
@@ -133,6 +134,7 @@ namespace CukAutomationOperations.Model
         public string POBox { get; set; }
         public string SupporterGroupAddressSalutation { get; set; }
     }
+
     public class ReadyBotRulesConfiguration
     {
         public string RuleSetID { get; set; }

@@ -19,7 +19,7 @@ namespace CukAutomationOperations.Model.AutomationBot
         public const string LOGGEDINUSERACCOUNTID = "545";
         public const string FUTUREDONATIONDATE = "01-07-2017";//this is a default date for future donation
         public const string SPONSORSHIPSOURCE = "Online";
-        public const int SPONSORSHIPMONTHLYAMOUNT = 32;
-        public const string HOSTNAME = "https://www.compassionuk.org/";
+        public const int SPONSORSHIPMONTHLYAMOUNT = 28;
+        public const string HOSTNAME = "https://www.cukwebsite.co.uk/";
     }
 }

@@ -18,6 +18,7 @@
       <xs:element minOccurs="0" name="GlobalPartner_ID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="HoldEndDate" type="xs:dateTime" />
       <xs:element minOccurs="0" name="HoldID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="HoldStatus" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="HoldYieldRate" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IsSpecialHandling" type="xs:boolean" />
       <xs:element minOccurs="0" name="PrimaryHoldOwner" nillable="true" type="xs:string" />

@@ -115,13 +115,6 @@ namespace CukAutomationOperations.Model
         public string RGType { get; set; }
         public int RGAmount { get; set; }
     }
-    public class TemplateInfo
-    {
-        public string TemplateId { get; set; }
-        public string TemplateName { get; set; }
-        public string TemplateURL { get; set; }
-        public string TemplateType { get; set; }
-    }
 
     public class Correspondence
     {
@@ -163,5 +156,13 @@ namespace CukAutomationOperations.Model
         public string Type { get; set; }
         public string LetterImage { get; set; }
         public string LetterId { get; set; }
+    }
+
+    public class TemplateInfo
+    {
+        public string TemplateId { get; set; }
+        public string TemplateName { get; set; }
+        public string TemplateURL { get; set; }
+        public string TemplateType { get; set; }
     }
 }

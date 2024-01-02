@@ -43,6 +43,10 @@ using System.Threading;
 using Blackbaud.AppFx;
 using Blackbaud.AppFx.Fundraising.Catalog.WebApiClient.DataLists.Revenue;
 using Polly;
+using Newtonsoft.Json.Linq;
+using Blackbaud.AppFx.GiftAid.Catalog.WebApiClient.AddForms.GiftAid;
+using System.Configuration;
+using Newtonsoft.Json;
 
 namespace CukAutomationOperations
 {
@@ -51,11 +55,13 @@ namespace CukAutomationOperations
         protected static readonly ILog appLogger = LogManager.GetLogger(typeof(CukAutomationOperation));
         APIAccessRequestHeader api = new APIAccessRequestHeader();
         private RightNowSyncPortClient rightNowSyncPortClient = new RightNowSyncPortClient();
-        private string MyConnectionString = "server=172.23.161.18;uid=comuk_websit;" + "pwd=Website2020@;database=comuk_website; convert zero datetime=True;AutoEnlist=false;Connect Timeout=200;";
-        private string Mytcpt_pptdbConnectionString = "server=62.138.4.114;uid=tcpt_pptdb;" + "pwd=G33c@n0404;database=tcpt_pptdb; convert zero datetime=True;AutoEnlist=false;Connect Timeout=200;";
-        private string mycuk_tcpt4ConnectionString = "server=172.23.161.30;uid=cuk_tcpt4;" + "pwd=Geecon0404;database=cuk_tcpt4_log; convert zero datetime=True;AutoEnlist=false";
-        // private string Mytcpt_pptdbConnectionString_cs = "server=62.138.4.114;uid=tcpt_celser;" + "pwd=G33c@n0404;database=tcpt_celser; convert zero datetime=True;AutoEnlist=false;Connection Lifetime=0;Min Pool Size=0;Max Pool Size=100;Pooling=true;";
-        private string Mytcpt_pptdbConnectionString_cs = "server=172.23.161.30;uid=oneview_celsppt;" + "pwd=G33c@n0404;database=oneview_celsppt; convert zero datetime=True;AutoEnlist=false;Connection Lifetime=0;Min Pool Size=0;Max Pool Size=100;Pooling=true;";
+        private static readonly System.Collections.Specialized.NameValueCollection settings = ConfigurationManager.AppSettings;
+        private string MyConnectionString = ConfigurationManager.ConnectionStrings["WebSiteDbConnectionString"].ConnectionString;
+        private string Mytcpt_pptdbConnectionString = ConfigurationManager.ConnectionStrings["TCPT_PPTDB_ConnectionString"].ConnectionString;
+        private string mycuk_tcpt4ConnectionString = ConfigurationManager.ConnectionStrings["TCPTR4DB_ConnectionString"].ConnectionString;
+        private string Mytcpt_pptdbConnectionString_cs = ConfigurationManager.ConnectionStrings["ONEVIEW_CELSPPT_ConnectionString"].ConnectionString;
+        
+
 
         string access_token = "";
         string token_type = "";
@@ -73,78 +79,46 @@ namespace CukAutomationOperations
         private Message DraftTileObj;
         private readonly System.Object lockThis = new System.Object();
         private string DDPaymentChecks = null;
-        private static BBTargetRepository.Model.Constant Constants = new BBTargetRepository.Model.Constant();
+        
         #region Global Instance
         private Blackbaud.AppFx.WebAPI.ServiceProxy.AppFxWebService _service;
         private string BbDatabase = string.Empty;
-        private string Host = "https://live.compassionuk.org";
-        private string Host_Website_Url = "https://oneview.org.uk/";
+        private string Host = settings["ENV_HOST_URL"];
+        private string Host_Website_Url = settings["WEBSITE_URL"];
         private string ApplicationName = System.Reflection.Assembly.GetCallingAssembly().FullName;
         #endregion
-        
+
+        #region Dictionary Container
+
+        Dictionary<string, long> SetupStatusDictionary = JsonConvert.DeserializeObject<Dictionary<string, long>>(settings["RN_SETUP_STATUS_DICTIONARY"].Replace("\\r\\n", "\r\n").Replace("\\\"", "\""));
+
+        Dictionary<string, string> FundsDesignation = JsonConvert.DeserializeObject<Dictionary<string, string>>(settings["BB_FUND_DESIGNATION_DICTIONARY"].Replace("\\r\\n", "\r\n").Replace("\\\"", "\""));
+
+        Dictionary<string, string> CancelRGReasonDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(settings["BB_CANCEL_RG_REASON_DICTIONARY"].Replace("\\r\\n", "\r\n").Replace("\\\"", "\""));
+
+        #endregion
 
         public CukAutomationOperation()
         {
             try
             {
                 DraftTileObj = new Message();
-                
+
                 rightNowSyncPortClient = new RightNowSyncPortClient();
-                rightNowSyncPortClient.ClientCredentials.UserName.UserName = "GC_2";
-                rightNowSyncPortClient.ClientCredentials.UserName.Password = "G33con0404";
+                rightNowSyncPortClient.ClientCredentials.UserName.UserName = settings["RN_USER_ID"];
+                rightNowSyncPortClient.ClientCredentials.UserName.Password = settings["RN_USER_PWD"];
 
                 log4net.Config.XmlConfigurator.Configure();
-                api_key = "b46u6dkaw2gjrw3myrgw7gcb";     // Prod
+                api_key = settings["GMC_API_KEY"];
 
-
-
-                int retryCount = 0;
-                while (retryCount < 4)
-                {
-                    retryCount++;
-                    try
-                    {
-                        appLogger.Info("BB construction call");
-                        BBTargetRepository.Model.Constant obj = new BBTargetRepository.Model.Constant();
-                        _service = new Blackbaud.AppFx.WebAPI.ServiceProxy.AppFxWebService();
-                        _service.Url = obj.URI;
-                        _service.Credentials = new System.Net.NetworkCredential(obj.UID, obj.PWD, "");
-                        var req = new Blackbaud.AppFx.WebAPI.ServiceProxy.GetAvailableREDatabasesRequest();
-                        req.ClientAppInfo = GetRequestHeader();
-                        var reply = _service.GetAvailableREDatabases(req);
-                        BbDatabase = reply.Databases[0];
-                        break;
-                    }
-                    catch (Exception e )
-                    {
-                        if (e.Message.Contains("The request failed with HTTP status 502: Bad Gateway"))
-                        {
-                            
-                            if (retryCount == 4)
-                            {
-                                
-                                appLogger.Error("Error in constructor try : " + e.Message);
-                                appLogger.Error(e.InnerException);
-                                appLogger.Error(e.StackTrace);
-                                throw e;
-                                
-                            }
-                            else
-                            {
-                                appLogger.Info("Retrying in constructor...");
-                            }
-                        }
-                        else
-                        {
-                            appLogger.Error("Error in constructor main : " + e.Message);
-                            appLogger.Error(e.InnerException);
-                            appLogger.Error(e.StackTrace);
-                            throw e;
-                            
-                        }
-                    }
-                }
-            }
+                _service = new Blackbaud.AppFx.WebAPI.ServiceProxy.AppFxWebService();
+                _service.Url = settings["BB_URI"];
+                _service.Credentials = new System.Net.NetworkCredential(settings["BB_UID"], settings["BB_PWD"], "");
+                var req = new Blackbaud.AppFx.WebAPI.ServiceProxy.GetAvailableREDatabasesRequest();
+                req.ClientAppInfo = GetRequestHeader();
+                var reply = retryPolicy.Execute(() => _service.GetAvailableREDatabases(req));
+                BbDatabase = reply.Databases[0];
+            }   
             catch (Exception e)
             {
                 appLogger.Error("Error in constructor CukAutomationOperation:" + e.Message);
@@ -155,15 +129,9 @@ namespace CukAutomationOperations
             string content = null;
             try
             {
-                /* Stage */
-                string _client = "l6iciqd96r9bjdb3cc9nbev9u";
-                string _secret = "t8499122n4mfhihoamgjb6ef2s0r33dp185c4db58jk2ebh6bp8";
+                var restClient = new RestClient(settings["GMC_TOKEN_URL"]);
 
-                //var restClient = new RestClient("https://shaphat-devint.ci.org/oauth2/token/");   // Test
-                //var restClient = new RestClient("https://shaphat-stage.ci.org/oauth2/token");    // Stage
-                var restClient = new RestClient("https://shaphat.ci.org/oauth2/token");    // Prod
-
-                restClient.Authenticator = new HttpBasicAuthenticator(_client, _secret);
+                restClient.Authenticator = new HttpBasicAuthenticator(settings["GMC_CLIENT_ID"], settings["GMC_SECRET"]);
 
                 var tokenRequest = new RestRequest(Method.POST);
 
@@ -196,25 +164,6 @@ namespace CukAutomationOperations
             }
         }
 
-        Dictionary<string, long> SetupStatusDictionary = new Dictionary<string, long>()
-        {
-            {"Not Started",352},
-            {"In Progress",355},
-            {"Held",1690},
-            {"Released",1691},
-            {"Succeeded",1692},
-            {"Failed",1693},
-            {"Retry",1694},
-            {"Resolving",1704},
-            {"Unable to Resolve", 1705 },
-            {"Failed to Resolve",1706},
-            {"Resolved",1707},
-            {"Check",1718},
-            {"No Match",1719},
-            {"Manual",1720},
-            {"Waiting",1750},
-            {"Unable to Setup",1717 }
-        };
         #region Helper Method
 
         public long fetchNeedIdByGlobalId(string globalId)
@@ -665,7 +614,7 @@ namespace CukAutomationOperations
             {
                 try
                 {
-                    var restClient = new RestClient("https://my.compassionuk.org/services/rest/connect/v1.4/queryResults/?query=" + URL); // Dev
+                    var restClient = new RestClient("https://my.compassionuk.org/services/rest/connect/v1.4/queryResults/?query=" + URL); // live
                     var tokenRequest = new RestRequest(Method.GET);
 
                     tokenRequest.AddHeader("OSvC-CREST-Application-Context", "This is a valid request for account.");
@@ -723,9 +672,9 @@ namespace CukAutomationOperations
 
         public void DoWork()
         {
-
+           
         }
-
+        
         public string GetDailySchedulerLastSuccessfullRunTime(string ProcessName)
         {
             appLogger.Info("GetDailySchedulerLastSuccessfullRunTime for Process : " + ProcessName + " Process Started...");
@@ -763,7 +712,7 @@ namespace CukAutomationOperations
         public ProcessScheduleManager fetchLastSuccessfullRunTime(string ProcessName)
         {
             appLogger.Info("Fetch LastSuccessfulRunTime Process Started...");
-            
+
             ProcessScheduleManager obj = new ProcessScheduleManager();
             MySql.Data.MySqlClient.MySqlConnection conn = new MySql.Data.MySqlClient.MySqlConnection();
             try
@@ -1017,7 +966,7 @@ namespace CukAutomationOperations
                     },
                 };
 
-                RightNowServices.Thread[] thrd = new RightNowServices.Thread[2];
+               RightNowServices.Thread[] thrd = new RightNowServices.Thread[2];
                 thrd[0] = new RightNowServices.Thread();
                 thrd[0].action = ActionEnum.add;
                 thrd[0].actionSpecified = true;
@@ -1118,6 +1067,7 @@ namespace CukAutomationOperations
             fvSet.Add("LOOkUPID", searchme);
             fvSet.Add("EXACTMATCHONLY", true);
             fvSet.Add("INCLUDEINACTIVE", true);
+            fvSet.Add("INCLUDEDECEASED", true);
 
             var dfi = new DataFormItem();
             dfi.Values = fvSet;
@@ -1344,7 +1294,7 @@ namespace CukAutomationOperations
                             }
                             */
                             #endregion
-
+                            
                             #region NewSupporter
                             //DX144 Identifying existing supporters in OSJ
                             if (RNIDMatch == "Existing (already logged in)" || RNIDMatch == "Existing (logged in during OSJ)")
@@ -1945,6 +1895,7 @@ namespace CukAutomationOperations
                                 BankAccountStatus = "None/Invalid";
                                 BankAccountStatusCode = 1710;
                             }
+
                             if (!string.IsNullOrEmpty(incidentdate.bankaccountstatus))
                             {
                                 // If bankaccountstatus is manually set by compassion team
@@ -2940,6 +2891,7 @@ namespace CukAutomationOperations
                 appLogger.Error(ex.InnerException);
             }
         }
+
         public void updateCheckBotinDB(string dbRecordId)
         {
 
@@ -3357,7 +3309,7 @@ namespace CukAutomationOperations
                 APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
                 string query = null;
                 query = "SELECT Incident.id,Incident.customFields.c.setupstatus.lookupname,Incident.customFields.c.setupguid,Incident.customFields.c.comments,Incident.Customfields.c.sponsorchildref,Incident.customFields.c.accountname,Incident.customFields.c.bankaccountnumber,Incident.customFields.c.banksortcode,Incident.primaryContact.contact,Incident.Customfields.c.sponsorshipplus,Incident.Customfields.c.giftaidstatus,Incident.Customfields.c.supprefname,Incident.Customfields.c.sponsorshipplustype.lookupName,Incident.threads.text,Incident.Customfields.c.sponsorshipplus,Incident.Customfields.c.lettersalutation,Incident.Customfields.c.dddateprefer.lookupName,Incident.Customfields.c.newsupporter.lookupName,Incident.Customfields.c.bankaccountstatus.lookupName,Incident.Customfields.c.updatesapplied.lookupname FROM Incident WHERE Incident.ID =" + IncidentID + " order by Incident.threads.createdTime ASC limit 0,1";
-
+                
                 byte[] byteArray;
 
                 CSVTableSet result;
@@ -3505,7 +3457,7 @@ namespace CukAutomationOperations
 
                             OPObj.MandateType = ByDefault_FFD;
                             ReadyForSetup = CheckBotObj.ReadyForSetup.Trim();
-
+                            
                             if (!string.IsNullOrEmpty(SetupGUID))
                             {
                                 appLogger.Info("SetupBot not started as SetupGUID is already set in enquiry AND ReadyForSetup " + ReadyForSetup + " with incident id: " + IncidentId);
@@ -3535,10 +3487,10 @@ namespace CukAutomationOperations
                                 appLogger.Info("SetupBot started as SetupStatus is :" + SetupStatus + " AND ReadyForSetup " + ReadyForSetup + " with incident id: " + IncidentId);
                             }
                             /*else if ((ReadyForSetup == "Ready" || ReadyForSetup == "Check") && SetupStatus == "Released")
-                            {
-                                StartSetupBot = true;
-                                appLogger.Info("SetupBot started as SetupStatus is :" + SetupStatus + " AND ReadyForSetup " + ReadyForSetup + " with incident id: " + IncidentId);
-                            }*/
+                             {
+                                 StartSetupBot = true;
+                                 appLogger.Info("SetupBot started as SetupStatus is :" + SetupStatus + " AND ReadyForSetup " + ReadyForSetup + " with incident id: " + IncidentId);
+                             }*/
                             else if (ReadyForSetup == "Ready" && SetupStatus == "Retry")
                             {
                                 //StartSetupBot = true;
@@ -3550,13 +3502,13 @@ namespace CukAutomationOperations
                                 StartSetupBot = true;
                                 appLogger.Info("SetupBot started as SetupStatus is :" + SetupStatus + " AND ReadyForSetup " + ReadyForSetup + " with incident id: " + IncidentId);
                             }
-
+                            
                             if (StartSetupBot)
                             {
                                 //Starte SetupBot
                                 Guid Guid = Guid.NewGuid();
                                 string SEFGUID = !string.IsNullOrEmpty(SetupGUID) ? SetupGUID : "{" + Guid.ToString().ToUpper() + "}";
-                                InsertSEFOperationResponse(SEFGUID, "SetupBot Process started...", "SetupBot", true);
+                                InsertSEFOperationResponse(SEFGUID, "SetupBot Process started...", "SetupBot", true); 
                                 OPObj.SEFGUID = SEFGUID;
                                 UpdateSetupBotFieldsinIncident(Convert.ToInt64(IncidentId), SEFGUID, false);
                                 bool isValidData = Verifydata(CheckBotObj);//verify data
@@ -3571,7 +3523,7 @@ namespace CukAutomationOperations
                                 if (NeedStatus != "Website (Sponsored)")
                                 {
                                     appLogger.Info("SetupBot failed for incidentid :" + IncidentId + " because needStatus is: " + NeedStatus);
-                                    UpdateSetupBotFieldsinIncident(Convert.ToInt64(IncidentId), SEFGUID, true);
+                                    UpdateSetupBotFieldsinIncident(Convert.ToInt64(IncidentId), SEFGUID, true); 
                                     InsertSEFOperationResponse(SEFGUID, "SetupBot failed as needstatus is invalid", "SetupBot", false);
                                     continue;
                                 }
@@ -4412,69 +4364,6 @@ namespace CukAutomationOperations
         }
         #endregion
 
-        public void TestMethod()
-        {
-            //byte[] fileContens = DownloadFileUsingHttpClient("http://compassionuk.org/wp-content/themes/donation/child_letter/Letter_KE038400333_255116__15.pdf");
-
-            ServicePointManager.ServerCertificateValidationCallback +=
-        (sender, certificate, chain, sslPolicyErrors) => true;
-
-            try
-            {
-                var client = new RestClient("http://compassionuk.org/wp-content/themes/donation/child_letter/Letter_KE038400333_255116__15.pdf");
-                var request = new RestRequest();
-
-                client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
-
-                var responce = client.Execute(request);
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-
-        public void UploadFileUsingFtpWebRequest()
-        {
-            string uploadUrl = "ftp://cukdev.co.uk/public_html/Alam.pdf";
-            try
-            {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(uploadUrl);
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential("cukdevco", "D@shwood0404");
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Timeout = 5000;
-                request.ReadWriteTimeout = 32000;
-                // Copy the contents of the file to the request stream.  
-                StreamReader sourceStream = new StreamReader(@"D:/Compassion-UK/Letters/Card_ES071000400_47215__29.pdf");
-                byte[] fileContents = Encoding.UTF8.GetBytes(sourceStream.ReadToEnd());
-                sourceStream.Close();
-                request.ContentLength = fileContents.Length;
-
-                Stream requestStream = request.GetRequestStream();
-
-                requestStream.Write(fileContents, 0, fileContents.Length);
-                requestStream.Close();
-                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-                Console.WriteLine("Upload File Complete, status {0}", response.StatusDescription);
-            }
-            catch (WebException e)
-            {
-                Console.WriteLine(e.Message.ToString());
-                String status = ((FtpWebResponse)e.Response).StatusDescription;
-                Console.WriteLine(status);
-                //appLogger.Error("WebExceptionError in  DownloadFileUsingFtpWebRequest : " + e.Message.ToString());
-                //appLogger.Error("Status is :" + status);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-                //appLogger.Error("WebExceptionError in  DownloadFileUsingFtpWebRequest : " + ex.Message.ToString());
-                //appLogger.Error(ex.InnerException);
-            }
-        }
-
-
         #region Compassion Celebration Services - Datapoint
         public void SyncOrgActiveSponsorshipData(int OrgID)
         {
@@ -4913,7 +4802,7 @@ namespace CukAutomationOperations
             appLogger.Info("Sync org process ended...");
         }
         #endregion
-
+        
         #region Advance Notice Control Table
 
         #region Create Batch No
@@ -6128,7 +6017,7 @@ namespace CukAutomationOperations
                 string ThreadTxt = incidentdata.Template.Replace("{PAYMENTS_TABLE}", DonationTable).Replace('^', '"');
 
 
-
+                
                 if (incidentdata.TemplateType == "Letter")//add pdf only for letter template
                 {
                     appLogger.Info("Creating Letter template for contactid: " + incidentdata.ContactID);
@@ -6502,7 +6391,7 @@ namespace CukAutomationOperations
                  {
                      return true;
                  };
-                var restClient = new RestClient(Constants.ONEVIEW_HOST_NAME + "CreateAdvanceNoticePdf.php");    // Dev
+                var restClient = new RestClient("https://cukwebsite.co.uk/oneview/CreateAdvanceNoticePdf.php");  
                 var tokenRequest = new RestRequest(Method.POST);
                 tokenRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
                 tokenRequest.AddParameter("Message", Message);
@@ -6542,7 +6431,7 @@ namespace CukAutomationOperations
                  {
                      return true;
                  };
-                var restClient = new RestClient(Constants.ONEVIEW_HOST_NAME + "DeleteAdvanceNoticePdf.php");// Dev
+                var restClient = new RestClient("https://cukwebsite.co.uk/oneview/DeleteAdvanceNoticePdf.php");// Dev
                 var tokenRequest = new RestRequest(Method.POST);
                 tokenRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
                 tokenRequest.AddParameter("FileName", FileName);
@@ -7045,10 +6934,11 @@ namespace CukAutomationOperations
         {
             string content = "";
             RevenuePayment payobj = new RevenuePayment();
+            BBTargetRepository.Model.Constant obj = new BBTargetRepository.Model.Constant();
             try
             {
                 var client = new RestClient("https://s01t2bisweb003.blackbaud.net/64156d_d9c4f582-10c9-4fa2-9f96-508d8545f918/ODataQuery.ashx?databasename=64156d&AdHocQueryID=d5866dbd-0ae1-460c-af98-2f14b9096070");//One Off Advance Notices from constituents who need an advance notice
-                client.Authenticator = new HttpBasicAuthenticator(@"blackbaud\esbuser64156", "Esbuswe@123");
+                client.Authenticator = new HttpBasicAuthenticator(obj.ODATA_USERNAME, obj.ODATA_PASSWORD);
                 //client.Timeout = 300000;
                 var request = new RestRequest(Method.GET);
                 System.Net.ServicePointManager.Expect100Continue = false;
@@ -7188,10 +7078,11 @@ namespace CukAutomationOperations
         {
             string content = "";
             RevenuePayment payobj = new RevenuePayment();
+            BBTargetRepository.Model.Constant obj = new BBTargetRepository.Model.Constant();
             try
             {
                 var client = new RestClient("https://s01t2bisweb003.blackbaud.net/64156d_d9c4f582-10c9-4fa2-9f96-508d8545f918/ODataQuery.ashx?databasename=64156d&AdHocQueryID=87de565e-184f-4044-8fff-5ba6225a3c96");//Recurring Advance Notices from constituents who need an advance notice
-                client.Authenticator = new HttpBasicAuthenticator(@"blackbaud\esbuser64156", "Esbuswe@123");
+                client.Authenticator = new HttpBasicAuthenticator(obj.ODATA_USERNAME, obj.ODATA_PASSWORD);
                 //client.Timeout = 300000;
                 var request = new RestRequest(Method.GET);
                 System.Net.ServicePointManager.Expect100Continue = false;
@@ -7541,7 +7432,7 @@ namespace CukAutomationOperations
                 url = url.Replace("{RECORDID}", RecordID);
                 WebClient req = new WebClient();
                 req.Credentials = provider().Credentials;
-                req.DownloadFile(url, @"E:\Compassion-UK\OneOffOrRecurringGiftExportCsv\" + Type + "_" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".csv");
+                req.DownloadFile(url, @"" + settings["RECURRINGGIFT_EXPORTEDCSV_PATH"] + Type + "_" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".csv");
             }
             catch (Exception e)
             {
@@ -7555,7 +7446,7 @@ namespace CukAutomationOperations
             appLogger.Info("Deleting recent file process started.");
             try
             {
-                DirectoryInfo DirectoryInfo = new DirectoryInfo(@"E:\Compassion-UK\OneOffOrRecurringGiftExportCsv");
+                DirectoryInfo DirectoryInfo = new DirectoryInfo(settings["RECURRINGGIFT_EXPORTEDCSV_PATH"]);
                 FileInfo[] files = DirectoryInfo.GetFiles();
                 foreach (FileInfo file in files)
                 {
@@ -7660,7 +7551,6 @@ namespace CukAutomationOperations
 
             appLogger.Info("DoExportMainProcess ended...");
         }
-
         public void SyncAdvanceNotice_RecurringGift()
         {
             appLogger.Info("Recurring Gift Advance Notice Sync Started...");
@@ -7670,7 +7560,7 @@ namespace CukAutomationOperations
                 string command = "INSERT INTO `AdvanceNoticeControl`(`RevenueID`, `AdvanceNoticeSentDate`, `InboundChannel`, `LookupID`, `Amount`, `TransactionDate`, `DirectDebitReferenceNo`, `Designation`, `PreferredChildName`, `NeedKey`,`Frequency`,`Office`,`TriggerType`,`CurrencySymbol`,`CollectionDate`,`Status`,`DirectDebitAccountNo`,`RevenueRecordID`,`PaymentMethod`) VALUES (?RevenueID,?AdvanceNoticeSentDate,?InboundChannel,?LookupID,?Amount,?TransactionDate,?DirectDebitReferenceNo,?Designation,?PreferredChildName,?NeedKey,?Frequency,?Office,?TriggerType,?CurrencySymbol,?CollectionDate,?Status,?DirectDebitAccountNo,?RevenueRecordID,?PaymentMethod)ON DUPLICATE KEY UPDATE RevenueID= Values(RevenueID),AdvanceNoticeSentDate= Values(AdvanceNoticeSentDate),InboundChannel= Values(InboundChannel),LookupID= Values(LookupID),Amount= Values(Amount),TransactionDate= Values(TransactionDate),DirectDebitReferenceNo= Values(DirectDebitReferenceNo),Designation= Values(Designation),PreferredChildName= Values(PreferredChildName),NeedKey= Values(NeedKey),Frequency=Values(Frequency),Office=Values(Office),TriggerType=Values(TriggerType),CurrencySymbol=Values(CurrencySymbol),CollectionDate=Values(CollectionDate),Status=Values(Status),DirectDebitAccountNo=Values(DirectDebitAccountNo),RevenueRecordID=Values(RevenueRecordID),PaymentMethod=Values(PaymentMethod)";
 
                 rowCounter = 1;
-                DirectoryInfo DirectoryInfo = new DirectoryInfo(@"E:\Compassion-UK\OneOffOrRecurringGiftExportCsv");
+                DirectoryInfo DirectoryInfo = new DirectoryInfo(settings["RECURRINGGIFT_EXPORTEDCSV_PATH"]);
                 FileInfo[] files = DirectoryInfo.GetFiles();
                 var LatestOneOffRecord = files.Where(i => i.Name.Contains("RecurringGift")).OrderBy(j => j.LastWriteTime).Last();
                 using (var reader = new StreamReader(LatestOneOffRecord.FullName))
@@ -7831,7 +7721,7 @@ namespace CukAutomationOperations
             {
                 string command = "INSERT INTO `AdvanceNoticeControl`(`RevenueID`, `AdvanceNoticeSentDate`, `InboundChannel`, `LookupID`, `Amount`, `TransactionDate`, `DirectDebitReferenceNo`, `Designation`, `PreferredChildName`, `Office`, `NeedKey`,`CurrencySymbol`,`TriggerType`,`Status`,`CollectionDate`,`DirectDebitAccountNo`,`RevenueRecordID`,`PaymentMethod`) VALUES (?RevenueID,?AdvanceNoticeSentDate,?InboundChannel,?LookupID,?Amount,?TransactionDate,?DirectDebitReferenceNo,?Designation,?PreferredChildName,?Office,?NeedKey,?CurrencySymbol,?TriggerType,?Status,?CollectionDate,?DirectDebitAccountNo,?RevenueRecordID,?PaymentMethod) ON DUPLICATE KEY UPDATE RevenueID= Values(RevenueID),AdvanceNoticeSentDate= Values(AdvanceNoticeSentDate),InboundChannel= Values(InboundChannel),LookupID= Values(LookupID),Amount= Values(Amount),TransactionDate= Values(TransactionDate),DirectDebitReferenceNo= Values(DirectDebitReferenceNo),Designation= Values(Designation),PreferredChildName= Values(PreferredChildName),Office= Values(Office),NeedKey= Values(NeedKey),CurrencySymbol= Values(CurrencySymbol),TriggerType= Values(TriggerType),Status=Values(Status),CollectionDate=Values(CollectionDate),DirectDebitAccountNo=Values(DirectDebitAccountNo),RevenueRecordID=Values(RevenueRecordID),PaymentMethod=Values(PaymentMethod)";
 
-                DirectoryInfo DirectoryInfo = new DirectoryInfo(@"E:\Compassion-UK\OneOffOrRecurringGiftExportCsv");
+                DirectoryInfo DirectoryInfo = new DirectoryInfo(settings["RECURRINGGIFT_EXPORTEDCSV_PATH"]);
                 FileInfo[] files = DirectoryInfo.GetFiles();
                 var LatestOneOffRecord = files.Where(i => i.Name.Contains("One_Off")).OrderBy(j => j.LastWriteTime).Last();
                 using (var reader = new StreamReader(LatestOneOffRecord.FullName))
@@ -7984,310 +7874,6 @@ namespace CukAutomationOperations
             }
             return advanceNotice;
         }
-
-        public void SyncAdvanceNotice_OneOff_Old()
-        {
-            appLogger.Info("SyncAdvanceNotice_OneOff Sync Started...");
-            int rowCounter = 0;
-            try
-            {
-                string command = "INSERT INTO `AdvanceNoticeControl`(`RevenueID`, `AdvanceNoticeSentDate`, `InboundChannel`, `LookupID`, `Amount`, `TransactionDate`, `DirectDebitReferenceNo`, `Designation`, `PreferredChildName`, `Office`, `NeedKey`,`CurrencySymbol`,`TriggerType`,`Status`,`CollectionDate`,`DirectDebitAccountNo`) VALUES (?RevenueID,?AdvanceNoticeSentDate,?InboundChannel,?LookupID,?Amount,?TransactionDate,?DirectDebitReferenceNo,?Designation,?PreferredChildName,?Office,?NeedKey,?CurrencySymbol,?TriggerType,?Status,?CollectionDate,?DirectDebitAccountNo) ON DUPLICATE KEY UPDATE RevenueID= Values(RevenueID),AdvanceNoticeSentDate= Values(AdvanceNoticeSentDate),InboundChannel= Values(InboundChannel),LookupID= Values(LookupID),Amount= Values(Amount),TransactionDate= Values(TransactionDate),DirectDebitReferenceNo= Values(DirectDebitReferenceNo),Designation= Values(Designation),PreferredChildName= Values(PreferredChildName),Office= Values(Office),NeedKey= Values(NeedKey),CurrencySymbol= Values(CurrencySymbol),TriggerType= Values(TriggerType),Status=Values(Status),CollectionDate=Values(CollectionDate),DirectDebitAccountNo=Values(DirectDebitAccountNo)";
-
-                DirectoryInfo DirectoryInfo = new DirectoryInfo(@"E:\Compassion-UK\OneOffOrRecurringGiftExportCsv");
-                FileInfo[] files = DirectoryInfo.GetFiles();
-                var LatestOneOffRecord = files.Where(i => i.Name.Contains("One_Off")).OrderBy(j => j.LastWriteTime).Last();
-                using (var reader = new StreamReader(LatestOneOffRecord.FullName))
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-                {
-                    var records = csv.GetRecords<OneOff>();
-                    foreach (OneOff row in records)
-                    {
-                        try
-                        {
-                            dbObj = createRowAdvanceNoticeOneOff(row);
-                            //Check if Revenue details is already exist
-                            string status = "";//CheckIfRevenueIdAlreadyExist(dbObj.RevenueID);
-                            if (string.IsNullOrEmpty(dbObj.ChildChildFirstname))
-                            {
-                                dbObj.ChildChildFirstname = dbObj.ChildPreferredName;
-                            }
-                            string Status = "Extracted";
-                            if (status == "Prepared")
-                            {
-                                Status = "Duplicate";
-                                appLogger.Info("Inserting Advance Notice record as its status is :" + status);
-                            }
-                            else if (status == "Merged")
-                            {
-                                appLogger.Info("Skipping Advance Notice record as its status is :" + status);
-                                continue;
-                            }
-
-                            if (!string.IsNullOrEmpty(status) && (status == "Extracted" || status == "Too Late"))
-                            {
-                                appLogger.Info("Upserting Advance Notice record as its status is :" + status);
-                                UpSertAdvanceNotice(dbObj, "One-Off");
-                                continue;
-                            }
-
-                            // DB Upsert
-                            using (MySqlConnection mConnection = new MySqlConnection(mycuk_tcpt4ConnectionString))
-                            using (MySqlCommand myCmd = new MySqlCommand(command, mConnection))
-                            {
-                                mConnection.Open();
-                                myCmd.Parameters.Add("?RevenueID", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.RevenueID) ? dbObj.RevenueID : null;
-                                myCmd.Parameters.Add("?AdvanceNoticeSentDate", MySqlDbType.DateTime).Value = dbObj.Advancenoticesentdate;
-                                myCmd.Parameters.Add("?InboundChannel", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.InboundChannel) ? dbObj.InboundChannel : null;
-                                myCmd.Parameters.Add("?LookupID", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ConstituentLookupID) ? dbObj.ConstituentLookupID : null;
-                                myCmd.Parameters.Add("?Amount", MySqlDbType.Decimal).Value = dbObj.Amount;
-                                myCmd.Parameters.Add("?DirectDebitReferenceNo", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.Directdebitreferencenumber) ? dbObj.Directdebitreferencenumber : null;
-                                myCmd.Parameters.Add("?Designation", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ApplicationDetailsDesignationPublicname) ? dbObj.ApplicationDetailsDesignationPublicname : null;
-
-                                //GetChildPreferredName
-                                myCmd.Parameters.Add("?NeedKey", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ChildChildFirstname) ? dbObj.ChildChildFirstname : null;
-
-                                if (!string.IsNullOrEmpty(dbObj.ChildChildFirstname))
-                                {
-                                    myCmd.Parameters.Add("?PreferredChildName", MySqlDbType.VarChar).Value = GetChildPreferredName(dbObj.ChildChildFirstname);
-                                }
-                                else
-                                {
-                                    myCmd.Parameters.Add("?PreferredChildName", MySqlDbType.VarChar).Value = null;
-                                }
-                                myCmd.Parameters.Add("?DirectDebitAccountNo", MySqlDbType.VarChar).Value = dbObj.DirectDebitAccountAccountnumber.Replace("*", "");
-                                myCmd.Parameters.Add("?TransactionDate", MySqlDbType.DateTime).Value = dbObj.PledgeGrantawardfirstinstallmentdue;
-                                DateTime NextInstallmaneDate = GetOneviewcirlBatchNextInstallmaneDate("CUK", "Pledge");
-                                if (dbObj.PledgeGrantawardfirstinstallmentdue >= NextInstallmaneDate)
-                                {
-                                    //Pledge can be collected 
-                                    myCmd.Parameters.Add("?CollectionDate", MySqlDbType.DateTime).Value = dbObj.PledgeGrantawardfirstinstallmentdue;
-                                    myCmd.Parameters.Add("?Status", MySqlDbType.VarChar).Value = Status;//"Incomplete";
-                                }
-                                else
-                                {
-                                    //Pledge cannot be collected.  Finance cancel, EC contact supporter
-                                    myCmd.Parameters.Add("?CollectionDate", MySqlDbType.DateTime).Value = null;
-                                    myCmd.Parameters.Add("?Status", MySqlDbType.VarChar).Value = "Too Late";
-                                }
-
-                                myCmd.Parameters.Add("?TriggerType", MySqlDbType.VarChar).Value = "One-Off";
-                                if (!string.IsNullOrEmpty(dbObj.ConstituentAssignedSecurityGroupsSecuritygroupname))
-                                {
-                                    if (dbObj.ConstituentAssignedSecurityGroupsSecuritygroupname == "Irish constituents")
-                                    {
-                                        myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = "Ireland";
-                                        myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = "€";
-                                    }
-                                    else
-                                    {
-                                        myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = "UK";
-                                        myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = "£";
-                                    }
-                                }
-                                else
-                                {
-                                    myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = null;
-                                    myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = null;
-                                }
-
-                                myCmd.ExecuteNonQuery();
-                                appLogger.Info(rowCounter + " One-Off AdvanceNotice records inserted successfully");
-                            }
-                            rowCounter++;
-                            if (rowCounter % 1000 == 0)
-                            {
-                                appLogger.Info(rowCounter + " AdvanceNotice records inserted successfully");
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            appLogger.Error("Error in AdvanceNotice for row " + rowCounter + ", RevenueID " + dbObj.RevenueID);
-                            appLogger.Error("Error Message - " + e.Message);
-                            appLogger.Error("Stack Trace - " + e.StackTrace);
-                        }
-                    }
-                    if (rowCounter < 1000)
-                    {
-                        appLogger.Info(rowCounter + " One-Off AdvanceNotice records inserted successfully.");
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                appLogger.Error("Main - OneOff AdvanceNotice Error in getting data from CSV : " + e.Message);
-                appLogger.Error("Main - Error for row " + rowCounter);
-                appLogger.Error("Main - Error Message - " + e.Message);
-                appLogger.Error("Main - Stack Trace - " + e.StackTrace);
-            }
-            appLogger.Info("SyncAdvanceNotice_OneOff Sync Ended...");
-        }
-        public void SyncAdvanceNotice_RecurringGift_Old()
-        {
-            appLogger.Info("Recurring Gift Advance Notice Sync Started...");
-            int rowCounter = 0;
-            try
-            {
-                string command = "INSERT INTO `AdvanceNoticeControl`(`RevenueID`, `AdvanceNoticeSentDate`, `InboundChannel`, `LookupID`, `Amount`, `TransactionDate`, `DirectDebitReferenceNo`, `Designation`, `PreferredChildName`, `NeedKey`,`Frequency`,`Office`,`TriggerType`,`CurrencySymbol`,`CollectionDate`,`Status`,`DirectDebitAccountNo`) VALUES (?RevenueID,?AdvanceNoticeSentDate,?InboundChannel,?LookupID,?Amount,?TransactionDate,?DirectDebitReferenceNo,?Designation,?PreferredChildName,?NeedKey,?Frequency,?Office,?TriggerType,?CurrencySymbol,?CollectionDate,?Status,?DirectDebitAccountNo)ON DUPLICATE KEY UPDATE RevenueID= Values(RevenueID),AdvanceNoticeSentDate= Values(AdvanceNoticeSentDate),InboundChannel= Values(InboundChannel),LookupID= Values(LookupID),Amount= Values(Amount),TransactionDate= Values(TransactionDate),DirectDebitReferenceNo= Values(DirectDebitReferenceNo),Designation= Values(Designation),PreferredChildName= Values(PreferredChildName),NeedKey= Values(NeedKey),Frequency=Values(Frequency),Office=Values(Office),TriggerType=Values(TriggerType),CurrencySymbol=Values(CurrencySymbol),CollectionDate=Values(CollectionDate),Status=Values(Status),DirectDebitAccountNo=Values(DirectDebitAccountNo)";
-
-                rowCounter = 1;
-                DirectoryInfo DirectoryInfo = new DirectoryInfo(@"E:\Compassion-UK\OneOffOrRecurringGiftExportCsv");
-                FileInfo[] files = DirectoryInfo.GetFiles();
-                var LatestOneOffRecord = files.Where(i => i.Name.Contains("RecurringGift")).OrderBy(j => j.LastWriteTime).Last();
-                using (var reader = new StreamReader(LatestOneOffRecord.FullName))
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-                {
-                    var records = csv.GetRecords<RecurringGift>();
-                    foreach (RecurringGift row in records)
-                    {
-                        try
-                        {
-                            dbObj = createRowAdvanceNoticeRecurringGift(row);
-                            //Check if Revenue details is already exist
-
-                            string status = "";// CheckIfRevenueIdAlreadyExist(dbObj.RevenueID);
-                            if (string.IsNullOrEmpty(dbObj.ChildChildFirstname))
-                            {
-                                dbObj.ChildChildFirstname = dbObj.ChildPreferredName;
-                            }
-                            bool IsDuplicate = false;
-                            if (status == "Prepared")
-                            {
-                                IsDuplicate = true;
-                                appLogger.Info("Inserting Advance Notice record as its status is :" + status);
-                            }
-                            else if (status == "Merged")
-                            {
-                                appLogger.Info("Skipping Advance Notice record as its status is :" + status);
-                                continue;
-                            }
-                            if (!string.IsNullOrEmpty(status) && (status == "Extracted"))
-                            {
-                                appLogger.Info("Upserting Advance Notice record as its status is :" + status);
-                                UpSertAdvanceNotice(dbObj, "RecurringGift");
-                                continue;
-                            }
-                            // DB Upsert
-                            using (MySqlConnection mConnection = new MySqlConnection(mycuk_tcpt4ConnectionString))
-                            using (MySqlCommand myCmd = new MySqlCommand(command, mConnection))
-                            {
-                                mConnection.Open();
-                                myCmd.Parameters.Add("?RevenueID", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.RevenueID) ? dbObj.RevenueID : null;
-                                myCmd.Parameters.Add("?AdvanceNoticeSentDate", MySqlDbType.DateTime).Value = dbObj.Advancenoticesentdate;
-                                myCmd.Parameters.Add("?InboundChannel", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.Inboundchannel) ? dbObj.Inboundchannel : null;
-                                myCmd.Parameters.Add("?LookupID", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ConstituentLookupID) ? dbObj.ConstituentLookupID : null;
-                                myCmd.Parameters.Add("?Amount", MySqlDbType.Decimal).Value = dbObj.Amount;
-                                myCmd.Parameters.Add("?TransactionDate", MySqlDbType.DateTime).Value = dbObj.Recurringgiftnexttransactiondate;
-                                myCmd.Parameters.Add("?DirectDebitAccountNo", MySqlDbType.VarChar).Value = dbObj.DirectDebitAccountAccountnumber.Replace("*", "");
-
-                                DateTime NextInstallmaneDate = GetOneviewcirlBatchNextInstallmaneDate("CUK", "Recurring Gifts Existing Mandate");
-
-                                if (dbObj.Recurringgiftnexttransactiondate >= NextInstallmaneDate)
-                                {
-                                    myCmd.Parameters.Add("?CollectionDate", MySqlDbType.DateTime).Value = dbObj.Recurringgiftnexttransactiondate;
-                                }
-                                else
-                                {
-                                    DateTime CollectionDate = Convert.ToDateTime(dbObj.Recurringgiftnexttransactiondate);
-                                    do
-                                    {
-                                        if (CollectionDate >= NextInstallmaneDate)
-                                        {
-                                            break;
-                                        }
-                                        switch (dbObj.Installmentfrequency)
-                                        {
-                                            case "Monthly":
-                                                CollectionDate = CollectionDate.AddMonths(1);
-                                                break;
-                                            case "Annually":
-                                                CollectionDate = CollectionDate.AddYears(1);
-                                                break;
-                                            case "Quarterly":
-                                                CollectionDate = CollectionDate.AddMonths(3);
-                                                break;
-                                            case "Weekly":
-                                                CollectionDate = CollectionDate.AddDays(7);
-                                                break;
-                                            case "Half-Yearly":
-                                                CollectionDate = CollectionDate.AddMonths(6);
-                                                break;
-                                        }
-
-                                    } while (true);
-                                    myCmd.Parameters.Add("?CollectionDate", MySqlDbType.DateTime).Value = CollectionDate.ToString("yyyy-MM-dd");
-                                }
-                                myCmd.Parameters.Add("?DirectDebitReferenceNo", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.Directdebitreferencenumber) ? dbObj.Directdebitreferencenumber : null;
-                                myCmd.Parameters.Add("?Designation", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ApplicationDetailsDesignationPublicname) ? dbObj.ApplicationDetailsDesignationPublicname : null;
-                                myCmd.Parameters.Add("?NeedKey", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ChildChildFirstname) ? dbObj.ChildChildFirstname : null;
-
-                                if (!string.IsNullOrEmpty(dbObj.ChildChildFirstname))
-                                {
-                                    myCmd.Parameters.Add("?PreferredChildName", MySqlDbType.VarChar).Value = GetChildPreferredName(dbObj.ChildChildFirstname);
-                                }
-                                else
-                                {
-                                    myCmd.Parameters.Add("?PreferredChildName", MySqlDbType.VarChar).Value = null;
-                                }
-                                myCmd.Parameters.Add("?Frequency", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.Installmentfrequency) ? dbObj.Installmentfrequency : null;
-                                myCmd.Parameters.Add("?TriggerType", MySqlDbType.VarChar).Value = "RecurringGift";
-                                if (!string.IsNullOrEmpty(dbObj.ConstituentAssignedSecurityGroupsSecuritygroupname))
-                                {
-                                    if (dbObj.ConstituentAssignedSecurityGroupsSecuritygroupname == "Irish constituents")
-                                    {
-                                        myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = "Ireland";
-                                        myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = "€";
-                                    }
-                                    else
-                                    {
-                                        myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = "UK";
-                                        myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = "£";
-                                    }
-                                }
-                                else
-                                {
-                                    myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = null;
-                                    myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = null;
-                                }
-                                if (IsDuplicate)
-                                {
-                                    myCmd.Parameters.Add("?Status", MySqlDbType.VarChar).Value = "Duplicate";
-                                }
-                                else
-                                {
-                                    myCmd.Parameters.Add("?Status", MySqlDbType.VarChar).Value = "Extracted";//"Incomplete";
-                                }
-                                myCmd.ExecuteNonQuery();
-                                appLogger.Info(rowCounter + " RecurringGift AdvanceNotice records inserted successfully");
-                            }
-                            rowCounter++;
-                            if (rowCounter % 1000 == 0)
-                            {
-                                appLogger.Info(rowCounter + " Recurring Advance Notice records inserted successfully");
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            appLogger.Error("Error in Recurring Advance Notice for row " + rowCounter + ", RevenueID " + dbObj.RevenueID);
-                            appLogger.Error("Error Message - " + e.Message);
-                            appLogger.Error("Stack Trace - " + e.StackTrace);
-                        }
-                    }
-                    if (rowCounter < 1000)
-                    {
-                        appLogger.Info(rowCounter + " Recurring Advance Notice records inserted successfully.");
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                appLogger.Error("Main - RecurringGift AdvanceNotice Error in getting data from CSV " + e.Message);
-                appLogger.Error("Main - Error for row " + rowCounter);
-                appLogger.Error("Main - Error Message - " + e.Message);
-                appLogger.Error("Main - Stack Trace - " + e.StackTrace);
-            }
-            appLogger.Info("Recurring Advance Notice Sync Ended...");
-        }
-
         public DateTime GetOneviewcirlBatchNextInstallmaneDate(string Office, string MandateType)
         {
             DateTime NextInstalmentDate = new DateTime();
@@ -8684,7 +8270,7 @@ namespace CukAutomationOperations
                         }
                         catch (Exception e)
                         {
-                            
+
                             if (e.Message.Contains("The request failed with HTTP status 502: Bad Gateway"))
                             {
 
@@ -8890,7 +8476,7 @@ namespace CukAutomationOperations
                 ClientInfoHeader info = new ClientInfoHeader();
                 APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
                 info.AppID = "Fetch Incident details";
-                
+
 
                 string query = "SELECT Incident.ID,Incident.threads.text,Incident.customFields.c.bankaccountnumber,Incident.customFields.c.banksortcode,Incident.Customfields.c.supportertype.lookupName,Incident.category.lookupName,Incident.Customfields.c.sponsorchildref,Incident.Customfields.c.sponsorshipplus.lookupname,Incident.primaryContact.contact,Incident.Customfields.c.newsupporter.lookupname,Incident.Customfields.c.automatedresponse.lookupname,Incident.customFields.c.setupguid FROM Incident WHERE Incident.ID = " + IncidentID + " order by Incident.threads.createdTime ASC limit 0,1";
 
@@ -9308,7 +8894,7 @@ namespace CukAutomationOperations
         public void UpdateResolveBotSetStatus(long IncidentId, string SetupStatus)
         {
             /*
-              Not Started - 352
+             Not Started - 352
                In Progress - 355
                Held - 1690
                Released - 1691
@@ -9322,7 +8908,7 @@ namespace CukAutomationOperations
                Check - 1718
                No match - 1719
                Manual - 1720
-            */
+                        */
             appLogger.Info("Updating Incident SetupStatus: " + SetupStatus + " with incident id: " + IncidentId + " for resolve bot process");
             int SetupStatusVal = 0;
             switch (SetupStatus)
@@ -9399,7 +8985,7 @@ namespace CukAutomationOperations
                 internalSubject = "Welcome Photo Pack Re-Ordered";
             }
             int StatusTypeID = 107; //107 - Resolved (Automated)
-            
+
             try
             {
                 Incident incident = new Incident
@@ -9468,7 +9054,7 @@ namespace CukAutomationOperations
                 };
 
                 GenericField feedbackstatusField = null;
-                feedbackstatusField = createGenericfield("feedbackstatus", createNamedIdDataValue(1646), DataTypeEnum.NAMED_ID); // 1646(TST1) 1646(prod)
+                feedbackstatusField = createGenericfield("feedbackstatus", createNamedIdDataValue(1646), DataTypeEnum.NAMED_ID); // 1646(TST1)
 
                 GenericField internalSubjectField = null;
                 if (internalSubject != null && !string.IsNullOrWhiteSpace(internalSubject))
@@ -10282,7 +9868,7 @@ namespace CukAutomationOperations
                 long Count_Org_Linked_With_Denomination = GetNoOfOrgWithActiveChildLinkedWithMenuItemId(entityObj.Entity_Id);
                 OrgData OrgObj = new OrgData();
                 OrgObj = GetSumOfEventBasedOnMenuItemId(Event_Ids);
-
+                
                 String timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 string Update_Query = "UPDATE ENTITY SET SYNC_STATUS = 'Success'";
 
@@ -10302,8 +9888,8 @@ namespace CukAutomationOperations
                     Update_Query += ", CHANGED_IN_S2B_LETTERS = 0";
                 }
 
-                string B2S_Arrow_URL = Host_Website_Url + "celebration_services/assets/empty_arrow.JPG";
-                string S2B_Arrow_URL = Host_Website_Url + "celebration_services/assets/empty_arrow.JPG";
+                string B2S_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/empty_arrow.JPG";
+                string S2B_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/empty_arrow.JPG";
 
                 if (OrgObj.B2S_Letters_Sent_Last_Year != 0 && OrgObj.B2S_Letters_Sent_Previous_Year != 0)
                 {
@@ -10311,9 +9897,9 @@ namespace CukAutomationOperations
                     {
                         // Do nothing
                     }
-                    else if (OrgObj.B2S_Letters_Sent_Last_Year > OrgObj.B2S_Letters_Sent_Previous_Year)
+                    else if (OrgObj.B2S_Letters_Sent_Last_Year > OrgObj.B2S_Letters_Sent_Previous_Year) // Greater than
                     {
-                        B2S_Arrow_URL = Host_Website_Url + "celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
+                        B2S_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
                     }
                     else
                     {
@@ -10327,9 +9913,9 @@ namespace CukAutomationOperations
                     {
                         // Do nothing
                     }
-                    else if (OrgObj.S2B_Letters_Sent_Last_Year > OrgObj.S2B_Letters_Sent_Previous_Year)
+                    else if (OrgObj.S2B_Letters_Sent_Last_Year > OrgObj.S2B_Letters_Sent_Previous_Year) // Greater than
                     {
-                        S2B_Arrow_URL = Host_Website_Url + "celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
+                        S2B_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
                     }
                     else
                     {
@@ -10345,8 +9931,8 @@ namespace CukAutomationOperations
                 Update_Query += ", TOTAL_OF_FINANCIAL_SUPPORT_IN_PREVIOUS_YEAR = " + OrgObj.Total_Of_Financial_Supp_In_Previous_Year;
                 Update_Query += ", NO_OF_GIFTS_IN_PREVIOUS_YEAR = " + OrgObj.No_Of_Gifts_In_Previous_Year;
 
-                string Financial_Support_Arrow_URL = Host_Website_Url + "celebration_services/assets/empty_arrow.JPG";
-                string No_Of_Gift_Arrow_URL = Host_Website_Url + "celebration_services/assets/empty_arrow.JPG";
+                string Financial_Support_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/empty_arrow.JPG";
+                string No_Of_Gift_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/empty_arrow.JPG";
 
                 if (OrgObj.Total_Of_Financial_Supp_In_Last_Year != 0 && OrgObj.Total_Of_Financial_Supp_In_Previous_Year != 0)
                 {
@@ -10354,7 +9940,7 @@ namespace CukAutomationOperations
                     {
                         if (OrgObj.Changed_In_Financial_Support != 0)
                         {
-                            Financial_Support_Arrow_URL = Host_Website_Url + "celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
+                            Financial_Support_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
                         }
                         if (Count_Org_Linked_With_Denomination != 0)
                         {
@@ -10381,7 +9967,7 @@ namespace CukAutomationOperations
                     {
                         if (OrgObj.Changed_In_No_Of_Gift != 0)
                         {
-                            No_Of_Gift_Arrow_URL = Host_Website_Url + "celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
+                            No_Of_Gift_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
                         }
                         if (Count_Org_Linked_With_Denomination != 0)
                         {
@@ -10422,8 +10008,8 @@ namespace CukAutomationOperations
 
                 try
                 {
-                    //string create_image_url = Host_Website_Url + "Create_ppt_images_for_denomination.php?OrgID=" + multiple_OrgIds + "&MENU_ITEM_ID=" + MenuItemId;
-                    string create_image_url = Host_Website_Url + "Create_ppt_images_for_denomination.php?ENTITY_ID=" + entityObj.Entity_Id + "&IS_EVENT=" + entityObj.Event_flag;
+                    //string create_image_url = Host_Website_Url + "oneview/Create_ppt_images_for_denomination.php?OrgID=" + multiple_OrgIds + "&MENU_ITEM_ID=" + MenuItemId;
+                    string create_image_url = Host_Website_Url + "oneview/Create_ppt_images_for_denomination.php?ENTITY_ID=" + entityObj.Entity_Id + "&IS_EVENT=" + entityObj.Event_flag;
                     //string create_image_url = "";
 
                     appLogger.Info("API Url for Creating Image Slider is " + create_image_url + " ");
@@ -10780,8 +10366,8 @@ namespace CukAutomationOperations
                     Update_Query += ", CHANGED_IN_S2B_LETTERS = 0";
                 }
 
-                string B2S_Arrow_URL = Host_Website_Url + "celebration_services/assets/empty_arrow.JPG";
-                string S2B_Arrow_URL = Host_Website_Url + "celebration_services/assets/empty_arrow.JPG";
+                string B2S_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/empty_arrow.JPG";
+                string S2B_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/empty_arrow.JPG";
 
                 if (OrgObj.B2S_Letters_Sent_Last_Year != 0 && OrgObj.B2S_Letters_Sent_Previous_Year != 0)
                 {
@@ -10791,11 +10377,11 @@ namespace CukAutomationOperations
                     }
                     else if (OrgObj.B2S_Letters_Sent_Last_Year > OrgObj.B2S_Letters_Sent_Previous_Year)
                     {
-                        B2S_Arrow_URL = Host_Website_Url + "celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
+                        B2S_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
                     }
                     else
                     {
-                        B2S_Arrow_URL = Host_Website_Url + "celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
+                        B2S_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
                     }
                 }
 
@@ -10807,11 +10393,11 @@ namespace CukAutomationOperations
                     }
                     else if (OrgObj.S2B_Letters_Sent_Last_Year > OrgObj.S2B_Letters_Sent_Previous_Year)
                     {
-                        S2B_Arrow_URL = Host_Website_Url + "celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
+                        S2B_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
                     }
                     else
                     {
-                        S2B_Arrow_URL = Host_Website_Url + "celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
+                        S2B_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
                     }
                 }
 
@@ -10834,8 +10420,8 @@ namespace CukAutomationOperations
                 }
                 */
 
-                string Financial_Support_Arrow_URL = Host_Website_Url + "celebration_services/assets/empty_arrow.JPG";
-                string No_Of_Gift_Arrow_URL = Host_Website_Url + "celebration_services/assets/empty_arrow.JPG";
+                string Financial_Support_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/empty_arrow.JPG";
+                string No_Of_Gift_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/empty_arrow.JPG";
 
                 if (OrgObj.Total_Of_Financial_Supp_In_Last_Year != 0 && OrgObj.Total_Of_Financial_Supp_In_Previous_Year != 0)
                 {
@@ -10843,7 +10429,7 @@ namespace CukAutomationOperations
                     {
                         if (OrgObj.Changed_In_Financial_Support != 0)
                         {
-                            Financial_Support_Arrow_URL = Host_Website_Url + "celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
+                            Financial_Support_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
                         }
                         if (Count_Org_Linked_With_Denomination != 0)
                         {
@@ -10878,7 +10464,7 @@ namespace CukAutomationOperations
                     {
                         if (OrgObj.Changed_In_No_Of_Gift != 0)
                         {
-                            No_Of_Gift_Arrow_URL = Host_Website_Url + "celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
+                            No_Of_Gift_Arrow_URL = Host_Website_Url + "oneview/celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
                         }
                         if (Count_Org_Linked_With_Denomination != 0)
                         {
@@ -10919,8 +10505,8 @@ namespace CukAutomationOperations
 
                 try
                 {
-                    //string create_image_url = Host_Website_Url + "Create_ppt_images_for_denomination.php?OrgID=" + multiple_OrgIds + "&MENU_ITEM_ID=" + MenuItemId;
-                    string create_image_url = Host_Website_Url + "Create_ppt_images_for_denomination.php?ENTITY_ID=" + entityObj.Entity_Id;
+                    //string create_image_url = Host_Website_Url + "oneview/Create_ppt_images_for_denomination.php?OrgID=" + multiple_OrgIds + "&MENU_ITEM_ID=" + MenuItemId;
+                    string create_image_url = Host_Website_Url + "oneview/Create_ppt_images_for_denomination.php?ENTITY_ID=" + entityObj.Entity_Id;
                     //string create_image_url = "";
 
                     appLogger.Info("API Url for Creating Image Slider is " + create_image_url + " ");
@@ -11350,7 +10936,7 @@ namespace CukAutomationOperations
                 appLogger.Info("Org: " + OrgID + " WorthyCommitmentOperation ended...");
             }
         }
-
+        
 
 
         public List<string> GetNeedkeysBasedonOrgId(long OrgId)
@@ -11446,6 +11032,7 @@ namespace CukAutomationOperations
             appLogger.Info("Needkey :" + Needkey + " GetCorrectCommitmentIdBasedOnNeedKey ended...");
             return CommitmentID;
         }
+
         /*public void SyncWorthyCommitmentInOrg(long OrgID)
         {
             appLogger.Info("SyncWorthyCommitmentInOrg for OrgID: "+ OrgID + " started...");
@@ -11621,13 +11208,13 @@ namespace CukAutomationOperations
                                     Hours_spent_at_project = (10 * length_of_sponsorship) / 12; //HOURS_SPENT 
                                     NutritionalMeal = Convert.ToInt32(((decimal) Meal_length_of_sponsorship / 12) * 10); //NUTRITIONS_MEALS
                                     medicalCheckups = Convert.ToInt32(((decimal) length_of_sponsorship / 12)); //MEDICAL_CHECKUPS
-                                } 
+                                }
                                 else // Project or Center based
                                 {
                                     Hours_spent_at_project = (44 * 4 * length_of_sponsorship) / 12; //HOURS_SPENT 
                                     NutritionalMeal = Convert.ToInt32(((decimal) Meal_length_of_sponsorship / 12) * 44); //NUTRITIONS_MEALS
                                     medicalCheckups = Convert.ToInt32(((decimal) length_of_sponsorship / 12)); //MEDICAL_CHECKUPS
-                                } 
+                                }
                                 projectAttendance = (int)Math.Floor(14 * ((end_Date - start_Date).TotalDays / 30.4375));
                             }
 
@@ -12297,9 +11884,9 @@ namespace CukAutomationOperations
                             string B2S_Letters_Sent_Previous_Year = OrgObj.B2S_Letters_Sent_Previous_Year.ToString();
                             string S2B_Letters_Sent_Previous_Year = OrgObj.S2B_Letters_Sent_Previous_Year.ToString();
                             string Change_In_B2S_Letter_Sent = "";
-                            string B2S_Arrow_URL = "https://oneview.org.uk/celebration_services/assets/empty_arrow.JPG";
+                            string B2S_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/empty_arrow.JPG";
                             string Change_In_S2B_Letter_Sent = "";
-                            string S2B_Arrow_URL = "https://oneview.org.uk/celebration_services/assets/empty_arrow.JPG";
+                            string S2B_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/empty_arrow.JPG";
 
                             if (OrgObj.B2S_Letters_Sent_Last_Year != 0 && OrgObj.B2S_Letters_Sent_Previous_Year != 0)
                             {
@@ -12307,13 +11894,13 @@ namespace CukAutomationOperations
                                 {
 
                                     Change_In_B2S_Letter_Sent = ((OrgObj.B2S_Letters_Sent_Last_Year - OrgObj.B2S_Letters_Sent_Previous_Year) * 100 / OrgObj.B2S_Letters_Sent_Previous_Year).ToString();
-                                    B2S_Arrow_URL = "https://oneview.org.uk/celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
+                                    B2S_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
 
                                 }
                                 else
                                 {
                                     Change_In_B2S_Letter_Sent = ((OrgObj.B2S_Letters_Sent_Previous_Year - OrgObj.B2S_Letters_Sent_Last_Year) * 100 / OrgObj.B2S_Letters_Sent_Last_Year).ToString();
-                                    B2S_Arrow_URL = "https://oneview.org.uk/celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
+                                    B2S_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
                                 }
                             }
 
@@ -12322,12 +11909,12 @@ namespace CukAutomationOperations
                                 if (OrgObj.S2B_Letters_Sent_Last_Year >= OrgObj.S2B_Letters_Sent_Previous_Year) // Greater than
                                 {
                                     Change_In_S2B_Letter_Sent = ((OrgObj.S2B_Letters_Sent_Last_Year - OrgObj.S2B_Letters_Sent_Previous_Year) * 100 / OrgObj.S2B_Letters_Sent_Previous_Year).ToString();
-                                    S2B_Arrow_URL = "https://oneview.org.uk/celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
+                                    S2B_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/up_arrow_blue@2x.png"; // Up Arrow
                                 }
                                 else
                                 {
                                     Change_In_S2B_Letter_Sent = ((OrgObj.S2B_Letters_Sent_Previous_Year - OrgObj.S2B_Letters_Sent_Last_Year) * 100 / OrgObj.S2B_Letters_Sent_Last_Year).ToString();
-                                    S2B_Arrow_URL = "https://oneview.org.uk/celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
+                                    S2B_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
                                 }
                             }
 
@@ -12347,8 +11934,8 @@ namespace CukAutomationOperations
                             int Total_Financial_Supp_In_Previous_Year = Convert.ToInt32(Total_Of_Financial_Supp_In_Previous_Year);
                             int No_Gifts_In_Last_Year = Convert.ToInt32(No_Of_Gifts_In_Last_Year);
                             int No_Gifts_In_Previous_Year = Convert.ToInt32(No_Of_Gifts_In_Previous_Year);
-                            string Financial_Support_Arrow_URL = "https://cukdev.co.uk/oneview/celebration_services/assets/empty_arrow.JPG";
-                            string No_Of_Gift_Arrow_URL = "https://cukdev.co.uk/oneview/celebration_services/assets/empty_arrow.JPG";
+                            string Financial_Support_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/empty_arrow.JPG";
+                            string No_Of_Gift_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/empty_arrow.JPG";
                             int Total_Change_In_Financial_Support;
                             int Total_Change_In_No_Of_Gift;
                             string Change_In_No_Of_Gift = "";
@@ -12361,13 +11948,13 @@ namespace CukAutomationOperations
                                     Total_Change_In_Financial_Support = (Total_Financial_Supp_In_Last_Year - Total_Financial_Supp_In_Previous_Year) * 100 / Total_Financial_Supp_In_Previous_Year;
                                     if (Total_Change_In_Financial_Support != 0)
                                     {
-                                        Financial_Support_Arrow_URL = "https://cukdev.co.uk/oneview/celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
+                                        Financial_Support_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
                                         Change_In_Financial_Support = Convert.ToString(Total_Change_In_Financial_Support);
                                     }
                                 }
                                 else
                                 {
-                                    //Financial_Support_Arrow_URL = "https://cukdev.co.uk/oneview/celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
+                                    //Financial_Support_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
                                     //Total_In_Financial_Support = (Total_Financial_Supp_In_Previous_Year - Total_Financial_Supp_In_Last_Year) * 100 / Total_Financial_Supp_In_Last_Year;
                                     //Change_In_Financial_Support = Convert.ToString(Total_In_Financial_Support);
                                 }
@@ -12380,13 +11967,13 @@ namespace CukAutomationOperations
                                     Total_Change_In_No_Of_Gift = (No_Gifts_In_Last_Year - No_Gifts_In_Previous_Year) * 100 / No_Gifts_In_Previous_Year;
                                     if (Total_Change_In_No_Of_Gift != 0)
                                     {
-                                        No_Of_Gift_Arrow_URL = "https://cukdev.co.uk/oneview/celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
+                                        No_Of_Gift_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/up_arrow_green@2x.png"; // Up Arrow
                                         Change_In_No_Of_Gift = Convert.ToString(Total_Change_In_No_Of_Gift);
                                     }
                                 }
                                 else
                                 {
-                                    //No_Of_Gift_Arrow_URL = "https://cukdev.co.uk/oneview/celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
+                                    //No_Of_Gift_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/down_arrow_grey@2x.png"; // Down Arrow
                                     //Total_Change_In_No_Of_Gift = (No_Gifts_In_Previous_Year - No_Gifts_In_Last_Year) * 100 / No_Gifts_In_Last_Year;
                                     //Change_In_No_Of_Gift = Convert.ToString(Total_Change_In_No_Of_Gift);
                                 }
@@ -12398,8 +11985,8 @@ namespace CukAutomationOperations
                             string Total_Of_Financial_Supp_In_Previous_Year = "0";
                             string No_Of_Gifts_In_Previous_Year = "0";
 
-                            string Financial_Support_Arrow_URL = Host_Website_Url + "celebration_services/assets/empty_arrow.JPG";
-                            string No_Of_Gift_Arrow_URL = Host_Website_Url + "celebration_services/assets/empty_arrow.JPG";
+                            string Financial_Support_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/empty_arrow.JPG";
+                            string No_Of_Gift_Arrow_URL = "https://cukwebsite.co.uk/oneview/celebration_services/assets/empty_arrow.JPG";
                             string Change_In_No_Of_Gift = "";
                             string Change_In_Financial_Support = "";
 
@@ -12417,7 +12004,7 @@ namespace CukAutomationOperations
                                 multi_country_breakdown_text_1 = !string.IsNullOrEmpty(OrgObj3.Slide7B_Text_1) ? OrgObj3.Slide7B_Text_1 : "";
                                 multi_country_breakdown_text_2 = !string.IsNullOrEmpty(OrgObj3.Slide7B_Text_2) ? OrgObj3.Slide7B_Text_2 : "";
                             }
-                            
+
 
                             string singleRow = "'" + Org_ID + "', '" + Org_Name + "', '" + NumberOfChild + "', '" + B2S_Letters_Sent_Last_Year + "', '" + S2B_Letters_Sent_Last_Year + "', '" + B2S_Letters_Sent_Previous_Year + "', '" + S2B_Letters_Sent_Previous_Year + "', '" + Change_In_B2S_Letter_Sent + "', '" + B2S_Arrow_URL + "', '" + Change_In_S2B_Letter_Sent + "', '" + S2B_Arrow_URL + "', '" + Total_Of_Financial_Supp_In_Last_Year + "', '" + No_Of_Gifts_In_Last_Year + "', '" + Total_Of_Financial_Supp_In_Previous_Year + "', '" + No_Of_Gifts_In_Previous_Year + "', '" + Change_In_Financial_Support + "', '" + Financial_Support_Arrow_URL + "', '" + Change_In_No_Of_Gift + "', '" + No_Of_Gift_Arrow_URL + "','" + PPT_TYPE + "','" + single_country_breakdown_text_1 + "','" + single_country_breakdown_text_2 + "','" + multi_country_breakdown_text_1 + "','" + multi_country_breakdown_text_2 + "'";
 
@@ -12550,6 +12137,7 @@ namespace CukAutomationOperations
 
                             if (!string.IsNullOrEmpty(Event_ID))
                             {
+                                appLogger.Info("Event sync single row data : " + singleRow);
                                 Rows.Add(string.Format("({0})", singleRow));
                             }
                         }
@@ -12746,7 +12334,6 @@ namespace CukAutomationOperations
                         {
                             //Qrcode_URL = GenerateBarCodeCampaignTable(Event_Page_URL, Campaign_Reference);
                             Qrcode_URL = GenerateBarCodeCampaignTableV2(Event_Page_URL, Campaign_Reference);
-                            //Qrcode_URL = "null";
                         }
                         else
                         {
@@ -12756,6 +12343,7 @@ namespace CukAutomationOperations
                         string Campaign_URL = "compassionuk.org/sponsorship/"; // CAMPAIGN_URL
                         string Campaign_Text_To_Sponsor = "SPONSOR "; // CAMPAIGN_TEXT_TO_SPONSOR
                         //string Campaign_Text_To_Sponsor = "SPONSOR to 07984377587"; // CAMPAIGN_TEXT_TO_SPONSOR
+                        Campaign_Text_To_Sponsor = "SPONSOR"; // CAMPAIGN_TEXT_TO_SPONSOR
 
                         string singleRow = "'" + Org_ID + "', '" + Campaign_ID + "', '" + Campaign_Name + "', '" + Campaign_Reference + "', '" + Qr_Code_Image_URL + "', '" + Campaign_URL + "', '" + Campaign_Text_To_Sponsor + "'";
 
@@ -13053,7 +12641,7 @@ namespace CukAutomationOperations
             string BarCodeUrl = Host + "/CukAutomationServices/QR-Code/QR-Code_" + Keyword + ".png";
             try
             {
-                string BarCodePath = @"E:/Compassion-UK/CukAutomationServices/CukAutomationServices/QR-Code/QR-Code_" + Keyword + ".png";
+                string BarCodePath = @""+ settings["QR_CODE_IMG_PATH"] + "QR-Code_" + Keyword + ".png";
                 var url = string.Format("http://chart.apis.google.com/chart?cht=qr&chs={1}x{2}&chl={0}", URL, "500", "500");
                 WebResponse response = default(WebResponse);
                 Stream remoteStream = default(Stream);
@@ -13084,7 +12672,7 @@ namespace CukAutomationOperations
             string BarCodeUrl = Host + "/CukAutomationServices/QR-Code/QR-Code_" + Keyword + ".png";
             try
             {
-                string BarCodePath = @"E:/Compassion-UK/CukAutomationServices/CukAutomationServices/QR-Code/QR-Code_" + Keyword + ".png";
+                string BarCodePath = @"" + settings["QR_CODE_IMG_PATH"] + "QR-Code_" + Keyword + ".png";
                 RestClient client = new RestClient("https://chart.apis.google.com/chart");
                 RestRequest request = new RestRequest("", Method.GET);
                 request.AddParameter("cht", "qr", ParameterType.QueryString);
@@ -13131,22 +12719,22 @@ namespace CukAutomationOperations
                         {
                             if (EventID != 0)
                             {
-                                create_image_url = Host_Website_Url + "Create_ppt_images_v2.php?EventID=" + EventID + "&child_count=" + no_of_child;
+                                create_image_url = "https://cukwebsite.co.uk/oneview/Create_ppt_images_v2.php?EventID=" + EventID + "&child_count=" + no_of_child;
                             }
                             else
                             {
-                                create_image_url = Host_Website_Url + "Create_ppt_images_v2.php?OrgID=" + OrgID + "&child_count=" + no_of_child;
+                                create_image_url = "https://cukwebsite.co.uk/oneview/Create_ppt_images_v2.php?OrgID=" + OrgID + "&child_count=" + no_of_child;
                             }
                         }
                         else
                         {
                             if (EventID != 0)
                             {
-                                create_image_url = Host_Website_Url + "Create_ppt_images_v2.php?EventID=" + EventID + "&child_count=" + no_of_child;
+                                create_image_url = "https://cukwebsite.co.uk/oneview/Create_ppt_images_v2.php?EventID=" + EventID + "&child_count=" + no_of_child;
                             }
                             else
                             {
-                                create_image_url = Host_Website_Url + "Create_ppt_images_v2.php?OrgID=" + OrgID + "&child_count=" + no_of_child;
+                                create_image_url = "https://cukwebsite.co.uk/oneview/Create_ppt_images_v2.php?OrgID=" + OrgID + "&child_count=" + no_of_child;
                             }
                         } //OrgID=21977&child_count=36
                         appLogger.Info("API Url for creating Image Slider is " + create_image_url + " Count of Children : " + no_of_child);
@@ -14836,7 +14424,7 @@ namespace CukAutomationOperations
                     //sCommand.Replace("'null'", "null");
                     //sCommand.Append(";");
                     appLogger.Info("Query is : " + sCommand.ToString());
-                    if (!string.IsNullOrEmpty(sCommand.ToString())) { 
+                    if (!string.IsNullOrEmpty(sCommand.ToString())) {
                         mConnection.Open();
                         using (MySqlCommand myCmd = new MySqlCommand(sCommand.ToString(), mConnection))
                         {
@@ -14986,6 +14574,458 @@ namespace CukAutomationOperations
             return FDataList;
         }
 
+        #endregion
+
+        #region Cancel Sponsorship issue replicate section
+        public void TransferSponserShip()
+        {
+            string json = "{'actionid':20101,'title':null,'firstname':'KE034700316','lastname':null,'postcode':null,'emailaddress':null,'Gender':'Female','DoNotMail':false,'Phoneno':null,'address':null,'city':null,'county':null,'RNID':null,'BBID':null,'RNSGID':null,'SGBBID':null,'NeedKey':null,'createCommitmentInBB':null,'sgname':null,'BBIDList':null,'primaryBBID':null,'CorrespondenceBBID':null,'sgtype':null,'AccountName':null,'AccountNumber':null,'SortCode':null,'Amount':0,'InstallmentFrequency':null,'PaymentMethod':null,'DDISource':null,'DDDate':null,'FirstFundedDate':null,'AdvanceNoticeSent':null,'GroupAccount':false,'Indicator':null,'ScannedDocExists':false,'GAStartDate':null,'GAMadeDate':null,'TaxPayerTitle':null,'TaxPayerFirstName':null,'TaxPayerLastName':null,'GiftAidStatus':false,'GlobalId':null,'CorresGlobalId':null,'BBCommitmentId':'sp-10073797','ChildLookUpId':'KE034700316','childPersonalName':'Shani','childName':'Shani Karisa','childGender':null,'isOrphan':'False','oldchildNeedkey':null,'childGlobalId':null,'ChildBirthDate':null,'IsSponPlus':null,'compassionoffice':null,'sefGUID':'{1098E172-B68D-9FEC-E91E-AF78B05BA237}','birthdayGiftAmount':'','christmasGiftAmount':'','AnnualBirthDate':'21-01-2022','AnnualChristmas':'21-10-2021','IsHillsongSponPlus':null,'priSupBlackbaudId':'8-10031239','supGrptype':'2'}";
+            dynamic obj = JObject.Parse(json);
+            string msg = "";
+            string spcommitmentid = Convert.ToString(obj.BBCommitmentId);
+            string DDISource = null;
+            string OldNeedkey = null;
+            string SrpGrpType = Convert.ToString(obj.supGrptype);
+            string psBlackbaudid = Convert.ToString(obj.priSupBlackbaudId);//Primary supporter bbid
+            string NewNeedkey = Convert.ToString(obj.ChildLookUpId);
+            string AccountID = null;
+            string lookupid = null;
+            string constituentId = null;
+            try
+            {
+                //appLogger.Info("Transfer Sponsorship Data received in BB : " + json + " at " + DateTime.Now);
+                //Console.WriteLine("Transfer Sponsorship Data received in BB : " + json + " at " + DateTime.Now);
+                //Cancel Recurring Gift
+                if (SrpGrpType == "2" || SrpGrpType == "3" || SrpGrpType == "4")
+                {
+                    constituentId = GetConstituentOnLookupIDNew(psBlackbaudid).Output.Rows[0].Values[0];
+                    lookupid = psBlackbaudid;
+                }
+                var SponsorshipRG = fetchRecurringGiftsForReassignSponsorship(constituentId);
+                if (SponsorshipRG.Count > 0)
+                {
+                    DDISource = SponsorshipRG[0].Values[14] == null ? "" : SponsorshipRG[0].Values[14].ToString();
+                    OldNeedkey = SponsorshipRG[0].Values[4].ToString();
+                }
+                if (!string.IsNullOrEmpty(OldNeedkey))
+                {
+                    //CancelOtherRecurringGift(OldNeedkey, lookupid, Convert.ToString(obj.sefGUID));//Cancel Recurring Gift
+                }
+                else
+                {
+                    appLogger.Info("OldChild not found failed to cancel other recurring gift with commitment id " + spcommitmentid);
+                    Console.WriteLine("OldChild not found failed to cancel other recurring gift with commitment id " + spcommitmentid);
+                }
+
+                #region Transfer SponserShip 
+
+                var childData = GetChildsearchOnLookupID(Convert.ToString(obj.ChildLookUpId));
+
+                var commitmentdetails = GetCommitmentOnLookupID(Convert.ToString(obj.BBCommitmentId));
+                if (commitmentdetails.Output.RowCount == 0)
+                {
+                    msg = "No active commitments found with sponsorship id : " + obj.BBCommitmentId + ".";
+                    //if (!string.IsNullOrWhiteSpace(obj.sefGUID))
+                    //  InsertSEFOperationResponse(obj.sefGUID, msg, MessageHeader.TransferSponsorshipInBB, false);
+                    appLogger.Error("No active commitments found with sponsorship id : " + obj.BBCommitmentId);
+                    //return msg;
+                }
+                else
+                {
+                    var financedetails = getFinancialOnChildIdForIndiaSupporter(commitmentdetails.Output.Rows[0].Values[4]);// "ET5550250"
+                    /*if (childData.TotalRowsInReply < 1) {
+                        Model.ChildDataModel childDetails = new Model.ChildDataModel();
+                        childDetails.childKey = obj.ChildLookUpId;
+                        childDetails.childName = obj.childName;
+                        if (obj.Gender == "Male")
+                        {
+                            childDetails.gender = "M";
+                        }
+                        else if (obj.Gender == "Female")
+                        {
+                            childDetails.gender = "F";
+                        }
+                        else {
+                            childDetails.gender = "";
+                        }
+                        childDetails.childPersonalName = obj.childPersonalName;
+                        string addChildDetails = (new JavaScriptSerializer()).Serialize(childDetails);
+                        bool success;
+                        AddChild(addChildDetails, out success);
+                        childData = GetChildsearchOnLookupID(Convert.ToString(obj.ChildLookUpId));
+                    }*/
+                    TransferSponsorshipEditFormData transfer = new TransferSponsorshipEditFormData();
+                    transfer.RecordID = commitmentdetails.Output.Rows[0].Values[0];
+                    //transfer.SPONSORSHIPCONSTITUENTID
+
+                    transfer.SPONSORSHIPOPPORTUNITYIDCHILD = new Guid(childData.Output.Rows[0].Values[0]);
+                    transfer.SPONSORSHIPREASONID = new Guid(GetDepartureReasonGUID());
+                    if (obj.Gender == "Male")
+                    {
+                        transfer.GENDERCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.GENDERCODE.Male;
+                    }
+                    else if (obj.Gender == "Female")
+                    {
+                        transfer.GENDERCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.GENDERCODE.Female;
+                    }
+                    else
+                    {
+                        transfer.GENDERCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.GENDERCODE.Male;
+                    }
+
+                    transfer.ISHIVPOSITIVECODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.ISHIVPOSITIVECODE.No;
+                    transfer.HASCONDITIONCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.HASCONDITIONCODE.No;
+
+                    if (obj.isOrphan == "True")
+                    {
+                        transfer.ISORPHANEDCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.ISORPHANEDCODE.Yes;
+                    }
+                    else
+                    {
+                        transfer.ISORPHANEDCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.ISORPHANEDCODE.No;
+                    }
+                    if (financedetails.TotalRowsInReply > 0)
+                    {
+                        if (financedetails.Rows[0].Values[5] == "Annually")
+                        {
+                            transfer.FREQUENCYCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.FREQUENCYCODE.Annually;
+                        }
+                        else if (financedetails.Rows[0].Values[5] == "Bimonthly")
+                        {
+                            transfer.FREQUENCYCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.FREQUENCYCODE.Bimonthly;
+                        }
+                        else if (financedetails.Rows[0].Values[5] == "Biweekly")
+                        {
+                            transfer.FREQUENCYCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.FREQUENCYCODE.Biweekly;
+                        }
+                        else if (financedetails.Rows[0].Values[5] == "Monthly")
+                        {
+                            transfer.FREQUENCYCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.FREQUENCYCODE.Monthly;
+                        }
+                        else if (financedetails.Rows[0].Values[5] == "Quarterly")
+                        {
+                            transfer.FREQUENCYCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.FREQUENCYCODE.Quarterly;
+                        }
+                        else if (financedetails.Rows[0].Values[5] == "SemiAnnually")
+                        {
+                            transfer.FREQUENCYCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.FREQUENCYCODE.SemiAnnually;
+                        }
+                        else if (financedetails.Rows[0].Values[5] == "SemiMonthly")
+                        {
+                            transfer.FREQUENCYCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.FREQUENCYCODE.SemiMonthly;
+                        }
+                        else
+                        {
+                            transfer.FREQUENCYCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.FREQUENCYCODE.Monthly;
+                        }
+                        if (financedetails.Rows[0].Values[6] == "Direct debit")
+                        {
+                            transfer.PAYMENTMETHODCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.PAYMENTMETHODCODE.Direct_Debit;
+                        }
+                        else if (financedetails.Rows[0].Values[6] == "Credit card")
+                        {
+                            transfer.PAYMENTMETHODCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.PAYMENTMETHODCODE.Credit_Card;
+                        }
+                        else
+                        {
+                            transfer.PAYMENTMETHODCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.PAYMENTMETHODCODE.None;
+                        }
+                    }
+                    else
+                    {
+                        transfer.FREQUENCYCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.FREQUENCYCODE.Monthly;
+                        transfer.PAYMENTMETHODCODE_IDVALUE = Blackbaud.AppFx.Sponsorship.Catalog.WebApiClient.EditForms.Sponsorship.TransferSponsorshipEditFormEnums.PAYMENTMETHODCODE.None;
+                    }
+
+                    try
+                    {
+                        string str = "";//transfer.Save(provider());
+                        msg = "Sponsorship Transfered in BB";
+                        //if (!string.IsNullOrWhiteSpace(Convert.ToString(obj.sefGUID)))
+                        //InsertSEFOperationResponse(Convert.ToString(obj.sefGUID), msg, MessageHeader.TransferSponsorshipInBB, true);
+                        appLogger.Info("Sponsorship Transfered in BB for Commitment " + Convert.ToString(obj.BBCommitmentId) + " and Needkey " + Convert.ToString(obj.ChildLookUpId) + " at " + DateTime.Now);
+                        Console.WriteLine("Sponsorship Transfered in BB for Commitment " + Convert.ToString(obj.BBCommitmentId) + " and Needkey " + Convert.ToString(obj.ChildLookUpId) + " at " + DateTime.Now);
+                        //adding Recurring Gift
+                        if (!string.IsNullOrEmpty(Convert.ToString(obj.birthdayGiftAmount)))
+                        {
+                            if (!string.IsNullOrEmpty(constituentId))
+                            {
+                                var finentialaccountlist = FinancialAccountListOnConsRecordid(constituentId);
+                                foreach (ConstituentFinancialAccountsListRow finentialaccount in finentialaccountlist)
+                                {
+                                    if (finentialaccount.EFT_status == "EFT")
+                                    {
+                                        AccountID = finentialaccount.ID.ToString();
+                                        break;
+                                    }
+                                }
+                                //doCreateChildBirthdayRGService(constituentId, NewNeedkey, Convert.ToDouble(obj.birthdayGiftAmount), Convert.ToString(obj.AnnualBirthDate), AccountID, lookupid, DDISource, Convert.ToString(obj.sefGUID));
+
+                                if (!string.IsNullOrEmpty(Convert.ToString(obj.christmasGiftAmount)))
+                                {
+                                    //doCreateChildChristmasRGService(constituentId, NewNeedkey, Convert.ToDouble(obj.christmasGiftAmount), Convert.ToString(obj.AnnualChristmas), AccountID, lookupid, DDISource, Convert.ToString(obj.sefGUID));
+                                }
+                                // CreateTracktochild(lookupid, NewNeedkey);//Create Track to child Birthday Recurring Gift
+                            }
+                            else
+                            {
+                                appLogger.Info("No constituent details found to add recurring gift with commitment id " + spcommitmentid);
+                                Console.WriteLine("No constituent details found to add recurring gift with commitment id " + spcommitmentid);
+                            }
+                        }
+                        //return msg;
+                    }
+                    catch (AppFxException e)
+                    {
+                        msg = "Error in transfering sponsorship in BB.";
+                        //if (!string.IsNullOrWhiteSpace(Convert.ToString(obj.sefGUID)))
+                        //  InsertSEFOperationResponse(Convert.ToString(obj.sefGUID), msg, MessageHeader.TransferSponsorshipInBB, false);
+                        appLogger.Error("Error in Sponsorship Transfer " + e.Message);
+                        Console.WriteLine("Error in Sponsorship Transfer " + e.Message);
+                        //return msg;
+                    }
+                }
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                msg = "Error in transfering sponsorship in BB.";
+                //if (!string.IsNullOrWhiteSpace(Convert.ToString(obj.sefGUID)))
+                //  InsertSEFOperationResponse(Convert.ToString(obj.sefGUID), msg, MessageHeader.TransferSponsorshipInBB, false);
+                appLogger.Error("Error in Sponsorship Transfer " + e.Message);
+                Console.WriteLine("Error in Sponsorship Transfer " + e.Message);
+            }
+        }
+        public Blackbaud.AppFx.Constituent.Catalog.WebApiClient.DataLists.Constituent.ConstituentFinancialAccountsListRow[] FinancialAccountListOnConsRecordid(string constituentRecordid)
+        {
+
+            try
+            {
+                DataListLoadRequest req = new DataListLoadRequest();
+                req.ClientAppInfo = GetRequestHeader();
+                req.DataListID = new Guid("18adb86f-bb23-4b71-820c-a0d91d12c8b6");
+                req.ContextRecordID = constituentRecordid;
+
+                Blackbaud.AppFx.Constituent.Catalog.WebApiClient.DataLists.Constituent.ConstituentFinancialAccountsListRow[] rows = Blackbaud.AppFx.Constituent.Catalog.WebApiClient.DataLists.Constituent.ConstituentFinancialAccountsList.GetRows(provider(), req);
+                return rows;
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error while fetching Financial Account from lookup id : " + e.Message);
+                Console.WriteLine("Error while fetching Financial Account from lookup id : " + e.Message);
+
+                return null;
+            }
+        }
+        public DataListLoadReply getFinancialOnChildIdForIndiaSupporter(string childId)
+        {
+            DataListLoadRequest req = new DataListLoadRequest();
+            req.ClientAppInfo = GetRequestHeader();
+            req.DataListID = new Guid("4d07957a-3a03-4500-bbb7-2adb926938cf"); // DataList for India children //6ccba68f-5696-4aff-8aa6-cac3f03815ac
+
+            req.IncludeMetaData = true;
+            var fvSet = new DataFormFieldValueSet();
+            fvSet.Add("SPONSORSHIPOPPORTUNITYLOOKUPID", childId);
+            // fvSet.Add("SPONSORSHIPSSTATUS", "Active");
+            var dfi = new DataFormItem();
+            dfi.Values = fvSet;
+            req.Parameters = dfi;
+            var datareply = _service.DataListLoad(req);
+            return datareply;
+        }
+        private SearchListLoadReply GetCommitmentOnLookupID(string searchme)
+        {
+
+            var searchreq = new SearchListLoadRequest();
+
+            searchreq.ClientAppInfo = GetRequestHeader();
+            searchreq.SearchListID = new Guid("69233a7f-c0b2-42bd-be51-89e16393a758");
+            searchreq.ReturnSearchFilters = true;
+            searchreq.MaxRecords = 500;
+
+            var fvSet = new DataFormFieldValueSet();
+            fvSet.Add("COMMITMENTID", searchme);
+
+            var dfi = new DataFormItem();
+            dfi.Values = fvSet;
+            searchreq.Filter = dfi;
+            return _service.SearchListLoad(searchreq);
+        }
+        public List<DataListResultRow> fetchRecurringGiftsForReassignSponsorship(string constituentId)
+        {
+            //14 - DDI source
+            List<DataListResultRow> responseList = new List<DataListResultRow>();
+            try
+            {
+                DataListLoadRequest request = new DataListLoadRequest();
+                request.ClientAppInfo = GetRequestHeader();
+                request.DataListID = new Guid("0be1b11f-854a-45b1-b90b-bc7947d17f17");   // Data List: Bacs Recurring gifts - sponsorship
+                request.ContextRecordID = constituentId;
+                request.IncludeMetaData = true;
+                var result = _service.DataListLoad(request);
+
+                if (result.TotalRowsInReply > 0)
+                {
+
+                    foreach (var res in result.Rows)
+                    {
+                        responseList.Add(res);
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetching sponsorship recurring gifts for constituent for reassign Sponsorship : " + constituentId + " : " + e.Message);
+            }
+            return responseList;
+        }
+        public SearchListLoadReply GetConstituentOnLookupIDNew(string searchme)
+        {
+
+            var searchreq = new SearchListLoadRequest();
+
+            searchreq.ClientAppInfo = GetRequestHeader();
+            searchreq.SearchListID = new Guid("23C5C603-D7D8-4106-AECC-65392B563887");
+            searchreq.ReturnSearchFilters = true;
+            searchreq.MaxRecords = 500;
+
+            var fvSet = new DataFormFieldValueSet();
+            fvSet.Add("LOOkUPID", searchme);
+            fvSet.Add("EXACTMATCHONLY", true);
+            fvSet.Add("INCLUDEINACTIVE", true);
+
+            var dfi = new DataFormItem();
+            dfi.Values = fvSet;
+            searchreq.Filter = dfi;
+            var reply = _service.SearchListLoad(searchreq);
+            return _service.SearchListLoad(searchreq);
+
+        }
+
+        #endregion
+
+        #region 0004208: S2B Whitemail Process - Lookup values in RightNow from Barcode
+        public List<string> GetBarcodeFromDB()
+        {
+            List<string> Barcode = new List<string>();
+            appLogger.Info("Get Barcode from DB where isprocessed is 3 started.");
+            int count = 0;
+            string S2B_Barcode;
+            MySqlConnection conn = new MySqlConnection(mycuk_tcpt4ConnectionString);
+            try
+            {
+                //string query = "SELECT Barcode FROM `wp_scanned_letter_details` WHERE isProcessed IS NOT NULL AND isProcessed = 3 AND Barcode IS NOT NULL";
+                string query = "SELECT Barcode FROM `wp_scanned_letter_details_dev` WHERE isProcessed IS NOT NULL AND isProcessed = 3 AND Barcode IS NOT NULL";
+                conn.Open();
+                MySqlCommand command = new MySqlCommand(query, conn);
+                MySqlDataReader reader = command.ExecuteReader();
+                OnlineS2BDbModel onlineS2BDbModel = new OnlineS2BDbModel();
+                if (reader.Read())
+                {
+                    while (reader.Read())
+                    {
+                        S2B_Barcode = reader["Barcode"] != null ? Convert.ToString(reader["Barcode"]) : "";
+                        Barcode.Add(S2B_Barcode);
+                        count++;
+                    }
+                }
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in GetBarcodeFromDB " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            finally
+            {
+                conn.Close();
+            }
+            appLogger.Info("Got " + count + " Barcode in DB with isprocessed is 3.");
+            appLogger.Info("Get Barcode from DB where isprocessed is 3 ended.");
+            return Barcode;
+        }
+        public void SyncS2BLookUpValFromBarcode()
+        {
+            appLogger.Info("SyncS2BLookUpValFromBarcode Start ");
+            List<string> Barcodes = GetBarcodeFromDB();
+            if (Barcodes.Count > 0)
+            {
+                appLogger.Info("Total Barcode found to sync in DB: " + Barcodes.Count);
+                foreach (string Barcode in Barcodes)
+                {
+                    fetchLookupValInRNFromBarcode(Barcode);
+                }
+            }
+            appLogger.Info("SyncS2BLookUpValFromBarcode Ended");
+        }
+        public void fetchLookupValInRNFromBarcode(string Barcode)
+        {
+            string BarcodeStr = Barcode; // "PE059300432000920482";
+            string Need_Key = BarcodeStr.Substring(0, 11);
+            string Con_Id = BarcodeStr.Replace(Need_Key + "000", "");
+            if (BarcodeStr.Length == 20)
+            {
+                ClientInfoHeader info = new ClientInfoHeader
+                {
+                    AppID = "Fetch Barcode Data",
+                };
+                try
+                {
+                    string Query = "SELECT CM.Need.NeedKey, CM.Need.ID, CM.Need.Beneficiary_GlobalID, CM.SupporterGroup.CompassConID, CM.SupporterGroup.ID, CM.SupporterGroup.GlobalID FROM SCBS_CM.Commitment CM WHERE CM.Need.NeedKey = '" + Need_Key + "' AND CM.SupporterGroup.CompassConID = " + Con_Id;
+                    APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+                    byte[] byteArray;
+                    CSVTableSet result;
+                    int count = 0;
+                    head = rightNowSyncPortClient.QueryCSV(info, api, Query, 100000, "^", false, true, out result, out byteArray);
+                    count = result.CSVTables[0].Rows.Count();
+                    if (count > 0)
+                    {
+                        appLogger.Info("Update Record for Barcode : " + BarcodeStr);
+                        foreach (string row in result.CSVTables[0].Rows)
+                        {
+                            string[] values = row.Replace("'", "").Split('^');
+                            //string[] values = result.CSVTables[0].Rows[0].Split(',');
+                            string NeedKey = !string.IsNullOrEmpty(values[0]) ? values[0] : "";
+                            string NeedID = !string.IsNullOrEmpty(values[1]) ? values[1] : "";
+                            string BeneficiaryGlobalID = !string.IsNullOrEmpty(values[2]) ? values[2] : "";
+                            string ConID = !string.IsNullOrEmpty(values[3]) ? values[3] : "";
+                            string SupporterGroupID = !string.IsNullOrEmpty(values[4]) ? values[4] : "";
+                            string SupporterGlobalID = !string.IsNullOrEmpty(values[5]) ? values[5] : "";
+                            string isprocessed = "0";
+
+                            //string Sql_Query = "UPDATE `wp_scanned_letter_details` SET `NeedKey` = '" + NeedKey + "', `NeedID` = '" + NeedID + "', `BeneficiaryGlobalID` = '" + BeneficiaryGlobalID + "', `ConID` = '" + ConID + "', `SupporterGroupID` = '" + SupporterGroupID + "', `SupporterGlobalID` = '" + SupporterGlobalID + "', `isProcessed` = '" + isprocessed + "' WHERE Barcode = '" + BarcodeStr + "'";
+                            string Sql_Query = "UPDATE `wp_scanned_letter_details_dev` SET `NeedKey` = '" + NeedKey + "', `NeedID` = '" + NeedID + "', `BeneficiaryGlobalID` = '" + BeneficiaryGlobalID + "', `ConID` = '" + ConID + "', `SupporterGroupID` = '" + SupporterGroupID + "', `SupporterGlobalID` = '" + SupporterGlobalID + "', `isProcessed` = '" + isprocessed + "' WHERE Barcode = '" + BarcodeStr + "'";
+
+                            using (MySqlConnection conn = new MySqlConnection(mycuk_tcpt4ConnectionString))
+                            {
+                                conn.Open();
+                                MySqlCommand cmd = new MySqlCommand(Sql_Query, conn);
+                                cmd.ExecuteNonQuery();
+                                appLogger.Info("Updated Record for " + BarcodeStr);
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        appLogger.Info("Not Data Found in RN for Barcode : " + BarcodeStr + " Needkey is " + Need_Key + " And ConId is " + Con_Id);
+                    }
+                }
+                catch (Exception e)
+                {
+                    appLogger.Error("Error in Fetch Lookup Value In RN From Barcode : " + e.Message);
+                    appLogger.Error(e.InnerException);
+                    appLogger.Error(e.StackTrace);
+                }
+            }
+            else
+            {
+                appLogger.Info("Barcode : " + BarcodeStr + " is less than 20 digit. Therefore cannot Processed data.");
+            }
+        }
         #endregion
 
         #region DX161 and DX162 Correspondence Data Service Method
@@ -15163,7 +15203,7 @@ namespace CukAutomationOperations
                     if (!string.IsNullOrEmpty(s2bData.TemplateID))
                     {
                         TemplateInfo Tinfo = GetTemplateURL(Convert.ToInt32(s2bData.TemplateID));
-                        s2bData.TemplateURL = constant.WEBSITE_URL + "wp-content/themes/donation" + Tinfo.TemplateURL;
+                        s2bData.TemplateURL = constant.HOSTNAME + "wp-content/themes/donation" + Tinfo.TemplateURL;
                         s2bData.LetterType = Tinfo.TemplateType;
                         if (!string.IsNullOrEmpty(s2bData.LetterType))
                         {
@@ -15229,8 +15269,8 @@ namespace CukAutomationOperations
 
             byte[] fileData;
             head = rightNowSyncPortClient.GetFileData(info, api, go, new ID() { id = FileId, idSpecified = true }, true, out fileData);
-            string sFile = @"E:\Compassion-UK\RightNowFetchServices\RightNowFetchServices\ChildLetters\" + CorrespondenceId + "_" + FileId + ".pdf"; //Path
-            string sFileName = "https://live.compassionuk.org/RightNowFetchServices/ChildLetters/" + CorrespondenceId + "_" + FileId + ".pdf"; //Path
+            string sFile = @""+ settings["B2S_LETTER_PATH"] + CorrespondenceId + "_" + FileId + ".pdf"; //Path
+            string sFileName = Host + "/RightNowFetchServices/ChildLetters/" + CorrespondenceId + "_" + FileId + ".pdf"; //Path
             System.IO.File.WriteAllBytes(sFile, fileData);
             return sFileName;
         }
@@ -15356,8 +15396,8 @@ namespace CukAutomationOperations
 
             byte[] fileData;
             head = rightNowSyncPortClient.GetFileData(info, api, go, new ID() { id = FileId, idSpecified = true }, true, out fileData);
-            string sFile = @"E:\Compassion-UK\RightNowFetchServices\RightNowFetchServices\LetterImages\" + letterId + "_" + FileId + ".png"; //Path
-            string sFileName = "https://live.compassionuk.org/RightNowFetchServices/LetterImages/" + letterId + "_" + FileId + ".png"; //Path
+            string sFile = @""+ settings["LETTER_IMAGES_PATH"] + letterId + "_" + FileId + ".png"; //Path
+            string sFileName = Host+"/RightNowFetchServices/LetterImages/" + letterId + "_" + FileId + ".png"; //Path
             System.IO.File.WriteAllBytes(sFile, fileData);
             return sFileName;
         }
@@ -16003,6 +16043,303 @@ namespace CukAutomationOperations
             return supGrpObj;
         }
         #endregion
+        
+        #region Send Notification
+        public void SendNotificationOperation(string Type, string Env)
+        {
+            Notifications nObj = new Notifications();
+
+            long Supporterid = 229207;
+            string Needkey = "NI033500089";
+
+            string PreferredName = "Ana";
+            long CorrespondenceID = 0;
+            long FileID = 0;
+            string image = "https://media.ci.org/w_150,h_150,c_thumb,g_face,q_60/v1619038483/ChildPhotos/Published/08463862_xwhcca.jpg";// Ana Image
+            string RevenueID = "";
+
+            if (Env == "dev")
+            {
+                CorrespondenceID = 954950;
+                FileID = 33939414;
+                RevenueID = "rev-26776824";
+            }
+            else if (Env == "live")
+            {
+                
+                CorrespondenceID = 1044630;
+                FileID = 34176784;
+                //Nathenial
+                RevenueID = "rev-27628417";
+                PreferredName = "Luciana";
+                Needkey = "CO061900351";
+                Supporterid = 397069;
+                
+            }
+            try
+            {
+                switch (Type)
+                {
+                    case "Birthday":
+                        nObj.NEEDKEY = Needkey;
+                        nObj.SUPPORTER_ID = Supporterid;
+                        nObj.MESSAGE_TITLE = "Birthday Reminder";
+                        nObj.MESSAGE_BODY = "It's 3 months until " + PreferredName + " has a birthday. Send your greeting today!";
+                        nObj.MESSAGE_TYPE = "Letter";
+                        nObj.DESTINATION = "Letter";
+                        nObj.image = image;
+                        NotificationCommonFunction(nObj, Env, Type);
+                        break;
+                    case "Letter":
+                        nObj.NEEDKEY = Needkey;
+                        nObj.SUPPORTER_ID = Supporterid;
+                        nObj.MESSAGE_TITLE = "New Letter!";
+                        nObj.MESSAGE_BODY = PreferredName + " has sent you a message! Read your new letter now.";
+                        nObj.MESSAGE_TYPE = "Letter";
+                        nObj.DESTINATION = "Letter";
+                        nObj.CorrespondenceID = CorrespondenceID;
+                        nObj.FileID = FileID;
+                        nObj.image = image;
+                        NotificationCommonFunction(nObj, Env, Type);
+                        break;
+                    case "Gift_TR":
+                        nObj.NEEDKEY = Needkey;
+                        nObj.SUPPORTER_ID = Supporterid;
+                        nObj.MESSAGE_TITLE = "Gift Update";
+                        nObj.MESSAGE_BODY = PreferredName + " has received your gift";
+                        nObj.MESSAGE_TYPE = "Gift Update";
+                        nObj.DESTINATION = "Gift Update";
+                        nObj.image = image;
+                        nObj.Revenueid = RevenueID;
+                        NotificationCommonFunction(nObj, Env, Type);
+                        break;
+                    case "Letter_TR":
+                        nObj.NEEDKEY = Needkey;
+                        nObj.SUPPORTER_ID = Supporterid;
+                        nObj.MESSAGE_TITLE = "Letter Update";
+                        nObj.MESSAGE_BODY = "Your letter to " + PreferredName + " has been translated and printed for delivery! Tap to learn more.";
+                        nObj.MESSAGE_TYPE = "Letter Update";
+                        nObj.DESTINATION = "Letter Update";
+                        nObj.CorrespondenceID = CorrespondenceID;
+                        nObj.FileID = FileID;
+                        nObj.image = image;
+                        NotificationCommonFunction(nObj, Env, Type);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in SendNotificationOperation: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+        }
+        public void SendNotificationOnType(string Type, string env)
+        {
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in SendNotificationOnType: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+        }
+        public void NotificationCommonFunction(Notifications nObj, string Env, string Type)
+        {
+            string ConnectionString = "";
+            string IOSNotificationTopic = "";
+            string AndroidNotificationTopic = "";
+            if (Env == "dev")
+            {
+                ConnectionString = "server=172.23.161.10;uid=cukdevco_comapp;" + "pwd=Geecon0404;database=cukdevco_comukapp_v2; convert zero datetime=True;AutoEnlist=false";
+                IOSNotificationTopic = "/topics/topic_generic_dev_" + nObj.SUPPORTER_ID;
+                AndroidNotificationTopic = "/topics/topic_generic_android_dev_" + nObj.SUPPORTER_ID;
+            }
+            else if (Env == "live")
+            {
+                ConnectionString = "server=172.23.161.30;uid=oneview_comapp;" + "pwd=Geecon0404;database=oneview_comukapp_v2; convert zero datetime=True;AutoEnlist=false";
+                IOSNotificationTopic = "/topics/topic_child_prod_" + nObj.SUPPORTER_ID;
+                AndroidNotificationTopic = "/topics/topic_child_android_prod_" + nObj.SUPPORTER_ID;
+
+            }
+            try
+            {
+                NotificationsModel notificationObj = new NotificationsModel();
+                notificationObj.RecordID = storeNotificationsInMySQLDB(nObj, ConnectionString, Type);
+
+                notificationObj.mutable_content = true;
+                notificationObj.to = IOSNotificationTopic;
+                notificationObj.notification = new NotificationContent();
+                notificationObj.notification.title = nObj.MESSAGE_TITLE;
+                notificationObj.notification.body = nObj.MESSAGE_BODY;
+                notificationObj.notification.sound = "default";
+                notificationObj.notification.badge = 1;
+                notificationObj.data = new NotificationData();
+                notificationObj.data.destination = nObj.DESTINATION;
+                notificationObj.data.CorrespondenceID = nObj.CorrespondenceID;
+                notificationObj.data.FileID = nObj.FileID;
+                notificationObj.data.image = nObj.image;
+                notificationObj.data.revenueid = nObj.Revenueid;
+
+
+                string JsonString = (new JavaScriptSerializer() { MaxJsonLength = int.MaxValue, RecursionLimit = 100 }).Serialize(notificationObj);
+                appLogger.Info("IOS App: " + JsonString);
+                SendNotification(notificationObj, "IOS", ConnectionString);
+
+                Model.NotificationsModel androidnotificationObj = new Model.NotificationsModel();
+                androidnotificationObj.RecordID = notificationObj.RecordID;
+                androidnotificationObj.to = AndroidNotificationTopic;
+                androidnotificationObj.data = new Model.NotificationData();
+                androidnotificationObj.data.title = nObj.MESSAGE_TITLE;
+                androidnotificationObj.data.badge = 1;
+                androidnotificationObj.data.body = nObj.MESSAGE_BODY;
+                androidnotificationObj.data.needkey = nObj.NEEDKEY;
+                androidnotificationObj.data.destination = nObj.DESTINATION;
+                androidnotificationObj.data.CorrespondenceID = nObj.CorrespondenceID;
+                androidnotificationObj.data.FileID = nObj.FileID;
+                androidnotificationObj.data.image = nObj.image;
+                androidnotificationObj.data.revenueid = nObj.Revenueid;
+
+                JsonString = (new JavaScriptSerializer() { MaxJsonLength = int.MaxValue, RecursionLimit = 100 }).Serialize(androidnotificationObj);
+                appLogger.Info("Android App: " + JsonString);
+                SendNotification(androidnotificationObj, "Android", ConnectionString);
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in NotificationCommonFunction: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+        }
+        public void SendNotification(NotificationsModel notificationObj, string source, string connectionstring)
+        {
+            var restClient = new RestClient("https://fcm.googleapis.com/fcm/send");     // REST Client URL
+            string content = "";
+            string requestObj = "";
+            //string FCMkey = "";
+            string FCMkey = "AAAAn6NWbGI:APA91bEohCIio551M8kjaPxVPA1BrnFlcW_2llZjQqJTed4Kj4u4f0hoGZQZZqk9q_ypkIC8qicuq94fWB9sefU7FofGVkrZABJ2V1VpJLY2HTDtnT6oD5ATYpMKuhnEKPtZfN4dc0VeMsXWawdi3zyWgWdetLBEaw";
+            try
+            {
+                var request = new RestRequest(Method.POST);                 // REST HTTP Verb ie Method for passing request to client
+                request.AddHeader("Authorization", "key=" + FCMkey);                    // Pass Compassion FCM App Service Key for Authentication
+                request.AddHeader("Accept", "application/json, text/javascript, */*; q=0.01");      // Accept response in one of the listed type
+                request.RequestFormat = DataFormat.Json;                    // Data format of the request
+
+                request.AddBody(notificationObj);
+                requestObj = SimpleJson.SerializeObject(notificationObj);
+                IRestResponse response = restClient.Execute(request);
+                content = response.Content; // raw content as string                
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    UpdateFCMID(content, notificationObj.RecordID, source, connectionstring);
+                    appLogger.Info("Notifications sent successfully to topic : " + notificationObj.to);
+                }
+                else
+                {
+                    appLogger.Info("Could not send notification to topic " + notificationObj.to);
+                }
+                appLogger.Info("Response : " + content);
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Request Body : " + requestObj);
+                appLogger.Error("Response : " + content);
+                appLogger.Error("Error in sending notifications to supporters : " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+
+            }
+        }
+        public void UpdateFCMID(string FCMID, long RecordID, string source, string ConnectionString)
+        {
+            string Query = "";
+            string DateTimeNow = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            MySql.Data.MySqlClient.MySqlConnection conn;
+            conn = new MySql.Data.MySqlClient.MySqlConnection();
+            if (RecordID > 0)
+            {
+                try
+                {
+                    conn.ConnectionString = ConnectionString;
+                    conn.Open();
+                    Query = "";
+                    if (source == "Android")
+                    {
+                        Query = "update notifications set STATUS='Success',ANDROIDFCMMESSAGEID='" + FCMID + "',NOTIFICATONSENTTIME='" + DateTimeNow + "' where ID=" + RecordID;
+                    }
+                    else
+                    {
+                        Query = "update notifications set STATUS='Success',IOSFCMMESSAGEID='" + FCMID + "',NOTIFICATONSENTTIME='" + DateTimeNow + "' where ID=" + RecordID;
+                    }
+                    MySqlCommand updateCommand = new MySqlCommand(Query, conn);
+                    MySqlDataReader dataReader;
+                    dataReader = updateCommand.ExecuteReader();     // Here our query will be executed and data saved into the database.
+
+                    conn.Close();
+                }
+                catch (Exception ex)
+                {
+                    appLogger.Error("Error in updating FCMID in DB for ID " + RecordID + ex.Message);
+                    appLogger.Error(ex.StackTrace);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+        public long storeNotificationsInMySQLDB(Notifications Notiobj, string ConnectionString, string Type)
+        {
+            MySqlConnection conn;
+            string Query = "";
+            long recordId = 0;
+            string NOTIFICATIONSCHEDULETIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            string DATA = "";
+
+            if (Type == "Gift_TR")
+            {
+                DATA = Notiobj.Revenueid;
+            }
+            else if (Type == "Letter" || Type == "Letter_TR")
+            {
+                DATA = "{^CorrespondenceID^:" + Notiobj.CorrespondenceID + ",^FileID^:" + Notiobj.FileID + ",^Image^:^" + Notiobj.image + "^}";
+            }
+
+            conn = new MySql.Data.MySqlClient.MySqlConnection();
+            try
+            {
+
+                conn.ConnectionString = ConnectionString;
+                conn.Open();
+
+                Query = "insert into notifications(SUPPORTER_ID,NEEDKEY,MESSAGE_TITLE,MESSAGE_BODY,MESSAGE_TYPE,NOTIFICATIONSCHEDULETIME,DESTINATION,DATA) VALUES(" + Notiobj.SUPPORTER_ID + ",'" + Notiobj.NEEDKEY + "','" + Notiobj.MESSAGE_TITLE + "','" + Notiobj.MESSAGE_BODY + "','" + Notiobj.MESSAGE_TYPE + "','" + NOTIFICATIONSCHEDULETIME + "','" + Notiobj.DESTINATION + "','" + DATA.Replace('^', '"') + "')";
+                MySqlCommand insertCommand = new MySqlCommand(Query, conn);
+                MySqlDataReader dataReader;
+                dataReader = insertCommand.ExecuteReader();     // Here our query will be executed and data saved into the database.
+                recordId = insertCommand.LastInsertedId;
+                appLogger.Info("Notification Record in DB : " + recordId);
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in storeNotificationsInMySQLDB: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            finally
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+            return recordId;
+        }
+        #endregion
 
         #region Optimization of GetS2BDraft Tile
 
@@ -16457,6 +16794,124 @@ namespace CukAutomationOperations
         }
 
         #endregion
+        public void getS2BIdByComKit(string comKitId)
+        {
+
+            try
+            {
+                ClientInfoHeader clientInfoHeader = new ClientInfoHeader();
+                clientInfoHeader.AppID = "Get S2BId from ComKitId";
+                APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+
+                byte[] byteArray;
+                String queryString = "SELECT SCBS_SUP.S2BCommunication.ID FROM SCBS_SUP.S2BCommunication Where SCBS_SUP.S2BCommunication.CommKitID = '" + comKitId + "' AND SCBS_SUP.S2BCommunication.Visible IN (1,0) ";
+                CSVTableSet queryCSV;
+                head = rightNowSyncPortClient.QueryCSV(clientInfoHeader, api, queryString, 10000, "^", false, true, out queryCSV, out byteArray);
+                CSVTable[] csvTables = queryCSV.CSVTables;
+
+                if (csvTables[0].Rows.Length > 0)
+                {
+
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetching S2BCommunication record with comkit id : " + comKitId);
+                appLogger.Error(e.Message);
+                appLogger.Error(e.InnerException);
+                appLogger.Error(e.StackTrace);
+            }
+
+
+        }
+        public void GetChildSupporterData(string NeedKey)
+        {
+            
+            try
+            {
+                ClientInfoHeader info = new ClientInfoHeader();
+                info.AppID = "Fetch Data";
+                APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+                String query = "SELECT C.Need.AbbreviatedName,C.SupporterGroup.PrioritySupporterId,C.Need.ID FROM SCBS_CM.Commitment C WHERE C.Need.NeedKey  = '" + NeedKey + "'";
+                byte[] byteArray;
+
+                CSVTableSet result = null;
+                head = rightNowSyncPortClient.QueryCSV(info,api, query, 100000, ",", false, true,out result, out byteArray);
+                if (result.CSVTables.Length > 0)
+                {
+                    if (result.CSVTables[0].Rows.Length > 0)
+                    {
+                        string[] values = result.CSVTables[0].Rows[0].Split(',');
+                        
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in GetChildSupporterData: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+                
+
+            }
+            
+        }
+        public void CheckAccountMethod()
+        {
+            getConstituentDetailOnAccountNo("73841060", "159900");
+        }
+        public List<DataListResultRow> getConstituentDetailOnAccountNo(string Accountno, string sortcode)
+        {
+
+            DataListLoadRequest req = new DataListLoadRequest();
+            req.ClientAppInfo = GetRequestHeader();
+            req.DataListID = new Guid("edefea1f-2f73-43a2-85b8-3018d4f7f67e");
+            req.IncludeMetaData = true;
+            var fvSet = new DataFormFieldValueSet();
+
+            fvSet.Add("REVENUESTANDINGORDERACCOUNTACCOUNTNUMBER", Accountno);
+            fvSet.Add("REVENUESTANDINGORDERACCOUNTFINANCIALINSTITUTIONSORTCODE", sortcode);
+
+
+            var dfi = new DataFormItem();
+            dfi.Values = fvSet;
+            req.Parameters = dfi;
+            
+            List<DataListResultRow> row = new List<DataListResultRow>();
+            try
+            {
+                var result = _service.DataListLoad(req);
+                if (result.TotalRowsInReply > 0)
+                {
+                    foreach (var res in result.Rows)
+                    {
+                        row.Add(res);
+                    }
+                }
+            }
+            catch (AppFxWebServiceException e)
+            {
+                appLogger.Error("Error in getConstituentDetailOnAccountNo : " + e.Message + " for " + Accountno + " And Sortcode: " + sortcode + " at Time " + DateTime.Now);
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in getConstituentDetailOnAccountNo : " + e.Message + " for " + Accountno + " And Sortcode: " + sortcode + " at Time " + DateTime.Now);
+            }
+            return row;
+
+        }
+        public void DigitalChoiceCheck(long contactid)
+        {
+            string DigitalChoice = "";
+            SupporterPreferences spObj = FetchSupporterPreferences(contactid);
+            
+            if (!string.IsNullOrEmpty(spObj.Post) && spObj.Post == "Opt-Out" && (spObj.Comments == "No Pack" || spObj.Comments == "I don't want a physical pack in the post" || string.IsNullOrEmpty(spObj.Comments))) { DigitalChoice = "Digital"; }
+            if (!string.IsNullOrEmpty(spObj.Post) && spObj.Post == "Opt-Out" && (spObj.Comments == "Welcome Pack" || spObj.Comments == "I do want a physical pack in the post")) { DigitalChoice = "Hybrid Welcome Pack"; }
+            if (!string.IsNullOrEmpty(spObj.Post) && spObj.Post == "Opt-Out" && spObj.Comments == "Photo Only") { DigitalChoice = "Hybrid Photo Pack"; }
+            if (!string.IsNullOrEmpty(spObj.Post) && spObj.Post == "Opt-In") { DigitalChoice = "Traditional"; }
+        }
+
+
 
         #region Exit to Resolve Automation
 
@@ -16895,7 +17350,7 @@ namespace CukAutomationOperations
                       I.queue = 125 AND disposition = " + disposition + " AND I.PrimaryContact.Contact.ID = " + ContactId;
 
                 //"E C - Exits to Resolve - automated" - 116 tst1 / 125 prod
-
+                
 
                 byte[] byteArray;
 
@@ -17907,7 +18362,7 @@ namespace CukAutomationOperations
 
                                     childholdobjList.Add(childholdobj);
 
-                                    
+
                                     try
                                     {
                                         TCPTR4Service.TCPTR4ServiceClient tcpt = new TCPTR4Service.TCPTR4ServiceClient();
@@ -17929,7 +18384,7 @@ namespace CukAutomationOperations
                                         appLogger.Error("childholdobjList: "+ SimpleJson.SerializeObject(childholdobjList));
                                         appLogger.Error("childimportobjList: " + SimpleJson.SerializeObject(childimportobjList));
                                     }
-                                   
+
 
                                     #endregion
                                 }
@@ -19026,7 +19481,7 @@ namespace CukAutomationOperations
                 ExistingCommitmentData eData = new ExistingCommitmentData();
                 SupporterDataList slObj = new SupporterDataList();
                 NewChildData NewChild = new NewChildData();
-
+                
                 sefcommitobj.RTXIncidentId = DepSEF.RTXIncidentId;
                 sefcommitobj.ETREnquiryId = DepSEF.ETREnquiryId;
                 //sefobj = GetDepartureSupporterData(DepSEF.ContactId);
@@ -19065,7 +19520,7 @@ namespace CukAutomationOperations
                                 {
                                     sefcommitobj.CancelRG = childlist;
                                 }
-
+                               
                             }
                         }
                         else
@@ -19768,7 +20223,7 @@ namespace CukAutomationOperations
                         {
                             appLogger.Info("ETR - RGAmount is empty in Beneficiary Kit Data.");
                         }
-
+                        
                     }
                 }
             }
@@ -19936,9 +20391,9 @@ namespace CukAutomationOperations
                     },
                 };
                 GenericField SetupEndateGenericField = null;
-
+                
                 DateTime Now = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);//GMT standard time
-
+                
 
                 SetupEndateGenericField = createGenericfield("setupended", createdatetimedataValue(Now), DataTypeEnum.DATETIME);
 
@@ -20039,37 +20494,10 @@ namespace CukAutomationOperations
         #endregion
 
         #region Cancel Recurring Gift
-
-
-        #region Designation live BB
-        Dictionary<string, string> FundsDesignation = new Dictionary<string, string>()
-        {
-            {"Child Survival Programme", "f577b412-8ca9-48ca-b92c-4a5c46958286"},
-            {"Complimentary Interventions","c1edd9b4-c51d-4189-9ffe-9e2e40ac7296"},
-            {"Christmas fund", "6814734e-b2f6-4643-a156-952ce65a6603"},
-            {"Disaster Relief Fund", "1e721faa-0a8b-4efe-87eb-70f0ad4e1850"},
-            {"HIV/AIDS Fund Sponsorship", "c5c7e3a8-fa8d-41ce-8cc7-cec9308c6412"},
-            {"Sponsorship Plus","b46dd026-22ad-4270-a8ba-7132e236d744"},
-            {"Unsponsored children fund", "493283c9-e115-4dbf-a511-35b385df399b"},
-            {"Most Needed FUND", "2aca790e-3056-4cb9-826f-c2a0708b01a8"},
-        };
-
-        Dictionary<string, string> CancelRGReasonDictionary = new Dictionary<string, string>() {
-        { "430","5cef84a7-b7c7-46a1-9b05-aef843216757"},
-        { "436","693a102a-2f7e-4bae-830f-56b24eb6fa76"},
-        { "Departure","902a5f60-9ab5-4aa6-903c-a6e43adb9172"},
-        { "Error","5aaa39fb-794d-4112-a3a0-30f1bb9c9cc2"},
-        { "443","7771fb49-2fbe-4883-8804-10f33645fe56"},
-        { "Other","b591cc02-0afc-4bb6-aab7-a115eab10a4f"},
-        { "Supporter requested cancellation","1104ece8-5007-45e8-b57a-3ca03de0984f"},
-        };
-
-        #endregion
-
         public List<cancelRecurringGift> CancelRecurringGift(List<cancelRecurringGift> rgobj, string delinkReason, string FundType, int DonationAmount, bool IsAssignToGeneralFund, string IncidentRefId, string DDiSource, string DDiSourceDate)
         {
             appLogger.Info($"CancelRecurringGift Process started with request: {SimpleJson.SerializeObject(rgobj)} delinkReason :{delinkReason} FundType :{FundType}  DonationAmount:{DonationAmount} IsAssignToGeneralFund:{IsAssignToGeneralFund} IncidentRefId:{IncidentRefId} DDiSource:{DDiSource} DDiSourceDate:{DDiSourceDate}");
-            
+
             cancelRecurringGift responce = new cancelRecurringGift();// responce for newly added RG
             bool AssignToGeneralProcessDone = false;
             if (IsAssignToGeneralFund)
@@ -21665,5 +22093,1822 @@ namespace CukAutomationOperations
         }
 
         #endregion
+        public List<DataListResultRow> fetchRecurringGiftsNew(string constituentId)
+        {
+            List<DataListResultRow> responseList = new List<DataListResultRow>();
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(constituentId))
+                {
+                    DataListLoadRequest request = new DataListLoadRequest();
+
+                    request.ClientAppInfo = GetRequestHeader();
+                    request.DataListID = new Guid("91f59ee7-98e6-44b3-a053-bd0842bb4292");   // GUID for Data List: Recurring gifts - sponsorship                    
+                    request.ContextRecordID = constituentId;
+                    request.IncludeMetaData = true;
+                    var result = _service.DataListLoad(request);
+                    if (result.TotalRowsInReply > 0)
+                    {
+                        //foreach (var res in result.Rows)
+                        //{
+                        for (int i = 0; i < result.TotalRowsInReply; i++)
+                        {
+                            var res = result.Rows[i];
+
+                            responseList.Add(res);
+                        }
+                        //}
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetching recurring gifts for Sponsorship Cancel screen : " + constituentId + " : " + e.Message);
+            }
+            return responseList;
+        }
+
+        public List<DataListResultRow> fetchOtherRecurringTest(string constituentId)
+        {
+            List<DataListResultRow> responseList = new List<DataListResultRow>();
+            try
+            {
+
+                //var constituentDetails = GetConstituentOnCommitmentID(CommitmentID);
+                if (!string.IsNullOrWhiteSpace(constituentId))
+                {
+                    DataListLoadRequest request = new DataListLoadRequest();
+
+                    request.ClientAppInfo = GetRequestHeader();
+                    request.DataListID = new Guid("573dbbaf-5bf0-4808-bc6b-37fc4c1eb7b7");// GUID for Data List: Other Recurring gifts - Linked                    
+                    request.ContextRecordID = constituentId;
+                    request.IncludeMetaData = true;
+                    var result = _service.DataListLoad(request);
+
+                    if (result.TotalRowsInReply > 0)
+                    {
+                        foreach (var res in result.Rows)
+                        {
+                            responseList.Add(res);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetching other recurring gifts for Sponsorship Cancel screen  : " + constituentId + " : " + e.Message);
+            }
+            return responseList;
+        }
+
+
+        public List<DataListResultRow> fetchRecurringGiftsForReassignSponsorshipnew(string constituentId)
+        {
+            //14 - DDI source
+            List<DataListResultRow> responseList = new List<DataListResultRow>();
+            try
+            {
+                DataListLoadRequest request = new DataListLoadRequest();
+                request.ClientAppInfo = GetRequestHeader();
+                request.DataListID = new Guid("0be1b11f-854a-45b1-b90b-bc7947d17f17");   // Data List: Bacs Recurring gifts - sponsorship
+                request.ContextRecordID = constituentId;
+                request.IncludeMetaData = true;
+                var result = _service.DataListLoad(request);
+
+                if (result.TotalRowsInReply > 0)
+                {
+
+                    foreach (var res in result.Rows)
+                    {
+                        responseList.Add(res);
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetching sponsorship recurring gifts for constituent for reassign Sponsorship : " + constituentId + " : " + e.Message);
+            }
+            return responseList;
+        }
+
+        public List<DataListResultRow> fetchRecurringGiftsTest(string constituentLookupID)
+        {
+            List<DataListResultRow> responseList = new List<DataListResultRow>();
+            string childKeyOtherFormat = constituentLookupID;
+            if (constituentLookupID.Length > 9)
+            {
+                childKeyOtherFormat = constituentLookupID.Remove(6, 1).Remove(2, 1);
+            }
+            else if (constituentLookupID.Length == 9)
+            {
+                childKeyOtherFormat = constituentLookupID.Insert(5, "0").Insert(2, "0");
+            }
+            try
+            {
+
+                var constituentDetails = GetConstituentOnLookupID(constituentLookupID);
+                if (constituentDetails.Output.RowCount > 0)
+                {
+                    DataListLoadRequest request = new DataListLoadRequest();
+
+                    request.ClientAppInfo = GetRequestHeader();
+                    foreach (ListOutputRow row in constituentDetails.Output.Rows)
+                    {
+                        // GUID for Data List: Recurring gifts - sponsorship
+                        request.DataListID = new Guid("91f59ee7-98e6-44b3-a053-bd0842bb4292");
+                        request.ContextRecordID = row.Values[0];
+                        request.IncludeMetaData = true;
+                        var result = _service.DataListLoad(request);
+
+                        if (result.TotalRowsInReply > 0)
+                        {
+                            foreach (var res in result.Rows)
+                            {
+                                responseList.Add(res);
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetching recurring gifts for constituent : " + constituentLookupID + " : " + e.Message);
+            }
+            return responseList;
+        }
+
+        public string fetchNeed()
+        {
+            string BirthDate = "";
+            // ClientInfoHeader
+            ClientInfoHeader clientInfoHeader = new ClientInfoHeader();
+            APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+            clientInfoHeader.AppID = "Fetch  Need record from RN";
+
+            string queryString = "SELECT SCBS_CHILD.Need FROM SCBS_CHILD.Need Where SCBS_CHILD.Need.Beneficiary_GlobalID = '06101305'";
+
+            // Create Object
+            GenericObject genericObj = new GenericObject();
+            RNObjectType objtype = new RNObjectType();
+            objtype.TypeName = "Need";
+            objtype.Namespace = "SCBS_CHILD";
+            genericObj.ObjectType = objtype;
+
+            RNObject[] objectTemplates = new RNObject[] { genericObj };
+
+            QueryResultData[] queryObjects = null;
+            head = rightNowSyncPortClient.QueryObjects(clientInfoHeader,api, queryString, objectTemplates, 1000000,out queryObjects);
+
+            RNObject[] rnObject = queryObjects[0].RNObjectsResult;
+
+            if (rnObject.Length > 0)
+            {
+                foreach (QueryResultData queryResultData in queryObjects)
+                {
+                    foreach (GenericObject genericObject in queryResultData.RNObjectsResult)
+                    {
+                        foreach (GenericField genericField in genericObject.GenericFields)
+                        {
+                            //Console.WriteLine(genericField.name);
+                            if (genericField.DataValue != null)
+                            {
+                                foreach (object obj in genericField.DataValue.Items)
+                                {
+                                    switch (genericField.name)
+                                    {
+                                        case "BirthDate":
+                                            BirthDate = fetchchilddata(genericField);
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            string NewBirthday = "2000-11-20 00:00:00";
+
+
+            DateTime oldBirthDate = DateTime.Parse(BirthDate);
+            DateTime newBirthdayDate = DateTime.Parse(NewBirthday);
+
+            if (oldBirthDate == newBirthdayDate)
+            {
+
+            }
+
+
+            if (NewBirthday == BirthDate)
+            {
+
+            }
+
+
+            return BirthDate;
+        }
+
+        #region Functions is linked with ESB
+        public string GetLookupIdOnSupporterId(long contactId)
+        {
+            ClientInfoHeader info = new ClientInfoHeader();
+            info.AppID = "Get Supporter";
+            APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+
+            string Query = "Select contact from contact where ID =" + contactId + ""; //13500
+            //string Query = "Select contact from contact where Contact.Login = 'tim_hathaway' OR ID ='57958'";
+
+            Contact contactTemplate = new Contact();
+            contactTemplate.CustomFields = new GenericObject() { };
+            contactTemplate.Notes = new Note[] { };
+
+            RNObject[] objectTemplates = new RNObject[] { contactTemplate };
+
+            QueryResultData[] results;
+            head = rightNowSyncPortClient.QueryObjects(info, api, Query, objectTemplates, 10000, out results);
+            if (results[0].RNObjectsResult.Length == 0)
+            {
+                return null;
+            }
+            Contact contact = (Contact)results[0].RNObjectsResult[0];
+            //Console.WriteLine("ID : " + contact.ID.id);
+
+            string lookupID = null;
+
+            foreach (GenericField fetchchildfields in ((GenericObject)(contact.CustomFields.GenericFields[3].DataValue.Items[0])).GenericFields)
+            {
+                switch (fetchchildfields.name)
+                {
+                    case "blackbaudid":
+                        lookupID = fetchchilddata(fetchchildfields);
+                        break;
+                }
+            }
+
+            return lookupID;
+        }
+
+        #endregion
+
+        #region IE180: Processing Non-Sponsor Donations: Matching Donations to existing sponsors
+        public string GetCurrentGiftAidBatchId()
+        {
+            string BatchID = null;
+            BatchSearchFilterData filter = new BatchSearchFilterData();
+            filter.DESCRIPTION = Convert.ToString($"Gift Aid Batch : {DateTime.Now.ToString("dd-MM-yyyy")}");
+
+            filter.STATUSCODE_IDVALUE = Blackbaud.AppFx.Platform.Catalog.WebApiClient.SearchLists.Batch.BatchSearchEnums.STATUSCODE.Uncommitted;
+            string[] row = BatchSearch.GetIDs(provider(), filter);
+
+            if (row.Length > 0)
+            {
+                BatchID = row[0];
+            }
+
+            return BatchID;
+        }
+
+        public void ProcessGiftAidBatchRows(string BatchID)
+        {
+            BatchLoadReply loadReply = new BatchLoadReply();
+            BatchLoadRequest loadreq = new BatchLoadRequest();
+            loadreq.ClientAppInfo = GetRequestHeader();
+            loadreq.BatchID = new Guid(BatchID);
+
+            // loadReply = retryPolicy.Execute(() => _service.BatchLoad(loadreq));
+            loadReply = _service.BatchLoad(loadreq);
+
+            List<string> rowIds = new List<string>();
+
+            if (loadReply.Rows.Length > 0)
+            {
+                foreach (BatchDataRow row in loadReply.Rows)
+                {
+                    DataFormFieldValueSet rowData = row.DataFormItem.Values;
+                    AddTaxDeclaration(rowData);
+                }
+            }
+        }
+
+        public string AddTaxDeclaration(DataFormFieldValueSet rowData)
+        {
+            TaxDeclarationAddForm2Data declobj = new TaxDeclarationAddForm2Data();
+
+            // CHARITYCLAIMREFERENCENUMBERID
+            declobj.CHARITYCLAIMREFERENCENUMBERID = (Guid)rowData["CHARITYCLAIMREFERENCENUMBERID"].Value; //XR35745
+
+            // DECLARATIONMADE
+            if (rowData["DECLARATIONMADE"].Value != null)
+                declobj.DECLARATIONMADE = (DateTime)rowData["DECLARATIONMADE"].Value;
+            else
+                declobj.DECLARATIONMADE = DateTime.Now;
+
+            // DECLARATIONSTARTS
+            if (rowData["DECLARATIONSTARTS"].Value != null)
+                declobj.DECLARATIONSTARTS = (DateTime)rowData["DECLARATIONSTARTS"].Value;
+            else
+                declobj.DECLARATIONSTARTS = new DateTime(2011, 7, 1);
+
+            // DECLARATIONINDICATORCODE
+            //declobj.DECLARATIONINDICATORCODE_IDVALUE = Blackbaud.AppFx.GiftAid.Catalog.WebApiClient.AddForms.GiftAid.TaxDeclarationAddForm2Enums.DECLARATIONINDICATORCODE.Internet;
+            declobj.DECLARATIONINDICATORCODE_IDVALUE = (Blackbaud.AppFx.GiftAid.Catalog.WebApiClient.AddForms.GiftAid.TaxDeclarationAddForm2Enums.DECLARATIONINDICATORCODE)Enum.Parse(typeof(Blackbaud.AppFx.GiftAid.Catalog.WebApiClient.AddForms.GiftAid.TaxDeclarationAddForm2Enums.DECLARATIONINDICATORCODE), (string)rowData["DECLARATIONINDICATORCODE"].Value);
+
+            //declobj.SCANNEDDOCSEXIST = scannedDocExists; // ???
+
+            // "PAYSTAXCODE"
+            declobj.PAYSTAXCODE_IDVALUE = (Blackbaud.AppFx.GiftAid.Catalog.WebApiClient.AddForms.GiftAid.TaxDeclarationAddForm2Enums.PAYSTAXCODE)rowData["PAYSTAXCODE"].Value;
+            //declobj.TAXSTATUSCODEID = GetIdForCodeTableValue("TAXSTATUSCODE", "Never"); // ???
+
+            // DECLARATIONSOURCECODEID
+            if (rowData["DECLARATIONSOURCECODEID"].Value != null)
+                declobj.DECLARATIONSOURCECODEID = (Guid)rowData["DECLARATIONSOURCECODEID"].Value;
+
+            if ((rowData["COMMENTS"].Value != null))
+                declobj.COMMENTS = (string)rowData["COMMENTS"].Value;
+
+
+            // CONSTITUENTLOOKUPID
+            declobj.ContextRecordID = (string)rowData["CONSTITUENTLOOKUPID"].Value;
+
+            string res = declobj.Save(provider());
+
+            // GA Automation
+            Blackbaud.AppFx.XmlTypes.DataForms.DataFormItem DataFormItem = new DataFormItem();
+
+            DataFormSaveRequest savereq = new DataFormSaveRequest();
+            savereq.ClientAppInfo = GetRequestHeader();
+            savereq.FormID = Guid.Parse("39d51e72-ac25-4b40-9887-8bde86402114");
+            savereq.ID = res.ToString();
+
+            /*if (!string.IsNullOrWhiteSpace(galocation))
+                DataFormItem.Values.Add("GIFTAIDDECLARATIONLOCATION", galocation, null); // ??? */
+
+            // COMMENTS
+            if ((rowData["COMMENTS"].Value != null))
+                DataFormItem.Values.Add("SUPPORTERENQUIRYREFERENCE", rowData["COMMENTS"].Value, null);
+
+            savereq.DataFormItem = DataFormItem;
+            DataFormSaveReply saveReply = provider().Service.DataFormSave(savereq);
+            return res;
+        }
+
+        public void ProcessGiftAidBatch()
+        {
+            try
+            {
+                string currentBatchId = GetCurrentGiftAidBatchId();
+                ProcessGiftAidBatchRows(currentBatchId);
+            }
+            catch (Exception e)
+            {
+                appLogger.Error($"Error in ProcessGiftAidBatch : {e.Message}");
+                appLogger.Error(e.StackTrace);
+            }
+        }
+        #endregion
+
+        #region IE154 - Processing Non-Sponsor Donations: Matching Donations to existing sponsors 
+
+        public void transferSupporterDetails(long recordId)
+        {
+            appLogger.Info($"transferSupporterDetails request received for NonDonationSponsor record {recordId}");
+            try
+            {
+                NonSponsorDonationsModel nModel = getNonDonationSponsorDetails(recordId);
+                if (nModel.SupporterID != 0 && nModel.NewSupporterID != 0)
+                {
+
+                    // Transfer constituent in BB Batch
+                    string NewlookupId = GetlookupidfromSupporterid(nModel.NewSupporterID);
+                    if (!string.IsNullOrEmpty(NewlookupId))
+                    {
+                        TransferConstituentInBatchModel tObj = new TransferConstituentInBatchModel();
+                        tObj.NewLookupId = NewlookupId;
+                        tObj.OldLookupId = nModel.BlackbaudID;
+                        tObj.BatchName = nModel.BatchName;
+                        TransferConstituentInBatch(tObj);
+                    }
+                    else
+                    {
+                        appLogger.Info($"No lookupId found to Transfer of constituent in BB batch with SupporterId {nModel.NewSupporterID}");
+                    }
+
+
+                    List<long> IncidentIds = fetchAllIncidentLinkedToSupporter(nModel.SupporterID);
+
+                    if (IncidentIds.Count > 0)
+                    {
+                        appLogger.Info($"Total {IncidentIds.Count} records found to transfer incident");
+                        foreach (long incidentId in IncidentIds)
+                        {
+                            TransferIncidentToNewSupporter(incidentId, nModel.NewSupporterID);
+                        }
+                    }
+                    else
+                    {
+                        appLogger.Info("No incident record found to transfer.");
+                    }
+
+                    List<long> DonationIds = fetchAllDonationsLinkedToSupporter(nModel.SupporterID);
+
+                    if (DonationIds.Count > 0)
+                    {
+                        appLogger.Info($"Total {DonationIds.Count} records found to transfer donation");
+                        foreach (long donationId in DonationIds)
+                        {
+                            TransferDonationToNewSupporter(donationId, nModel.NewSupporterID);
+                        }
+                    }
+                    else
+                    {
+                        appLogger.Info("No donation record found to transfer.");
+                    }
+
+                    setSupporterStatusInactiveInRN(nModel.SupporterID);
+                    if (!string.IsNullOrEmpty(nModel.BlackbaudID))
+                    {
+                        makeConstituentInactiveInBB(nModel.BlackbaudID);
+                    }
+                    else
+                    {
+                        appLogger.Info("No constituent record found to inactive in BB.");
+                    }
+
+                    UpdateNonSponsorDonationsDBFields(recordId, "ItemDeleted", "NOW()");
+
+                }
+                else
+                {
+                    appLogger.Info($"Unable to transferSupporterDetails due to SupporterId or NewSupporterId is blank for recordId: {recordId}");
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in transferSupporterDetails: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+        }
+
+
+        public NonSponsorDonationsModel getNonDonationSponsorDetails(long recordId)
+        {
+            NonSponsorDonationsModel nModel = new NonSponsorDonationsModel();
+            try
+            {
+
+                string query = $"SELECT * FROM NonSponsorDonations WHERE ID={recordId}";
+                using (MySqlConnection conn = new MySqlConnection(mycuk_tcpt4ConnectionString))
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        nModel.SupporterID = reader["SupporterID"] != null ? Convert.ToInt64(reader["SupporterID"]) : 0;
+                        nModel.NewSupporterID = reader["NewSupporterID"] != null ? Convert.ToInt64(reader["NewSupporterID"]) : 0;
+                        nModel.BlackbaudID = reader["BlackbaudID"] != null ? reader["BlackbaudID"].ToString() : "";
+                        nModel.BatchId = reader["BatchID"] != null ? reader["BatchID"].ToString() : "";
+                        nModel.BatchName = reader["BatchName"] != null ? reader["BatchName"].ToString() : "";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in getNonDonationSponsorDetails: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            return nModel;
+        }
+        public void TransferDonationToNewSupporter(long DonationId, long NewSupporterId)
+        {
+            appLogger.Info($"TransferDonationToNewSupporter request received with DonationId {DonationId} and SupporterId {NewSupporterId}");
+            try
+            {
+                ClientInfoHeader clientInfoHeader = new ClientInfoHeader();
+                clientInfoHeader.AppID = "Updating donation supporter";
+
+                GenericObject genericObject = new GenericObject();
+                RNObjectType objType = new RNObjectType();
+                objType.TypeName = "Donation";
+                objType.Namespace = "SCBS_DON";
+                genericObject.ObjectType = objType;
+
+                UpdateProcessingOptions options = new UpdateProcessingOptions();
+                options.SuppressExternalEvents = false;
+                options.SuppressRules = false;
+
+                ID objID = new ID();
+                objID.id = DonationId;
+                objID.idSpecified = true;
+
+                genericObject.ID = objID;
+
+                List<GenericField> genFieldsList = new List<GenericField>();
+                GenericField SupporterGenericField = null;
+
+
+
+                if (NewSupporterId != 0)
+                {
+                    SupporterGenericField = createGenericfield("Supporter", createNamedIdDataValue(NewSupporterId), DataTypeEnum.NAMED_ID);
+                    genFieldsList.Add(SupporterGenericField);
+                }
+
+                genericObject.GenericFields = genFieldsList.ToArray();
+                RNObject[] createObjects = new RNObject[] { genericObject };
+
+                rightNowSyncPortClient.Update(clientInfoHeader, api, createObjects, options);
+                appLogger.Info($"Donation {DonationId} successfully transfered to new supporter {NewSupporterId}");
+
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in TransferDonationToNewSupporter: " + e.Message);
+                appLogger.Error(e.InnerException);
+                appLogger.Error(e.StackTrace);
+            }
+        }
+        public void TransferIncidentToNewSupporter(long IncidentId, long NewSupporterId)
+        {
+            appLogger.Info($"TransferIncidentToNewSupporter request received with IncidentId {IncidentId} and SupporterId {NewSupporterId}");
+            try
+            {
+                Incident incident = new Incident
+                {
+                    ID = new ID
+                    {
+                        id = IncidentId,
+                        idSpecified = true
+                    },
+                    PrimaryContact = new IncidentContact
+                    {
+                        Contact = new NamedID
+                        {
+                            ID = new ID
+                            {
+                                id = NewSupporterId,
+                                idSpecified = true
+                            }
+                        }
+                    },
+                };
+
+
+                /*GenericField SetupStatusGenericField = null;
+                SetupStatusGenericField = createGenericfield("setupstatus", createNamedIdDataValue(1661), DataTypeEnum.NAMED_ID);//Held
+
+                GenericObject genericObject = new GenericObject();
+                genericObject.GenericFields = new GenericField[] { SetupStatusGenericField };
+                genericObject.ObjectType = new RNObjectType() { TypeName = "CustomIncident" };
+
+                GenericField customFieldsPackage = new GenericField();
+                customFieldsPackage.name = "c";
+                customFieldsPackage.dataType = DataTypeEnum.NAMED_ID;
+                customFieldsPackage.dataTypeSpecified = true;
+                customFieldsPackage.DataValue = new DataValue();
+                customFieldsPackage.DataValue.Items = new[] { genericObject };
+                customFieldsPackage.DataValue.ItemsElementName = new[] { ItemsChoiceType.ObjectValue };
+
+                incident.CustomFields = new GenericObject();
+                incident.CustomFields.GenericFields = new GenericField[1];
+                incident.CustomFields.GenericFields[0] = customFieldsPackage;
+                incident.CustomFields.ObjectType = new RNObjectType();
+                incident.CustomFields.ObjectType.TypeName = "IncidentCustomFields";*/
+
+                RNObject[] createContact = new RNObject[] { incident };
+                rightNowSyncPortClient.Update(new ClientInfoHeader { AppID = "Update incident" }, api, new RNObject[] { incident },
+                new UpdateProcessingOptions { SuppressExternalEvents = false, SuppressRules = false });
+
+                appLogger.Info($"Incident {IncidentId} successfully transfered to new supporter {NewSupporterId}");
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in TransferIncidentToNewSupporter: " + e.Message);
+                appLogger.Error(e.InnerException);
+                appLogger.Error(e.StackTrace);
+            }
+        }
+        public List<long> fetchAllDonationsLinkedToSupporter(long SupporterId)
+        {
+            List<long> listresobj = new List<long>();
+            try
+            {
+                ClientInfoHeader clientInfoHeader = new ClientInfoHeader();
+                clientInfoHeader.AppID = "Delete Donation Fields";
+                String queryString;
+                APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+                queryString = "SELECT SCBS_DON.Donation FROM SCBS_DON.Donation Where SCBS_DON.Donation.Supporter=" + SupporterId;
+
+                GenericObject genericObj = new GenericObject();
+                RNObjectType objtype = new RNObjectType();
+                objtype.TypeName = "Donation";
+                objtype.Namespace = "SCBS_DON";
+                genericObj.ObjectType = objtype;
+                RNObject[] objectTemplates = new RNObject[] { genericObj };
+                QueryResultData[] queryObjects;
+                head = rightNowSyncPortClient.QueryObjects(clientInfoHeader, api, queryString, objectTemplates, 1000000, out queryObjects);
+                RNObject[] rnObject = queryObjects[0].RNObjectsResult;
+                if (rnObject.Length > 0)
+                {
+                    for (int k = 0; k < rnObject.Length; k++)
+                    {
+                        listresobj.Add(rnObject[k].ID.id);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetchAllDonationsLinkedToSupporter: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            return listresobj;
+        }
+        public List<long> fetchAllIncidentLinkedToSupporter(long SupporterId)
+        {
+            List<long> listresobj = new List<long>();
+            APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+            ClientInfoHeader info = new ClientInfoHeader();
+            info.AppID = "Get Incident Data";
+
+            string Query = "SELECT Incident FROM Incident WHERE Incident.PrimaryContact.Contact.ID = " + SupporterId + " limit 10000";
+            Incident contactTemplate = new Incident();
+            contactTemplate.PrimaryContact = new IncidentContact();
+
+            RNObject[] objectTemplates = new RNObject[] { contactTemplate };
+            try
+            {
+                QueryResultData[] queryObjects = null;
+                head = rightNowSyncPortClient.QueryObjects(info, api, Query, objectTemplates, 10000, out queryObjects);
+                RNObject[] rnObjects = queryObjects[0].RNObjectsResult;
+
+                if (rnObjects != null && rnObjects.Length > 0)
+                {
+                    foreach (QueryResultData queryResultData in queryObjects)
+                    {
+                        foreach (RNObject data in queryResultData.RNObjectsResult)
+                        {
+                            Incident incidentTemp = (Incident)data;
+                            listresobj.Add(incidentTemp.ID.id);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetchAllIncidentLinkedToSupporter: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            return listresobj;
+        }
+
+
+
+        public void setSupporterStatusInactiveInRN(long RNID)
+        {
+            UpdateProcessingOptions options = new UpdateProcessingOptions();
+            options.SuppressExternalEvents = false;
+            options.SuppressRules = false;
+
+            Contact updateContact = new Contact();
+
+            ID contactID = new ID();
+            contactID.id = RNID;
+
+            updateContact.ID = contactID;
+            updateContact.ID.idSpecified = true;
+
+            GenericField statusGenericField = null;
+
+            statusGenericField = createGenericfield("status", createNamedIdDataValue(394), DataTypeEnum.NAMED_ID);//tst1 - 394 Inactive (Duplicate)
+
+            GenericObject updateGenericObject = new GenericObject();
+            updateGenericObject.GenericFields = new GenericField[] { statusGenericField };
+            updateGenericObject.ObjectType = new RNObjectType() { TypeName = "CustomContacts" };
+
+            GenericField updateCustomFieldsPackage = new GenericField();
+            updateCustomFieldsPackage.name = "c";
+            updateCustomFieldsPackage.dataType = DataTypeEnum.NAMED_ID;
+            updateCustomFieldsPackage.dataTypeSpecified = true;
+            updateCustomFieldsPackage.DataValue = new DataValue();
+            updateCustomFieldsPackage.DataValue.Items = new[] { updateGenericObject };
+            updateCustomFieldsPackage.DataValue.ItemsElementName = new[] { ItemsChoiceType.ObjectValue };
+
+            updateContact.CustomFields = new GenericObject();
+            updateContact.CustomFields.GenericFields = new GenericField[1];
+            updateContact.CustomFields.GenericFields[0] = updateCustomFieldsPackage;
+            updateContact.CustomFields.ObjectType = new RNObjectType();
+            updateContact.CustomFields.ObjectType.TypeName = "ContactCustomFields";
+
+            ClientInfoHeader updateClientInfoHeader = new ClientInfoHeader();
+            updateClientInfoHeader.AppID = "Supporter Update";
+
+            RNObject[] updateObject = new RNObject[] { updateContact };
+            try
+            {
+                rightNowSyncPortClient.Update(updateClientInfoHeader, api, updateObject, options);
+                appLogger.Info($"Supporter {RNID} status succesfully set inactive in RN.");
+
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in setSupporterStatusInactive: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+
+        }
+
+
+        public void makeConstituentInactiveInBB(string BBID)
+        {
+            try
+            {
+                var constituentDetails = GetConstituentOnLookupID(BBID);
+                Blackbaud.AppFx.Constituent.Catalog.WebApiClient.EditForms.Constituent.ConstituentInactiveDetailEditDataFormData conData = new ConstituentInactiveDetailEditDataFormData();
+                conData.RecordID = constituentDetails.Output.Rows[0].Values[0];
+
+                /*
+                
+                        "labelDisplayText": "394 - Inactive (Duplicate)",
+                        "name": "CONSTITUENTINACTIVITYREASONCODEID",
+                        "value": "d8d549f7-b452-494e-819b-6770965d9d24",
+
+                 */
+
+                conData.CONSTITUENTINACTIVITYREASONCODEID = new Guid("d8d549f7-b452-494e-819b-6770965d9d24");
+                conData.DETAILS = " ";
+                conData.Save(provider());
+                appLogger.Info("Constituent with lookup " + BBID + " made inactive successfully at " + DateTime.Now);
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in makeConstituentInactiveInBB with lookup " + BBID + "" + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+
+
+        }
+        public void UpdateNonSponsorDonationsDBFields(long dbRecordId, string dbFieldName, string value)
+        {
+            try
+            {
+                string updateFields = dbFieldName == "SupporterID" ? $"{dbFieldName} = {value}" : $"{dbFieldName} = '{value}'";
+                string query = $"UPDATE NonSponsorDonations SET {updateFields} WHERE ID={dbRecordId}";
+
+                using (MySqlConnection conn = new MySqlConnection(mycuk_tcpt4ConnectionString))
+                {
+                    conn.Open();
+                    MySqlCommand insertCommand = new MySqlCommand(query, conn);
+                    MySqlDataReader dataReader;
+                    dataReader = insertCommand.ExecuteReader();
+                    appLogger.Info($"NonSponsorDonations record field {dbFieldName} updated with value {value} for {dbRecordId} updated in DB");
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error($"Error in UpdateNonSponsorDonationsConstituentIds : {e.Message}");
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+        }
+
+
+        public void TransferConstituentInBatch(TransferConstituentInBatchModel Obj)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(Obj.BatchName) && !string.IsNullOrEmpty(Obj.NewLookupId) && !string.IsNullOrEmpty(Obj.OldLookupId))
+                {
+                    EditBatchNonSponsorDonation(Obj);
+                }
+                else
+                {
+                    appLogger.Info("BatchName,NewLookupId and OldLookupId connot be empty.");
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in TransferConstituentInBatch: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+        }
+
+
+        public void EditBatchNonSponsorDonation(TransferConstituentInBatchModel Obj)
+        {
+
+            string BatchID = null;
+            BatchSearchFilterData filter = new BatchSearchFilterData();
+            filter.DESCRIPTION = Convert.ToString(Obj.BatchName);
+
+            filter.STATUSCODE_IDVALUE = Blackbaud.AppFx.Platform.Catalog.WebApiClient.SearchLists.Batch.BatchSearchEnums.STATUSCODE.Uncommitted;
+            string[] row = BatchSearch.GetIDs(provider(), filter);
+
+            if (row.Length > 0)
+            {
+                BatchID = row[0];
+            }
+            if (!string.IsNullOrEmpty(BatchID))
+            {
+                EditRowToNonSponsorDonation(new Guid(BatchID), Obj);
+            }
+            else
+            {
+                appLogger.Info("No batch found in BB with given BatchName: " + Obj.BatchName);
+                Console.WriteLine("No batch found in BB with given BatchName: " + Obj.BatchName);
+            }
+        }
+
+        public string EditRowToNonSponsorDonation(Guid _currentBatchID, TransferConstituentInBatchModel Obj)
+        {
+            appLogger.Info($"EditRowToNonSponsorDonation request received with json: {SimpleJson.SerializeObject(Obj)}");
+            var constituentId = "";
+            Guid? SaveRequestGUID = default(Guid);
+            int _batchRowSequence = 5;
+            DataFormItem dfimain = new DataFormItem();
+            try
+            {
+                DataFormFieldValueSet fvSetmain = new DataFormFieldValueSet();
+                fvSetmain.Add("PDACCOUNTSYSTEMID", "8888e850-e394-422a-a234-18fd45bed112");//Compassion-UK Dev BB
+                constituentId = GetConstituentOnLookupID(Obj.NewLookupId).Output.Rows[0].Values[0];
+                fvSetmain.Add("CONSTITUENTID", constituentId);
+
+                dfimain.Values = fvSetmain;
+
+                SaveRequestGUID = BatchSaveRequestOtherPaymentMethod(_currentBatchID, dfimain, _batchRowSequence, Obj);
+                if (SaveRequestGUID != default(Guid))
+                {
+                    Console.WriteLine($"Error in OtherPaymentMethod Batch for NewLookupId " + Obj.NewLookupId + " OldLookupId " + Obj.OldLookupId + " at " + DateTime.Now);
+                    appLogger.Info($"Error in OtherPaymentMethod Batch for NewLookupId " + Obj.NewLookupId + " OldLookupId " + Obj.OldLookupId + " at " + DateTime.Now);
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in EditRowToOtherPaymentMethodBatch: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+
+            return Convert.ToString(SaveRequestGUID);
+        }
+
+        private Guid? BatchSaveRequestOtherPaymentMethod(Guid BatchID, DataFormItem DataFormItem, int BatchRowSequence, TransferConstituentInBatchModel Obj)
+        {
+            BatchLoadReply loadReply = new BatchLoadReply();
+            BatchLoadRequest loadreq = new BatchLoadRequest();
+            loadreq.ClientAppInfo = GetRequestHeader();
+            loadreq.BatchID = BatchID;
+
+            Guid functionReturnValue = default(Guid);
+            loadReply = retryPolicy.Execute(() => _service.BatchLoad(loadreq));
+            List<string> rowIds = new List<string>();
+
+            if (loadReply.Rows.Length > 0)
+            {
+                foreach (BatchDataRow row in loadReply.Rows)
+                {
+                    DataFormFieldValueSet values = row.DataFormItem.Values;
+                    foreach (DataFormFieldValue val in values)
+                    {
+                        if (val.ID == "CONSTITUENTLOOKUPID" && val.ValueTranslation != null && val.ValueTranslation.ToString() == Obj.OldLookupId)
+                        {
+                            rowIds.Add(row.ID);
+                        }
+                    }
+                }
+
+                try
+                {
+                    if (rowIds.Count > 0)
+                    {
+                        foreach (string ID in rowIds)
+                        {
+                            BatchSaveRequest req = new BatchSaveRequest();
+                            BatchSaveReply reply = new BatchSaveReply();
+                            req.ClientAppInfo = GetRequestHeader();
+                            req.BatchID = BatchID;
+                            BatchDataRow BatchDataRow = new BatchDataRow();
+                            BatchDataRow[] BatchDataRows = new BatchDataRow[1];
+
+                            BatchDataRow.ID = ID;
+                            BatchDataRow.AddRow = false;
+
+                            BatchDataRow.DataFormItem = DataFormItem;
+                            BatchDataRow.ExceptionMessageTypeCode = BatchMessageType.GeneralError;
+                            BatchDataRow.ClearUserMessage = false;
+                            BatchDataRow.ClearSystemMessage = false;
+                            BatchDataRow.IgnoreDuplicate = false;
+
+                            BatchDataRows[0] = BatchDataRow;
+                            req.Rows = BatchDataRows;
+
+                            reply = retryPolicy.Execute(() => _service.BatchSave(req));
+
+                            if ((reply.Exceptions != null))
+                            {
+                                if (reply.Exceptions.Count() > 0)
+                                {
+                                    appLogger.Error($"Error while adding Constituent {Obj.NewLookupId} in  OtherPaymentMethod batch for OldLookupId {Obj.OldLookupId} at " + DateTime.Now);
+                                    Exception ex = new Exception("Batch Save Error. " + reply.Exceptions[0].ErrorMessage);
+                                    Console.WriteLine(reply.Exceptions[0].ErrorMessage);
+                                    appLogger.Error(reply.Exceptions[0].ErrorMessage);
+                                    throw ex;
+                                    return functionReturnValue;
+                                }
+                            }
+                            else
+                            {
+                                appLogger.Info($"In NonSponsorDonor batch rowid {ID} Constituent {Obj.NewLookupId} successfully updated for OldLookupId {Obj.OldLookupId} at " + DateTime.Now);
+                                Console.WriteLine($"In NonSponsorDonor batch rowid {ID} Constituent {Obj.NewLookupId} successfully updated for OldLookupId {Obj.OldLookupId} at " + DateTime.Now);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        appLogger.Info($"No row record found in Batch for OldLookupId {Obj.OldLookupId}");
+                    }
+                }
+                catch (Exception e)
+                {
+                    appLogger.Error("Error in BatchSaveRequestOtherPaymentMethod: " + e.Message);
+                    appLogger.Error(e.StackTrace);
+                    appLogger.Error(e.InnerException);
+                }
+            }
+            return functionReturnValue;
+        }
+
+        #endregion
+
+        #region Search supporter by firstname, lastname and email for NonSponsorDonation process
+
+        public string SearchSupporterByParams(SearchSupporterModel Obj)
+        {
+            /* Obj.FirstName = "";
+             Obj.LastName = "";
+             Obj.Email = "";
+             Obj.IncludeEmail = true;*/
+
+            appLogger.Info($"SearchSupporterByParams request received with json: {SimpleJson.SerializeObject(Obj)}");
+            string filters = null;
+
+            if (string.IsNullOrEmpty(Obj.FirstName) && string.IsNullOrEmpty(Obj.LastName) && string.IsNullOrEmpty(Obj.Email))
+            {
+                appLogger.Info("Supporter search not possible as all search params is empty or null.");
+                return null;
+            }
+
+            try
+            {
+                ClientInfoHeader clientInfoHeader = new ClientInfoHeader();
+                clientInfoHeader.AppID = "Get Supporter";
+                APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+
+                string Query = "SELECT id FROM contact WHERE ";
+
+                if (!string.IsNullOrEmpty(Obj.FirstName) && !string.IsNullOrEmpty(Obj.LastName))
+                {
+                    Query += $"Contact.Name.First = '{Obj.FirstName}' AND contact.Name.Last = '{Obj.LastName}'";
+                    filters += "FirstName and LastName";
+
+                }
+
+                if (Obj.IncludeEmail && !string.IsNullOrEmpty(Obj.Email))
+                {
+                    string Operator = !string.IsNullOrEmpty(filters) ? "AND" : "";
+                    Query += $" {Operator} contact.Emails.Address LIKE '%" + Obj.Email + "%'";
+                    filters += " Email";
+                }
+
+
+                byte[] byteArray;
+
+                CSVTableSet results;
+                head = rightNowSyncPortClient.QueryCSV(clientInfoHeader, api, Query, 20000, ",", false, true, out results, out byteArray);
+
+                if (results.CSVTables[0].Rows.Length > 0)
+                {
+                    appLogger.Info($"Total {results.CSVTables[0].Rows.Length} records found with filters {filters} and SupporterId {results.CSVTables[0].Rows[0]}");
+
+                    return results.CSVTables[0].Rows[0];
+                }
+                else
+                {
+                    appLogger.Info($"No records found with filters {filters}");
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in SearchSupporterByParams: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            return null;
+        }
+
+        #endregion
+
+        #region Create only consituent using RN SupporterId
+        public void CreateOnlyConstituentProcess(long SupporterId, string CC_TransactionId)
+        {
+            appLogger.Info("CreateOnlyConstituentProcess process started with " + SupporterId);
+            try
+            {
+                SEFModel sefobj = new SEFModel();
+                sefobj = GetSupporterData(SupporterId, null);
+                Model.CIFModel sefcommitobj = new Model.CIFModel();
+                Guid Guid = Guid.NewGuid();
+                sefcommitobj.CC_TransactionId = CC_TransactionId;
+                //Flags
+                sefcommitobj.isDepartureSubCommitment = false;
+                sefcommitobj.isCorrespondentCommitment = false;
+                sefcommitobj.createconstituentonly = true;
+
+                //asign value to CIF Model
+                //supporter data
+                sefcommitobj.supporterid = new string[] { SupporterId.ToString(), "0" };
+                sefcommitobj.titlestring = new string[] { sefobj.titlestring, "" };
+                sefcommitobj.email = new string[] { sefobj.email, "" };
+                sefcommitobj.firstname = new string[] { sefobj.firstname, "" };
+                sefcommitobj.lastname = new string[] { sefobj.lastname, "" };
+                sefcommitobj.mobilephone = new string[] { sefobj.mobilephone, "" };
+                sefcommitobj.addresslineone = new string[] { sefobj.addresslineone, "" };
+                sefcommitobj.postcode = new string[] { sefobj.postcode, "" };
+                sefcommitobj.sponsorchild = sefobj.sponsorchild;
+                sefcommitobj.communicationmethod = 0;
+                sefcommitobj.BestTimetoCall = new string[] { "", "" };
+                sefcommitobj.type = "2";
+                sefcommitobj.primary = "0";
+                sefcommitobj.title = new string[] { "992", "992" }; // HardCoded title
+                sefcommitobj.dob = new string[] { "", "" };
+                sefcommitobj.phone = new string[] { sefobj.mobilephone, "" };
+                sefcommitobj.addresslinetwo = new string[] { sefobj.addresslinetwo, "" };
+                sefcommitobj.addresslinethree = new string[] { sefobj.addresslinethree, "" };
+                sefcommitobj.addresslinefour = new string[] { sefobj.addresslinefour, "" };
+                sefcommitobj.town = new string[] { sefobj.town, "" };
+                sefcommitobj.county = new string[] { sefobj.county, "" };
+                sefcommitobj.addresscountry = new string[] { sefobj.addresscountry, "" };
+                sefcommitobj.communicationmethod = 0;
+
+                sefcommitobj.country = CukAutomationOperations.Model.AutomationBot.Constant.COUNTRY;
+                sefcommitobj.loggedinUser = CukAutomationOperations.Model.AutomationBot.Constant.LOGGEDINUSER;
+                sefcommitobj.loggedinUserAccountID = CukAutomationOperations.Model.AutomationBot.Constant.LOGGEDINUSERACCOUNTID;
+
+                sefcommitobj.sefGUID = "{" + Guid.ToString().ToUpper() + "}";
+                sefcommitobj.sgname = sefobj.titlestring + " " + sefobj.firstname + " " + sefobj.lastname;
+                sefcommitobj.SupGrpPreferredName = sefobj.firstname;
+                sefcommitobj.sglettersalutation = sefobj.firstname;
+                sefcommitobj.sgaddresssalutation = sefobj.titlestring + " " + sefobj.firstname + " " + sefobj.lastname;
+
+
+
+                //child details
+                sefcommitobj.childnumber = sefobj.childnumber;
+                sefcommitobj.BeneficiaryGlobalId = sefobj.BeneficiaryGlobalId;
+                sefcommitobj.BeneficiaryHoldId = sefobj.BeneficiaryHoldId;
+
+
+                //bank details
+                sefcommitobj.accountname = null;
+                sefcommitobj.accountnumber = null;
+                sefcommitobj.sortcode = null;
+                sefcommitobj.paymentmethod = null;
+                sefcommitobj.barcode = null;
+
+
+
+
+
+                sefcommitobj.amount = 0;
+                sefcommitobj.installmentfrequency = null;
+
+                sefcommitobj.ddisource = null;
+                sefcommitobj.firstfundeddate = null;
+
+                sefcommitobj.indicator = null;
+
+                sefcommitobj.futuredonationdate = null;
+                sefcommitobj.Sponsorshipsource = null;
+
+
+
+                sefcommitobj.christmasGiftAmount = null;
+                sefcommitobj.AnnualChristmasDate = null;
+                sefcommitobj.birthdayGiftAmount = null;
+                sefcommitobj.AnnualBirthDate = null;
+
+
+                sefcommitobj.IsSponPlus = null;
+                sefcommitobj.IsHillsongSponPlus = null;
+
+
+                sefcommitobj.dddate = null;
+                sefcommitobj.advancenoticesent = null;
+                sefcommitobj.nomoney = "0";
+
+
+                sefcommitobj.emailPreference = new string[] { "2", "2" };
+                sefcommitobj.phonePreference = new string[] { "2", "2" };
+                sefcommitobj.smsPreference = new string[] { "2", "2" };
+                sefcommitobj.createSolicit = new string[] { "2", "2" };
+
+                sefcommitobj.donationdate = null;
+                sefcommitobj.taxpayertitle = null;
+
+
+                sefcommitobj.linkreason = 328;
+                sefcommitobj.linktype = 1;
+                sefcommitobj.giftaidstatus = null;
+                sefcommitobj.taxpayertitle = "";
+                sefcommitobj.taxpayerfirstname = "";
+                sefcommitobj.taxpayersurname = "";
+                sefcommitobj.iamtaxpayer = "1";
+
+
+
+
+
+                sefcommitobj.connectusestage = sefobj.connectusestage == "Yes" ? true : false;
+                sefcommitobj.iscorrsponsor = "0";
+                sefcommitobj.volunteering = "0";
+                sefcommitobj.sponsorship = null;
+                sefcommitobj.manager = null;
+                sefcommitobj.bankaddress = null;
+                sefcommitobj.bankpostcode = "";
+                sefcommitobj.sortcode1 = "00";
+                sefcommitobj.sortcode2 = "00";
+                sefcommitobj.sortcode3 = "00";
+                sefcommitobj.reference = "0000000";
+                sefcommitobj.supgrpid = 0;
+                sefcommitobj.enqrefid = "";
+                sefcommitobj.groupaccount = "0";
+                sefcommitobj.scanneddocexists = "0";
+                sefcommitobj.sgglobalid = null;
+                sefcommitobj.sgcompassconid = null;
+                sefcommitobj.SponsorSupporterGlobalID = "null";
+                sefcommitobj.DepartedBeneficiaryGlobalId = "";
+                sefcommitobj.ExistingBeneficiaryGlobalId = "";
+                sefcommitobj.individualsgname = null;
+                sefcommitobj.ExistingCommitmentId = null;
+                sefcommitobj.ExistingGlobalCommitmentId = null;
+                sefcommitobj.ExistingGlobalCorrCommitmentId = null;
+                sefcommitobj.ExistingSupporterGroupID = null;
+                sefcommitobj.CorrespondentSupporterGlobalID = null;
+                sefcommitobj.ComBBId = null;
+                sefcommitobj.bic = "";
+                sefcommitobj.iban = "";
+                sefcommitobj.isOrganisation = false;
+                sefcommitobj.orgId = "0";
+                sefcommitobj.orgName = "";
+                sefcommitobj.orgAddPref = null;
+                sefcommitobj.orgaddresslineone = null;
+                sefcommitobj.orgaddresslinetwo = null;
+                sefcommitobj.orgaddresslinethree = null;
+                sefcommitobj.orgaddresslinefour = null;
+                sefcommitobj.orgtown = null;
+                sefcommitobj.orgcounty = null;
+                sefcommitobj.orgaddresscountry = null;
+                sefcommitobj.orgpostcode = null;
+                sefcommitobj.orgwebsite = "";
+                sefcommitobj.orgPhone = "";
+                sefcommitobj.orgEmail = "";
+                sefcommitobj.orgType = "";
+                sefcommitobj.isorgcorrsponsor = null;
+                sefcommitobj.commMarketingChannel = "";
+                sefcommitobj.commMarketingCode = "";
+                sefcommitobj.commRelationshipManager = "";
+                sefcommitobj.commOrganisation = "";
+                sefcommitobj.commSupporter = "";
+                sefcommitobj.commEvent = "";
+                sefcommitobj.commCampaign = "";
+                sefcommitobj.commBBDDAmount = null;
+                sefcommitobj.commBBDDNextDate = null;
+                sefcommitobj.commBBDDStartDate = null;
+                sefcommitobj.commBBPaymentMethod = null;
+                sefcommitobj.commDDReference = null;
+                sefcommitobj.commSponsorshipPlus = true;
+                sefcommitobj.commPaymentMethod = null;
+                sefcommitobj.commLinkedToPartnership = null;
+                sefcommitobj.isIndiaProcessService = false;
+                sefcommitobj.DepNeedStatus = null;
+                sefcommitobj.delinkType = null;
+                sefcommitobj.delinkReason = null;
+                sefcommitobj.isChildChangeFlow = null;
+                sefcommitobj.samepc = "0";
+                sefcommitobj.debiton = "0";
+
+                appLogger.Info("CreateOnlyConstituentProcess with data " + SimpleJson.SerializeObject(sefcommitobj));
+                SendDataToMainWS(sefcommitobj, 1002);//uncomment after debug
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in CreateOnlyConstituentProcess: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+
+            appLogger.Info("CreateOnlyConstituentProcess ended...");
+        }
+        public SEFModel GetSupporterData(long contactid, string Needkey)
+        {
+            SEFModel sefObj = new SEFModel();
+            SEFModel EPObj = new SEFModel();
+            SEFModel ChildObj = new SEFModel();
+            if (!string.IsNullOrEmpty(Needkey))
+            {
+                ChildObj = GetChildData(Needkey);
+            }
+            EPObj = GetEmailAndPhoneNo(contactid);
+            try
+            {
+                ClientInfoHeader info = new ClientInfoHeader();
+                info.AppID = "Get contact data";
+                APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+                string query = "SELECT c.customfields.c.titlename.lookupname,c.customfields.c.titlename.id,c.name.first,c.name.last,c.customfields.c.street1,c.customfields.c.street2,c.customfields.c.street3,c.customfields.c.street4,c.customfields.c.town,c.customfields.c.county, c.customfields.c.add_mailingcountrydrop.id,c.customfields.c.postcode,c.customfields.c.connectusestage.lookupname FROM Contact as c where id =" + contactid;
+                byte[] byteArray;
+
+                CSVTableSet result;
+                head = rightNowSyncPortClient.QueryCSV(info, api, query, 100000, "^", false, true, out result, out byteArray);
+                if (result.CSVTables.Length > 0)
+                {
+                    if (result.CSVTables[0].Rows.Length > 0)
+                    {
+                        foreach (string row in result.CSVTables[0].Rows)
+                        {
+                            string[] values = row.Split('^');
+                            sefObj.titlestring = values[0];
+                            sefObj.title = values[1];
+                            sefObj.firstname = values[2];
+                            sefObj.lastname = values[3];
+                            sefObj.addresslineone = values[4];
+                            sefObj.addresslinetwo = values[5];
+                            sefObj.addresslinethree = values[6];
+                            sefObj.addresslinefour = values[7];
+                            sefObj.town = values[8];
+                            sefObj.county = values[9];
+                            sefObj.addresscountry = values[10];
+                            sefObj.postcode = values[11];
+                            sefObj.mobilephone = EPObj.mobilephone;
+                            sefObj.email = EPObj.email;
+                            sefObj.BeneficiaryGlobalId = ChildObj.BeneficiaryGlobalId;
+                            sefObj.sponsorchild = ChildObj.sponsorchild;
+                            sefObj.BeneficiaryHoldId = ChildObj.BeneficiaryHoldId;
+                            sefObj.childnumber = Needkey;
+                            sefObj.BirthDate = ChildObj.BirthDate;
+                            sefObj.connectusestage = values[12];
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetching supporter data :" + e.Message + " with supporter id: " + contactid);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            return sefObj;
+        }
+
+        #endregion
+
+        #region Create only consituent using RN Supporter data
+        public void CreateOnlyConstituentProcessOtherPayments(OnlyConstituentDetails Obj)
+        {
+            try
+            {
+                appLogger.Info("CreateOnlyConstituentProcessOtherPayments request received with data:  " + SimpleJson.SerializeObject(Obj));
+
+                SEFModel sefobj = new SEFModel();
+                Model.CIFModel sefcommitobj = new Model.CIFModel();
+                Guid Guid = Guid.NewGuid();
+                sefcommitobj.BatchName = Obj.BatchName;
+                sefcommitobj.BatchDonorId = Obj.BatchDonorId;
+                sefcommitobj.NonSponsorDonationRecordId = Obj.NonSponsorDonationRecordId;
+
+                //Flags
+                sefcommitobj.isDepartureSubCommitment = false;
+                sefcommitobj.isCorrespondentCommitment = false;
+                sefcommitobj.createconstituentonly = true;
+
+                string SupporterId = !string.IsNullOrWhiteSpace(Obj.SupporterId) ? Obj.SupporterId : "0";
+
+                //asign value to CIF Model
+                //supporter data
+                sefcommitobj.supporterid = new string[] { SupporterId, "0" };
+                sefcommitobj.titlestring = new string[] { Obj.titlestring, "" };
+                sefcommitobj.email = new string[] { Obj.email, "" };
+                sefcommitobj.firstname = new string[] { Obj.firstname, "" };
+                sefcommitobj.lastname = new string[] { Obj.lastname, "" };
+                sefcommitobj.mobilephone = new string[] { Obj.mobilephone, "" };
+                sefcommitobj.addresslineone = new string[] { Obj.addresslineone, "" };
+                sefcommitobj.postcode = new string[] { Obj.postcode, "" };
+                sefcommitobj.sponsorchild = sefobj.sponsorchild;
+                sefcommitobj.communicationmethod = 0;
+                sefcommitobj.BestTimetoCall = new string[] { "", "" };
+                sefcommitobj.type = "2";
+                sefcommitobj.primary = "0";
+                sefcommitobj.title = new string[] { "992", "992" }; // HardCoded title
+                sefcommitobj.dob = new string[] { "", "" };
+                sefcommitobj.phone = new string[] { Obj.mobilephone, "" };
+                sefcommitobj.addresslinetwo = new string[] { Obj.addresslinetwo, "" };
+                sefcommitobj.addresslinethree = new string[] { Obj.addresslinethree, "" };
+                sefcommitobj.addresslinefour = new string[] { Obj.addresslinefour, "" };
+                sefcommitobj.town = new string[] { Obj.town, "" };
+                sefcommitobj.county = new string[] { Obj.county, "" };
+                sefcommitobj.addresscountry = new string[] { Obj.addresscountry, "" };
+                sefcommitobj.communicationmethod = 0;
+
+                sefcommitobj.country = CukAutomationOperations.Model.AutomationBot.Constant.COUNTRY;
+                sefcommitobj.loggedinUser = CukAutomationOperations.Model.AutomationBot.Constant.LOGGEDINUSER;
+                sefcommitobj.loggedinUserAccountID = CukAutomationOperations.Model.AutomationBot.Constant.LOGGEDINUSERACCOUNTID;
+
+                sefcommitobj.sefGUID = "{" + Guid.ToString().ToUpper() + "}";
+                sefcommitobj.sgname = Obj.titlestring + " " + Obj.firstname + " " + Obj.lastname;
+                sefcommitobj.SupGrpPreferredName = Obj.firstname;
+                sefcommitobj.sglettersalutation = Obj.firstname;
+                sefcommitobj.sgaddresssalutation = Obj.titlestring + " " + Obj.firstname + " " + Obj.lastname;
+
+
+
+                //child details
+                sefcommitobj.childnumber = sefobj.childnumber;
+                sefcommitobj.BeneficiaryGlobalId = sefobj.BeneficiaryGlobalId;
+                sefcommitobj.BeneficiaryHoldId = sefobj.BeneficiaryHoldId;
+
+
+                //bank details
+                sefcommitobj.accountname = null;
+                sefcommitobj.accountnumber = null;
+                sefcommitobj.sortcode = null;
+                sefcommitobj.paymentmethod = null;
+                sefcommitobj.barcode = null;
+
+
+
+
+
+                sefcommitobj.amount = 0;
+                sefcommitobj.installmentfrequency = null;
+
+                sefcommitobj.ddisource = null;
+                sefcommitobj.firstfundeddate = null;
+
+                sefcommitobj.indicator = null;
+
+                sefcommitobj.futuredonationdate = null;
+                sefcommitobj.Sponsorshipsource = null;
+
+
+
+                sefcommitobj.christmasGiftAmount = null;
+                sefcommitobj.AnnualChristmasDate = null;
+                sefcommitobj.birthdayGiftAmount = null;
+                sefcommitobj.AnnualBirthDate = null;
+
+
+                sefcommitobj.IsSponPlus = null;
+                sefcommitobj.IsHillsongSponPlus = null;
+
+
+                sefcommitobj.dddate = null;
+                sefcommitobj.advancenoticesent = null;
+                sefcommitobj.nomoney = "0";
+
+
+                sefcommitobj.emailPreference = new string[] { "2", "2" };
+                sefcommitobj.phonePreference = new string[] { "2", "2" };
+                sefcommitobj.smsPreference = new string[] { "2", "2" };
+                sefcommitobj.createSolicit = new string[] { "2", "2" };
+
+                sefcommitobj.donationdate = null;
+                sefcommitobj.taxpayertitle = null;
+
+
+                sefcommitobj.linkreason = 328;
+                sefcommitobj.linktype = 1;
+                sefcommitobj.giftaidstatus = null;
+                sefcommitobj.taxpayertitle = "";
+                sefcommitobj.taxpayerfirstname = "";
+                sefcommitobj.taxpayersurname = "";
+                sefcommitobj.iamtaxpayer = "1";
+
+
+
+
+
+                sefcommitobj.connectusestage = sefobj.connectusestage == "Yes" ? true : false;
+                sefcommitobj.iscorrsponsor = "0";
+                sefcommitobj.volunteering = "0";
+                sefcommitobj.sponsorship = null;
+                sefcommitobj.manager = null;
+                sefcommitobj.bankaddress = null;
+                sefcommitobj.bankpostcode = "";
+                sefcommitobj.sortcode1 = "00";
+                sefcommitobj.sortcode2 = "00";
+                sefcommitobj.sortcode3 = "00";
+                sefcommitobj.reference = "0000000";
+                sefcommitobj.supgrpid = 0;
+                sefcommitobj.enqrefid = "";
+                sefcommitobj.groupaccount = "0";
+                sefcommitobj.scanneddocexists = "0";
+                sefcommitobj.sgglobalid = null;
+                sefcommitobj.sgcompassconid = null;
+                sefcommitobj.SponsorSupporterGlobalID = "null";
+                sefcommitobj.DepartedBeneficiaryGlobalId = "";
+                sefcommitobj.ExistingBeneficiaryGlobalId = "";
+                sefcommitobj.individualsgname = null;
+                sefcommitobj.ExistingCommitmentId = null;
+                sefcommitobj.ExistingGlobalCommitmentId = null;
+                sefcommitobj.ExistingGlobalCorrCommitmentId = null;
+                sefcommitobj.ExistingSupporterGroupID = null;
+                sefcommitobj.CorrespondentSupporterGlobalID = null;
+                sefcommitobj.ComBBId = null;
+                sefcommitobj.bic = "";
+                sefcommitobj.iban = "";
+                sefcommitobj.isOrganisation = false;
+                sefcommitobj.orgId = "0";
+                sefcommitobj.orgName = "";
+                sefcommitobj.orgAddPref = null;
+                sefcommitobj.orgaddresslineone = null;
+                sefcommitobj.orgaddresslinetwo = null;
+                sefcommitobj.orgaddresslinethree = null;
+                sefcommitobj.orgaddresslinefour = null;
+                sefcommitobj.orgtown = null;
+                sefcommitobj.orgcounty = null;
+                sefcommitobj.orgaddresscountry = null;
+                sefcommitobj.orgpostcode = null;
+                sefcommitobj.orgwebsite = "";
+                sefcommitobj.orgPhone = "";
+                sefcommitobj.orgEmail = "";
+                sefcommitobj.orgType = "";
+                sefcommitobj.isorgcorrsponsor = null;
+                sefcommitobj.commMarketingChannel = "";
+                sefcommitobj.commMarketingCode = "";
+                sefcommitobj.commRelationshipManager = "";
+                sefcommitobj.commOrganisation = "";
+                sefcommitobj.commSupporter = "";
+                sefcommitobj.commEvent = "";
+                sefcommitobj.commCampaign = "";
+                sefcommitobj.commBBDDAmount = null;
+                sefcommitobj.commBBDDNextDate = null;
+                sefcommitobj.commBBDDStartDate = null;
+                sefcommitobj.commBBPaymentMethod = null;
+                sefcommitobj.commDDReference = null;
+                sefcommitobj.commSponsorshipPlus = true;
+                sefcommitobj.commPaymentMethod = null;
+                sefcommitobj.commLinkedToPartnership = null;
+                sefcommitobj.isIndiaProcessService = false;
+                sefcommitobj.DepNeedStatus = null;
+                sefcommitobj.delinkType = null;
+                sefcommitobj.delinkReason = null;
+                sefcommitobj.isChildChangeFlow = null;
+                sefcommitobj.samepc = "0";
+                sefcommitobj.debiton = "0";
+
+                appLogger.Info("CreateOnlyConstituentProcess with data " + SimpleJson.SerializeObject(sefcommitobj));
+                SendDataToMainWS(sefcommitobj, 1002);//uncomment after debug
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in CreateOnlyConstituentProcess: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+
+            appLogger.Info("CreateOnlyConstituentProcess ended...");
+        }
+        #endregion
+
+        #region Delete RN Task Records
+
+        public long GetTaskRecordsCount()
+        {
+            long count = 0;
+            try
+            {
+                ClientInfoHeader info = new ClientInfoHeader();
+                info.AppID = "Get task data";
+                APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+
+                string query = "SELECT COUNT(1) FROM task";
+
+                byte[] byteArray;
+
+                CSVTableSet result;
+                head = rightNowSyncPortClient.QueryCSV(info, api, query, 100000, "^", false, true, out result, out byteArray);
+                if (result.CSVTables.Length > 0 && result.CSVTables[0].Rows.Length > 0)
+                {
+                    count = Convert.ToInt64(result.CSVTables[0].Rows[0]);
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in GetTaskRecords: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            return count;
+        }
+        private List<long> GetTaskRecords()
+        {
+            List<long> taskIds = new List<long>();
+            try
+            {
+                ClientInfoHeader info = new ClientInfoHeader();
+                info.AppID = "Get task data";
+                APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+
+                string query = "SELECT task.id FROM task ORDER BY task.id ASC LIMIT 0,10";
+
+                byte[] byteArray;
+
+                CSVTableSet result;
+                head = rightNowSyncPortClient.QueryCSV(info, api, query, 100000, "^", false, true, out result, out byteArray);
+                if (result.CSVTables.Length > 0)
+                {
+                    foreach (string id in result.CSVTables[0].Rows)
+                    {
+                        taskIds.Add(Convert.ToInt64(id));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in GetTaskRecords: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            return taskIds;
+        }
+        public void DeleteRightNowTaskRecords()
+        {
+            appLogger.Info("DeleteRightNowTaskRecords process started...");
+            try
+            {
+                List<long> taskIds = GetTaskRecords();
+
+                appLogger.Info("Total task record deleting from RN: " + taskIds.Count);
+                //do something here
+                foreach (long taskid in taskIds)
+                {
+                    DestroyTaskRecord(taskid);
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in DeleteRightNowTaskRecords: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            appLogger.Info("DeleteRightNowTaskRecords process ended...");
+        }
+        private void DestroyTaskRecord(long taskId)
+        {
+            try
+            {
+                Task task = new Task();
+                ID taskid = new ID();
+
+                taskid.id = taskId;
+
+                task.ID = taskid;
+                task.ID.idSpecified = true;
+
+                //Instantiate and populate the RNObject[]
+                RNObject[] destroyObjects = new RNObject[] { task };
+
+                //Create the DestroyProcessingOptions
+                DestroyProcessingOptions options = new DestroyProcessingOptions();
+                options.SuppressExternalEvents = false;
+                options.SuppressRules = false;
+
+
+                ClientInfoHeader clientInfoHeader = new ClientInfoHeader();
+                clientInfoHeader.AppID = "delete task";
+
+                //Invoke the Delete operation
+                rightNowSyncPortClient.Destroy(clientInfoHeader, api, destroyObjects, options);
+                appLogger.Info("Task deleted from RN with id:" + taskId);
+            }
+            catch (Exception e)
+            {
+
+                appLogger.Error("Error in DestroyTaskRecord: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+
+            }
+        }
+        #endregion
+
+        public string getSupIdFromBlackbaudId(string blackbaudid)
+        {
+            string Supporterid = "";
+            try
+            {
+                ClientInfoHeader info = new ClientInfoHeader();
+                APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
+                info.AppID = "Fetch Supporter id";
+                String query = "select contact.ID from contact where contact.customFields.c.blackbaudid = '" + blackbaudid + "'";
+                byte[] byteArray;
+
+                CSVTableSet result;
+                head = rightNowSyncPortClient.QueryCSV(info, api, query, 100000, ",", false, true, out result, out byteArray);
+                if (result.CSVTables.Length > 0)
+                {
+                    if (result.CSVTables[0].Rows.Length > 0)
+                    {
+                        Supporterid = result.CSVTables[0].Rows[0].ToString();
+                    }
+                }
+                appLogger.Info("Supporterid : " + Supporterid + " found for blackbaudid  " + blackbaudid);
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in getSupIdFromBlackbaudId while fetching Supporter ID from blackbaudid for Arrears Payment Method None: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            return Supporterid;
+        }
+
+
+        #region TEST CODE - No Need to move in PROD
+        public void CheckBBRecords()
+        {
+            appLogger.Info("CheckIfConstituentHasSponsorshipPlusRg started....");
+            string[] bbids = { "8-10035784", "8-10041148", "8-10043878", "8-10135273", "8-10062302", "8-10123518", "8-10082868", "8-10105364", "8-10110369", "8-10120718", "8-10124920", "8-10399214", "8-10421010", "8-10512481", "8-10487489", "8-10505886", "8-10512011", "8-10512067", "8-10579696", "8-10515878", "8-10518178", "8-10518846", "8-10577337", "8-10533581", "8-10555859", "8-10583557", "8-10577350", "8-10547723", "8-10555121", "8-10557660", "8-10578454", "8-10577515", "8-10581932", "8-10577292", "8-10577341", "8-10577445", "8-10577496", "8-10577575", "8-10577506", "8-10577673", "8-10577623", "8-10577709", "8-10577727", "8-10577888", "8-10578011", "8-10578013", "8-10577891", "8-10577917", "8-10578063", "8-10578069", "8-10578168", "8-10578235", "8-10578338", "8-10578340", "8-10578405", "8-10578385", "8-10578434", "8-10578472", "8-10578476", "8-10578646", "8-10578645", "8-10578625", "8-10578676", "8-10578671", "8-10578677", "8-10578679", "8-10578720", "8-10578816", "8-10578929", "8-10578979", "8-10579069", "8-10579087", "8-10579122", "8-10579326", "8-10579422", "8-10579493", "8-10579466", "8-10579462", "8-10579542", "8-10579650", "8-10579679", "8-10579690", "8-10579675", "8-10579704", "8-10579771", "8-10579763", "8-10579933", "8-10579970", "8-10580111", "8-10580131", "8-10580373", "8-10580209", "8-10580343", "8-10580374", "8-10580430", "8-10580379", "8-10580566", "8-10580539", "8-10580743", "8-10580759", "8-10580755", "8-10580855", "8-10580879", "8-10580900", "8-10580977", "8-10581006", "8-10581148", "8-10581179", "8-10581235", "8-10581238", "8-10583249", "8-10581467", "8-10581751", "8-10581568", "8-10581841", "8-10581831", "8-10581786", "8-10581825", "8-10582045", "8-10582013", "8-10582031", "8-10582054", "8-10582058", "8-10582206", "8-10582119", "8-10582166", "8-10582179", "8-10582178", "8-10582123", "8-10582277", "8-10582127", "8-10582145", "8-10582406", "8-10582582", "8-10582562", "8-10582544", "8-10582590", "8-10582596", "8-10582980", "8-10582568", "8-10582772", "8-10582985", "8-10582997", "8-10583000", "8-10583052", "8-10583234", "8-10583367", "8-10583391", "8-10583446", "8-10583448", "8-10583533", "8-10583709", "8-10583561", "8-10583484", "8-10583604", "8-10583620", "8-10583861", "8-10583839", "8-10583859", "8-10583856", "8-10583922", "8-10584012", "8-10584064", "8-10584068", "8-10584190"};
+
+            appLogger.Info("Total records found: "+bbids.Length);
+            foreach (string bbid in bbids)
+            {
+                CheckIfConstituentHasSponsorshipPlusRg(bbid);
+            }
+            appLogger.Info("CheckIfConstituentHasSponsorshipPlusRg ended....");
+        }
+        public void CheckIfConstituentHasSponsorshipPlusRg(string bbid)
+        {
+            
+            try
+            {
+                string constituentId = GetConstituentOnLookupID(bbid).Output.Rows[0].Values[0];
+                bool isFound = false;
+                if (!string.IsNullOrEmpty(constituentId))
+                {
+                    var orgdata = fetchRecurringGiftsNew(constituentId);
+                    if (orgdata.Count > 0)
+                    {
+                        for (int i = 0; i < orgdata.Count; i++)
+                        {
+                            if (orgdata[i].Values[0] == "Active" && orgdata[i].Values[7] == "Sponsorship Plus")
+                            {
+                                appLogger.Info("Sponsorship Plus SET for " + bbid + ", SET");
+                                isFound = true;
+                                break;
+                            }
+                        }
+                        if (!isFound)
+                        {
+                            appLogger.Info("Sponsorship Plus NOT SET for " + bbid + ", NOT SET");
+                        }
+                    }
+                    else
+                    {
+                        appLogger.Info("Sponsorship Plus NOT SET for "+ bbid + ", NOT SET");
+                    }
+                }
+                else
+                {
+                    appLogger.Info("Cannot find constituent data using bbid " + bbid);
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in CheckIfConstituentHasSponsorshipPlusRg: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+        }
+        public bool CheckIfGivenAmountIsMatchWithAllRgsAmount(string LookupId, string Amount)
+        {
+            bool isAmountMatched = false;
+            try
+            {
+                Double TotalAmount = 0;
+                string constituentId = GetConstituentOnLookupID(LookupId).Output.Rows[0].Values[0];
+
+                List<DataListResultRow> sponsorshipRecurringGift = fetchRecurringGiftsforBOS(constituentId);
+                for (int i = 0; i < sponsorshipRecurringGift.Count; i++)
+                {
+                    if (sponsorshipRecurringGift[i].Values[0].ToString() == "Active")
+                    {
+                        TotalAmount += Convert.ToDouble(sponsorshipRecurringGift[i].Values[1]);
+                    }
+                }
+
+
+                List<DataListResultRow> otherRecurringGift = fetchOtherRecurringforBOS(constituentId);
+                for (int i = 0; i < otherRecurringGift.Count; i++)
+                {
+                    if (otherRecurringGift[i].Values[0].ToString() == "Active")
+                    {
+                        TotalAmount += Convert.ToDouble(otherRecurringGift[i].Values[1]);
+                    }
+                }
+                
+                if (Convert.ToInt32(Convert.ToDecimal(Amount)) == Convert.ToInt32(Convert.ToDecimal(TotalAmount)))
+                {
+                    isAmountMatched = true;
+                }
+
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in CheckIfGivenAmountIsMatchWithAllRgsAmount: " + e.Message);
+                appLogger.Error(e.StackTrace);
+                appLogger.Error(e.InnerException);
+            }
+            return isAmountMatched;
+        }
+        public List<DataListResultRow> fetchRecurringGiftsforBOS(string constituentId)
+        {
+            List<DataListResultRow> responseList = new List<DataListResultRow>();
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(constituentId))
+                {
+                    DataListLoadRequest request = new DataListLoadRequest();
+
+                    request.ClientAppInfo = GetRequestHeader();
+                    request.DataListID = new Guid("91f59ee7-98e6-44b3-a053-bd0842bb4292");   // GUID for Data List: Recurring gifts - sponsorship                    
+                    request.ContextRecordID = constituentId;
+                    request.IncludeMetaData = true;
+                    var result = _service.DataListLoad(request);
+                    if (result.TotalRowsInReply > 0)
+                    {
+                        //foreach (var res in result.Rows)
+                        //{
+                        for (int i = 0; i < result.TotalRowsInReply; i++)
+                        {
+                            var res = result.Rows[i];
+
+                            if (result.Rows[i].Values[0].ToString() == "Active")
+                            {
+                                responseList.Add(res);
+                            }
+                        }
+                        //}
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetching recurring gifts for gift aid : " + constituentId + " : " + e.Message);
+            }
+            return responseList;
+        }
+        public List<DataListResultRow> fetchOtherRecurringforBOS(string constituentId)
+        {
+            List<DataListResultRow> responseList = new List<DataListResultRow>();
+            try
+            {
+
+                //var constituentDetails = GetConstituentOnCommitmentID(CommitmentID);
+                if (!string.IsNullOrWhiteSpace(constituentId))
+                {
+                    DataListLoadRequest request = new DataListLoadRequest();
+
+                    request.ClientAppInfo = GetRequestHeader();
+                    request.DataListID = new Guid("573dbbaf-5bf0-4808-bc6b-37fc4c1eb7b7");// GUID for Data List: Other Recurring gifts - Linked                    
+                    request.ContextRecordID = constituentId;
+                    request.IncludeMetaData = true;
+                    var result = _service.DataListLoad(request);
+
+                    if (result.TotalRowsInReply > 0)
+                    {
+                        foreach (var res in result.Rows)
+                        {
+                            responseList.Add(res);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                appLogger.Error("Error in fetching other recurring gifts for constituent : " + constituentId + " : " + e.Message);
+            }
+            return responseList;
+        }
+
+        #endregion
+
     }
 }

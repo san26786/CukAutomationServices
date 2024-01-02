@@ -55,5 +55,5 @@ namespace CukAutomationOperations.Model
         public string Event_Ambassador_Name { get; set; }
 
     }
-
+  
 }
