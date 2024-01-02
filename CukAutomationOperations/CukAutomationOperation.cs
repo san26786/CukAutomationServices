@@ -43,6 +43,10 @@ using System.Threading;
 using Blackbaud.AppFx;
 using Blackbaud.AppFx.Fundraising.Catalog.WebApiClient.DataLists.Revenue;
 using Polly;
+using Newtonsoft.Json.Linq;
+using Blackbaud.AppFx.GiftAid.Catalog.WebApiClient.AddForms.GiftAid;
+using System.Configuration;
+using Newtonsoft.Json;
 
 namespace CukAutomationOperations
 {
@@ -51,13 +55,13 @@ namespace CukAutomationOperations
         protected static readonly ILog appLogger = LogManager.GetLogger(typeof(CukAutomationOperation));
         APIAccessRequestHeader api = new APIAccessRequestHeader();
         private RightNowSyncPortClient rightNowSyncPortClient = new RightNowSyncPortClient();
-        private string MyConnectionString = "server=172.23.161.89;uid=cuk_stage;" + "pwd=0hFUyhipq3;database=cuk_stage; convert zero datetime=True;AutoEnlist=false;Connect Timeout=200;";
-        private string Mytcpt_pptdbConnectionString = "server=62.138.4.114;uid=tcpt_pptdb;" + "pwd=G33c@n0404;database=tcpt_pptdb; convert zero datetime=True;AutoEnlist=false;Connect Timeout=200;";
-        private string mycuk_tcpt4ConnectionString = "server=172.23.161.30;uid=cuk_tcpt4;" + "pwd=Geecon0404;database=cuk_tcpt4_log; convert zero datetime=True;AutoEnlist=false";
-        // private string Mytcpt_pptdbConnectionString_cs = "server=62.138.4.114;uid=tcpt_celser;" + "pwd=G33c@n0404;database=tcpt_celser_dev; convert zero datetime=True;AutoEnlist=false;Connection Lifetime=0;Min Pool Size=0;Max Pool Size=100;Pooling=true;";
-        private string Mytcpt_pptdbConnectionString_cs = "server=172.23.161.30;uid=oneview_celsppt;" + "pwd=G33c@n0404;database=oneview_celsppt_dev; convert zero datetime=True;AutoEnlist=false;Connection Lifetime=0;Min Pool Size=0;Max Pool Size=100;Pooling=true;";
+        private static readonly System.Collections.Specialized.NameValueCollection settings = ConfigurationManager.AppSettings;
+        private string MyConnectionString = ConfigurationManager.ConnectionStrings["WebSiteDbConnectionString"].ConnectionString;
+        private string Mytcpt_pptdbConnectionString = ConfigurationManager.ConnectionStrings["TCPT_PPTDB_ConnectionString"].ConnectionString;
+        private string mycuk_tcpt4ConnectionString = ConfigurationManager.ConnectionStrings["TCPTR4DB_ConnectionString"].ConnectionString;
+        private string Mytcpt_pptdbConnectionString_cs = ConfigurationManager.ConnectionStrings["ONEVIEW_CELSPPT_ConnectionString"].ConnectionString;
+        
 
-        private string ETR_TestConnectionString = "server=62.138.4.114;uid=cuk_tcpt4;" + "pwd=Geecon0404;database=cuk_tcpt4_log; convert zero datetime=True;AutoEnlist=false";
 
         string access_token = "";
         string token_type = "";
@@ -79,11 +83,20 @@ namespace CukAutomationOperations
         #region Global Instance
         private Blackbaud.AppFx.WebAPI.ServiceProxy.AppFxWebService _service;
         private string BbDatabase = string.Empty;
-        private string Host = "https://staging.compassionuk.org";
-        private string Host_Website_Url = "https://cukwebsite.co.uk/";
+        private string Host = settings["ENV_HOST_URL"];
+        private string Host_Website_Url = settings["WEBSITE_URL"];
         private string ApplicationName = System.Reflection.Assembly.GetCallingAssembly().FullName;
         #endregion
 
+        #region Dictionary Container
+
+        Dictionary<string, long> SetupStatusDictionary = JsonConvert.DeserializeObject<Dictionary<string, long>>(settings["RN_SETUP_STATUS_DICTIONARY"].Replace("\\r\\n", "\r\n").Replace("\\\"", "\""));
+
+        Dictionary<string, string> FundsDesignation = JsonConvert.DeserializeObject<Dictionary<string, string>>(settings["BB_FUND_DESIGNATION_DICTIONARY"].Replace("\\r\\n", "\r\n").Replace("\\\"", "\""));
+
+        Dictionary<string, string> CancelRGReasonDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(settings["BB_CANCEL_RG_REASON_DICTIONARY"].Replace("\\r\\n", "\r\n").Replace("\\\"", "\""));
+
+        #endregion
 
         public CukAutomationOperation()
         {
@@ -92,61 +105,20 @@ namespace CukAutomationOperations
                 DraftTileObj = new Message();
 
                 rightNowSyncPortClient = new RightNowSyncPortClient();
-                rightNowSyncPortClient.ClientCredentials.UserName.UserName = "GC_2";
-                rightNowSyncPortClient.ClientCredentials.UserName.Password = "G33con0404";
+                rightNowSyncPortClient.ClientCredentials.UserName.UserName = settings["RN_USER_ID"];
+                rightNowSyncPortClient.ClientCredentials.UserName.Password = settings["RN_USER_PWD"];
 
                 log4net.Config.XmlConfigurator.Configure();
-                api_key = "b46u6dkaw2gjrw3myrgw7gcb";     // Prod
+                api_key = settings["GMC_API_KEY"];
 
-
-
-                int retryCount = 0;
-                while (retryCount < 4)
-                {
-                    retryCount++;
-                    try
-                    {
-                        appLogger.Info("BB construction call");
-                        BBTargetRepository.Model.Constant obj = new BBTargetRepository.Model.Constant();
-                        _service = new Blackbaud.AppFx.WebAPI.ServiceProxy.AppFxWebService();
-                        _service.Url = obj.URI;
-                        _service.Credentials = new System.Net.NetworkCredential(obj.UID, obj.PWD, "");
-                        var req = new Blackbaud.AppFx.WebAPI.ServiceProxy.GetAvailableREDatabasesRequest();
-                        req.ClientAppInfo = GetRequestHeader();
-                        var reply = _service.GetAvailableREDatabases(req);
-                        BbDatabase = reply.Databases[0];
-                        break;
-                    }
-                    catch (Exception e )
-                    {
-                        if (e.Message.Contains("The request failed with HTTP status 502: Bad Gateway"))
-                        {
-
-                            if (retryCount == 4)
-                            {
-
-                                appLogger.Error("Error in constructor try : " + e.Message);
-                                appLogger.Error(e.InnerException);
-                                appLogger.Error(e.StackTrace);
-                                throw e;
-
-                            }
-                            else
-                            {
-                                appLogger.Info("Retrying in constructor...");
-                            }
-                        }
-                        else
-                        {
-                            appLogger.Error("Error in constructor main : " + e.Message);
-                            appLogger.Error(e.InnerException);
-                            appLogger.Error(e.StackTrace);
-                            throw e;
-
-                        }
-                    }
-                }
-            }
+                _service = new Blackbaud.AppFx.WebAPI.ServiceProxy.AppFxWebService();
+                _service.Url = settings["BB_URI"];
+                _service.Credentials = new System.Net.NetworkCredential(settings["BB_UID"], settings["BB_PWD"], "");
+                var req = new Blackbaud.AppFx.WebAPI.ServiceProxy.GetAvailableREDatabasesRequest();
+                req.ClientAppInfo = GetRequestHeader();
+                var reply = retryPolicy.Execute(() => _service.GetAvailableREDatabases(req));
+                BbDatabase = reply.Databases[0];
+            }   
             catch (Exception e)
             {
                 appLogger.Error("Error in constructor CukAutomationOperation:" + e.Message);
@@ -157,15 +129,9 @@ namespace CukAutomationOperations
             string content = null;
             try
             {
-                /* Stage */
-                string _client = "l6iciqd96r9bjdb3cc9nbev9u";
-                string _secret = "t8499122n4mfhihoamgjb6ef2s0r33dp185c4db58jk2ebh6bp8";
+                var restClient = new RestClient(settings["GMC_TOKEN_URL"]);
 
-                //var restClient = new RestClient("https://shaphat-devint.ci.org/oauth2/token/");   // Test
-                //var restClient = new RestClient("https://shaphat-stage.ci.org/oauth2/token");    // Stage
-                var restClient = new RestClient("https://shaphat.ci.org/oauth2/token");    // Prod
-
-                restClient.Authenticator = new HttpBasicAuthenticator(_client, _secret);
+                restClient.Authenticator = new HttpBasicAuthenticator(settings["GMC_CLIENT_ID"], settings["GMC_SECRET"]);
 
                 var tokenRequest = new RestRequest(Method.POST);
 
@@ -198,25 +164,6 @@ namespace CukAutomationOperations
             }
         }
 
-        Dictionary<string, long> SetupStatusDictionary = new Dictionary<string, long>()
-        {
-            {"Not Started",352},
-            {"In Progress",355},
-            {"Held",1690},
-            {"Released",1691},
-            {"Succeeded",1692},
-            {"Failed",1693},
-            {"Retry",1694},
-            {"Resolving",1704},
-            {"Unable to Resolve", 1705 },
-            {"Failed to Resolve",1706},
-            {"Resolved",1707},
-            {"Check",1718},
-            {"No Match",1719},
-            {"Manual",1720},
-            {"Waiting",1750},
-            {"Unable to Setup",1717 }
-        };
         #region Helper Method
 
         public long fetchNeedIdByGlobalId(string globalId)
@@ -4417,69 +4364,6 @@ namespace CukAutomationOperations
         }
         #endregion
 
-        public void TestMethod()
-        {
-            //byte[] fileContens = DownloadFileUsingHttpClient("http://compassionuk.org/wp-content/themes/donation/child_letter/Letter_KE038400333_255116__15.pdf");
-
-            ServicePointManager.ServerCertificateValidationCallback +=
-        (sender, certificate, chain, sslPolicyErrors) => true;
-
-            try
-            {
-                var client = new RestClient("http://compassionuk.org/wp-content/themes/donation/child_letter/Letter_KE038400333_255116__15.pdf");
-                var request = new RestRequest();
-
-                client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
-
-                var responce = client.Execute(request);
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-
-        public void UploadFileUsingFtpWebRequest()
-        {
-            string uploadUrl = "ftp://cukdev.co.uk/public_html/Alam.pdf";
-            try
-            {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(uploadUrl);
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential("cukdevco", "D@shwood0404");
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Timeout = 5000;
-                request.ReadWriteTimeout = 32000;
-                // Copy the contents of the file to the request stream.  
-                StreamReader sourceStream = new StreamReader(@"D:/Compassion-UK/Letters/Card_ES071000400_47215__29.pdf");
-                byte[] fileContents = Encoding.UTF8.GetBytes(sourceStream.ReadToEnd());
-                sourceStream.Close();
-                request.ContentLength = fileContents.Length;
-
-                Stream requestStream = request.GetRequestStream();
-
-                requestStream.Write(fileContents, 0, fileContents.Length);
-                requestStream.Close();
-                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-                Console.WriteLine("Upload File Complete, status {0}", response.StatusDescription);
-            }
-            catch (WebException e)
-            {
-                Console.WriteLine(e.Message.ToString());
-                String status = ((FtpWebResponse)e.Response).StatusDescription;
-                Console.WriteLine(status);
-                //appLogger.Error("WebExceptionError in  DownloadFileUsingFtpWebRequest : " + e.Message.ToString());
-                //appLogger.Error("Status is :" + status);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-                //appLogger.Error("WebExceptionError in  DownloadFileUsingFtpWebRequest : " + ex.Message.ToString());
-                //appLogger.Error(ex.InnerException);
-            }
-        }
-
-
         #region Compassion Celebration Services - Datapoint
         public void SyncOrgActiveSponsorshipData(int OrgID)
         {
@@ -4918,11 +4802,7 @@ namespace CukAutomationOperations
             appLogger.Info("Sync org process ended...");
         }
         #endregion
-
         
-
-        
-
         #region Advance Notice Control Table
 
         #region Create Batch No
@@ -7552,7 +7432,7 @@ namespace CukAutomationOperations
                 url = url.Replace("{RECORDID}", RecordID);
                 WebClient req = new WebClient();
                 req.Credentials = provider().Credentials;
-                req.DownloadFile(url, @"D:\Compassion-UK\OneOffOrRecurringGiftExportCsv\" + Type + "_" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".csv");
+                req.DownloadFile(url, @"" + settings["RECURRINGGIFT_EXPORTEDCSV_PATH"] + Type + "_" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".csv");
             }
             catch (Exception e)
             {
@@ -7566,7 +7446,7 @@ namespace CukAutomationOperations
             appLogger.Info("Deleting recent file process started.");
             try
             {
-                DirectoryInfo DirectoryInfo = new DirectoryInfo(@"D:\Compassion-UK\OneOffOrRecurringGiftExportCsv");
+                DirectoryInfo DirectoryInfo = new DirectoryInfo(settings["RECURRINGGIFT_EXPORTEDCSV_PATH"]);
                 FileInfo[] files = DirectoryInfo.GetFiles();
                 foreach (FileInfo file in files)
                 {
@@ -7671,7 +7551,6 @@ namespace CukAutomationOperations
 
             appLogger.Info("DoExportMainProcess ended...");
         }
-
         public void SyncAdvanceNotice_RecurringGift()
         {
             appLogger.Info("Recurring Gift Advance Notice Sync Started...");
@@ -7681,7 +7560,7 @@ namespace CukAutomationOperations
                 string command = "INSERT INTO `AdvanceNoticeControl`(`RevenueID`, `AdvanceNoticeSentDate`, `InboundChannel`, `LookupID`, `Amount`, `TransactionDate`, `DirectDebitReferenceNo`, `Designation`, `PreferredChildName`, `NeedKey`,`Frequency`,`Office`,`TriggerType`,`CurrencySymbol`,`CollectionDate`,`Status`,`DirectDebitAccountNo`,`RevenueRecordID`,`PaymentMethod`) VALUES (?RevenueID,?AdvanceNoticeSentDate,?InboundChannel,?LookupID,?Amount,?TransactionDate,?DirectDebitReferenceNo,?Designation,?PreferredChildName,?NeedKey,?Frequency,?Office,?TriggerType,?CurrencySymbol,?CollectionDate,?Status,?DirectDebitAccountNo,?RevenueRecordID,?PaymentMethod)ON DUPLICATE KEY UPDATE RevenueID= Values(RevenueID),AdvanceNoticeSentDate= Values(AdvanceNoticeSentDate),InboundChannel= Values(InboundChannel),LookupID= Values(LookupID),Amount= Values(Amount),TransactionDate= Values(TransactionDate),DirectDebitReferenceNo= Values(DirectDebitReferenceNo),Designation= Values(Designation),PreferredChildName= Values(PreferredChildName),NeedKey= Values(NeedKey),Frequency=Values(Frequency),Office=Values(Office),TriggerType=Values(TriggerType),CurrencySymbol=Values(CurrencySymbol),CollectionDate=Values(CollectionDate),Status=Values(Status),DirectDebitAccountNo=Values(DirectDebitAccountNo),RevenueRecordID=Values(RevenueRecordID),PaymentMethod=Values(PaymentMethod)";
 
                 rowCounter = 1;
-                DirectoryInfo DirectoryInfo = new DirectoryInfo(@"D:\Compassion-UK\OneOffOrRecurringGiftExportCsv");
+                DirectoryInfo DirectoryInfo = new DirectoryInfo(settings["RECURRINGGIFT_EXPORTEDCSV_PATH"]);
                 FileInfo[] files = DirectoryInfo.GetFiles();
                 var LatestOneOffRecord = files.Where(i => i.Name.Contains("RecurringGift")).OrderBy(j => j.LastWriteTime).Last();
                 using (var reader = new StreamReader(LatestOneOffRecord.FullName))
@@ -7842,7 +7721,7 @@ namespace CukAutomationOperations
             {
                 string command = "INSERT INTO `AdvanceNoticeControl`(`RevenueID`, `AdvanceNoticeSentDate`, `InboundChannel`, `LookupID`, `Amount`, `TransactionDate`, `DirectDebitReferenceNo`, `Designation`, `PreferredChildName`, `Office`, `NeedKey`,`CurrencySymbol`,`TriggerType`,`Status`,`CollectionDate`,`DirectDebitAccountNo`,`RevenueRecordID`,`PaymentMethod`) VALUES (?RevenueID,?AdvanceNoticeSentDate,?InboundChannel,?LookupID,?Amount,?TransactionDate,?DirectDebitReferenceNo,?Designation,?PreferredChildName,?Office,?NeedKey,?CurrencySymbol,?TriggerType,?Status,?CollectionDate,?DirectDebitAccountNo,?RevenueRecordID,?PaymentMethod) ON DUPLICATE KEY UPDATE RevenueID= Values(RevenueID),AdvanceNoticeSentDate= Values(AdvanceNoticeSentDate),InboundChannel= Values(InboundChannel),LookupID= Values(LookupID),Amount= Values(Amount),TransactionDate= Values(TransactionDate),DirectDebitReferenceNo= Values(DirectDebitReferenceNo),Designation= Values(Designation),PreferredChildName= Values(PreferredChildName),Office= Values(Office),NeedKey= Values(NeedKey),CurrencySymbol= Values(CurrencySymbol),TriggerType= Values(TriggerType),Status=Values(Status),CollectionDate=Values(CollectionDate),DirectDebitAccountNo=Values(DirectDebitAccountNo),RevenueRecordID=Values(RevenueRecordID),PaymentMethod=Values(PaymentMethod)";
 
-                DirectoryInfo DirectoryInfo = new DirectoryInfo(@"D:\Compassion-UK\OneOffOrRecurringGiftExportCsv");
+                DirectoryInfo DirectoryInfo = new DirectoryInfo(settings["RECURRINGGIFT_EXPORTEDCSV_PATH"]);
                 FileInfo[] files = DirectoryInfo.GetFiles();
                 var LatestOneOffRecord = files.Where(i => i.Name.Contains("One_Off")).OrderBy(j => j.LastWriteTime).Last();
                 using (var reader = new StreamReader(LatestOneOffRecord.FullName))
@@ -7995,310 +7874,6 @@ namespace CukAutomationOperations
             }
             return advanceNotice;
         }
-
-        public void SyncAdvanceNotice_OneOff_Old()
-        {
-            appLogger.Info("SyncAdvanceNotice_OneOff Sync Started...");
-            int rowCounter = 0;
-            try
-            {
-                string command = "INSERT INTO `AdvanceNoticeControl`(`RevenueID`, `AdvanceNoticeSentDate`, `InboundChannel`, `LookupID`, `Amount`, `TransactionDate`, `DirectDebitReferenceNo`, `Designation`, `PreferredChildName`, `Office`, `NeedKey`,`CurrencySymbol`,`TriggerType`,`Status`,`CollectionDate`,`DirectDebitAccountNo`) VALUES (?RevenueID,?AdvanceNoticeSentDate,?InboundChannel,?LookupID,?Amount,?TransactionDate,?DirectDebitReferenceNo,?Designation,?PreferredChildName,?Office,?NeedKey,?CurrencySymbol,?TriggerType,?Status,?CollectionDate,?DirectDebitAccountNo) ON DUPLICATE KEY UPDATE RevenueID= Values(RevenueID),AdvanceNoticeSentDate= Values(AdvanceNoticeSentDate),InboundChannel= Values(InboundChannel),LookupID= Values(LookupID),Amount= Values(Amount),TransactionDate= Values(TransactionDate),DirectDebitReferenceNo= Values(DirectDebitReferenceNo),Designation= Values(Designation),PreferredChildName= Values(PreferredChildName),Office= Values(Office),NeedKey= Values(NeedKey),CurrencySymbol= Values(CurrencySymbol),TriggerType= Values(TriggerType),Status=Values(Status),CollectionDate=Values(CollectionDate),DirectDebitAccountNo=Values(DirectDebitAccountNo)";
-
-                DirectoryInfo DirectoryInfo = new DirectoryInfo(@"D:\Compassion-UK\OneOffOrRecurringGiftExportCsv");
-                FileInfo[] files = DirectoryInfo.GetFiles();
-                var LatestOneOffRecord = files.Where(i => i.Name.Contains("One_Off")).OrderBy(j => j.LastWriteTime).Last();
-                using (var reader = new StreamReader(LatestOneOffRecord.FullName))
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-                {
-                    var records = csv.GetRecords<OneOff>();
-                    foreach (OneOff row in records)
-                    {
-                        try
-                        {
-                            dbObj = createRowAdvanceNoticeOneOff(row);
-                            //Check if Revenue details is already exist
-                            string status = "";//CheckIfRevenueIdAlreadyExist(dbObj.RevenueID);
-                            if (string.IsNullOrEmpty(dbObj.ChildChildFirstname))
-                            {
-                                dbObj.ChildChildFirstname = dbObj.ChildPreferredName;
-                            }
-                            string Status = "Extracted";
-                            if (status == "Prepared")
-                            {
-                                Status = "Duplicate";
-                                appLogger.Info("Inserting Advance Notice record as its status is :" + status);
-                            }
-                            else if (status == "Merged")
-                            {
-                                appLogger.Info("Skipping Advance Notice record as its status is :" + status);
-                                continue;
-                            }
-
-                            if (!string.IsNullOrEmpty(status) && (status == "Extracted" || status == "Too Late"))
-                            {
-                                appLogger.Info("Upserting Advance Notice record as its status is :" + status);
-                                UpSertAdvanceNotice(dbObj, "One-Off");
-                                continue;
-                            }
-
-                            // DB Upsert
-                            using (MySqlConnection mConnection = new MySqlConnection(mycuk_tcpt4ConnectionString))
-                            using (MySqlCommand myCmd = new MySqlCommand(command, mConnection))
-                            {
-                                mConnection.Open();
-                                myCmd.Parameters.Add("?RevenueID", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.RevenueID) ? dbObj.RevenueID : null;
-                                myCmd.Parameters.Add("?AdvanceNoticeSentDate", MySqlDbType.DateTime).Value = dbObj.Advancenoticesentdate;
-                                myCmd.Parameters.Add("?InboundChannel", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.InboundChannel) ? dbObj.InboundChannel : null;
-                                myCmd.Parameters.Add("?LookupID", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ConstituentLookupID) ? dbObj.ConstituentLookupID : null;
-                                myCmd.Parameters.Add("?Amount", MySqlDbType.Decimal).Value = dbObj.Amount;
-                                myCmd.Parameters.Add("?DirectDebitReferenceNo", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.Directdebitreferencenumber) ? dbObj.Directdebitreferencenumber : null;
-                                myCmd.Parameters.Add("?Designation", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ApplicationDetailsDesignationPublicname) ? dbObj.ApplicationDetailsDesignationPublicname : null;
-
-                                //GetChildPreferredName
-                                myCmd.Parameters.Add("?NeedKey", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ChildChildFirstname) ? dbObj.ChildChildFirstname : null;
-
-                                if (!string.IsNullOrEmpty(dbObj.ChildChildFirstname))
-                                {
-                                    myCmd.Parameters.Add("?PreferredChildName", MySqlDbType.VarChar).Value = GetChildPreferredName(dbObj.ChildChildFirstname);
-                                }
-                                else
-                                {
-                                    myCmd.Parameters.Add("?PreferredChildName", MySqlDbType.VarChar).Value = null;
-                                }
-                                myCmd.Parameters.Add("?DirectDebitAccountNo", MySqlDbType.VarChar).Value = dbObj.DirectDebitAccountAccountnumber.Replace("*", "");
-                                myCmd.Parameters.Add("?TransactionDate", MySqlDbType.DateTime).Value = dbObj.PledgeGrantawardfirstinstallmentdue;
-                                DateTime NextInstallmaneDate = GetOneviewcirlBatchNextInstallmaneDate("CUK", "Pledge");
-                                if (dbObj.PledgeGrantawardfirstinstallmentdue >= NextInstallmaneDate)
-                                {
-                                    //Pledge can be collected 
-                                    myCmd.Parameters.Add("?CollectionDate", MySqlDbType.DateTime).Value = dbObj.PledgeGrantawardfirstinstallmentdue;
-                                    myCmd.Parameters.Add("?Status", MySqlDbType.VarChar).Value = Status;//"Incomplete";
-                                }
-                                else
-                                {
-                                    //Pledge cannot be collected.  Finance cancel, EC contact supporter
-                                    myCmd.Parameters.Add("?CollectionDate", MySqlDbType.DateTime).Value = null;
-                                    myCmd.Parameters.Add("?Status", MySqlDbType.VarChar).Value = "Too Late";
-                                }
-
-                                myCmd.Parameters.Add("?TriggerType", MySqlDbType.VarChar).Value = "One-Off";
-                                if (!string.IsNullOrEmpty(dbObj.ConstituentAssignedSecurityGroupsSecuritygroupname))
-                                {
-                                    if (dbObj.ConstituentAssignedSecurityGroupsSecuritygroupname == "Irish constituents")
-                                    {
-                                        myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = "Ireland";
-                                        myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = "€";
-                                    }
-                                    else
-                                    {
-                                        myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = "UK";
-                                        myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = "£";
-                                    }
-                                }
-                                else
-                                {
-                                    myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = null;
-                                    myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = null;
-                                }
-
-                                myCmd.ExecuteNonQuery();
-                                appLogger.Info(rowCounter + " One-Off AdvanceNotice records inserted successfully");
-                            }
-                            rowCounter++;
-                            if (rowCounter % 1000 == 0)
-                            {
-                                appLogger.Info(rowCounter + " AdvanceNotice records inserted successfully");
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            appLogger.Error("Error in AdvanceNotice for row " + rowCounter + ", RevenueID " + dbObj.RevenueID);
-                            appLogger.Error("Error Message - " + e.Message);
-                            appLogger.Error("Stack Trace - " + e.StackTrace);
-                        }
-                    }
-                    if (rowCounter < 1000)
-                    {
-                        appLogger.Info(rowCounter + " One-Off AdvanceNotice records inserted successfully.");
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                appLogger.Error("Main - OneOff AdvanceNotice Error in getting data from CSV : " + e.Message);
-                appLogger.Error("Main - Error for row " + rowCounter);
-                appLogger.Error("Main - Error Message - " + e.Message);
-                appLogger.Error("Main - Stack Trace - " + e.StackTrace);
-            }
-            appLogger.Info("SyncAdvanceNotice_OneOff Sync Ended...");
-        }
-        public void SyncAdvanceNotice_RecurringGift_Old()
-        {
-            appLogger.Info("Recurring Gift Advance Notice Sync Started...");
-            int rowCounter = 0;
-            try
-            {
-                string command = "INSERT INTO `AdvanceNoticeControl`(`RevenueID`, `AdvanceNoticeSentDate`, `InboundChannel`, `LookupID`, `Amount`, `TransactionDate`, `DirectDebitReferenceNo`, `Designation`, `PreferredChildName`, `NeedKey`,`Frequency`,`Office`,`TriggerType`,`CurrencySymbol`,`CollectionDate`,`Status`,`DirectDebitAccountNo`) VALUES (?RevenueID,?AdvanceNoticeSentDate,?InboundChannel,?LookupID,?Amount,?TransactionDate,?DirectDebitReferenceNo,?Designation,?PreferredChildName,?NeedKey,?Frequency,?Office,?TriggerType,?CurrencySymbol,?CollectionDate,?Status,?DirectDebitAccountNo)ON DUPLICATE KEY UPDATE RevenueID= Values(RevenueID),AdvanceNoticeSentDate= Values(AdvanceNoticeSentDate),InboundChannel= Values(InboundChannel),LookupID= Values(LookupID),Amount= Values(Amount),TransactionDate= Values(TransactionDate),DirectDebitReferenceNo= Values(DirectDebitReferenceNo),Designation= Values(Designation),PreferredChildName= Values(PreferredChildName),NeedKey= Values(NeedKey),Frequency=Values(Frequency),Office=Values(Office),TriggerType=Values(TriggerType),CurrencySymbol=Values(CurrencySymbol),CollectionDate=Values(CollectionDate),Status=Values(Status),DirectDebitAccountNo=Values(DirectDebitAccountNo)";
-
-                rowCounter = 1;
-                DirectoryInfo DirectoryInfo = new DirectoryInfo(@"D:\Compassion-UK\OneOffOrRecurringGiftExportCsv");
-                FileInfo[] files = DirectoryInfo.GetFiles();
-                var LatestOneOffRecord = files.Where(i => i.Name.Contains("RecurringGift")).OrderBy(j => j.LastWriteTime).Last();
-                using (var reader = new StreamReader(LatestOneOffRecord.FullName))
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-                {
-                    var records = csv.GetRecords<RecurringGift>();
-                    foreach (RecurringGift row in records)
-                    {
-                        try
-                        {
-                            dbObj = createRowAdvanceNoticeRecurringGift(row);
-                            //Check if Revenue details is already exist
-
-                            string status = "";// CheckIfRevenueIdAlreadyExist(dbObj.RevenueID);
-                            if (string.IsNullOrEmpty(dbObj.ChildChildFirstname))
-                            {
-                                dbObj.ChildChildFirstname = dbObj.ChildPreferredName;
-                            }
-                            bool IsDuplicate = false;
-                            if (status == "Prepared")
-                            {
-                                IsDuplicate = true;
-                                appLogger.Info("Inserting Advance Notice record as its status is :" + status);
-                            }
-                            else if (status == "Merged")
-                            {
-                                appLogger.Info("Skipping Advance Notice record as its status is :" + status);
-                                continue;
-                            }
-                            if (!string.IsNullOrEmpty(status) && (status == "Extracted"))
-                            {
-                                appLogger.Info("Upserting Advance Notice record as its status is :" + status);
-                                UpSertAdvanceNotice(dbObj, "RecurringGift");
-                                continue;
-                            }
-                            // DB Upsert
-                            using (MySqlConnection mConnection = new MySqlConnection(mycuk_tcpt4ConnectionString))
-                            using (MySqlCommand myCmd = new MySqlCommand(command, mConnection))
-                            {
-                                mConnection.Open();
-                                myCmd.Parameters.Add("?RevenueID", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.RevenueID) ? dbObj.RevenueID : null;
-                                myCmd.Parameters.Add("?AdvanceNoticeSentDate", MySqlDbType.DateTime).Value = dbObj.Advancenoticesentdate;
-                                myCmd.Parameters.Add("?InboundChannel", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.Inboundchannel) ? dbObj.Inboundchannel : null;
-                                myCmd.Parameters.Add("?LookupID", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ConstituentLookupID) ? dbObj.ConstituentLookupID : null;
-                                myCmd.Parameters.Add("?Amount", MySqlDbType.Decimal).Value = dbObj.Amount;
-                                myCmd.Parameters.Add("?TransactionDate", MySqlDbType.DateTime).Value = dbObj.Recurringgiftnexttransactiondate;
-                                myCmd.Parameters.Add("?DirectDebitAccountNo", MySqlDbType.VarChar).Value = dbObj.DirectDebitAccountAccountnumber.Replace("*", "");
-
-                                DateTime NextInstallmaneDate = GetOneviewcirlBatchNextInstallmaneDate("CUK", "Recurring Gifts Existing Mandate");
-
-                                if (dbObj.Recurringgiftnexttransactiondate >= NextInstallmaneDate)
-                                {
-                                    myCmd.Parameters.Add("?CollectionDate", MySqlDbType.DateTime).Value = dbObj.Recurringgiftnexttransactiondate;
-                                }
-                                else
-                                {
-                                    DateTime CollectionDate = Convert.ToDateTime(dbObj.Recurringgiftnexttransactiondate);
-                                    do
-                                    {
-                                        if (CollectionDate >= NextInstallmaneDate)
-                                        {
-                                            break;
-                                        }
-                                        switch (dbObj.Installmentfrequency)
-                                        {
-                                            case "Monthly":
-                                                CollectionDate = CollectionDate.AddMonths(1);
-                                                break;
-                                            case "Annually":
-                                                CollectionDate = CollectionDate.AddYears(1);
-                                                break;
-                                            case "Quarterly":
-                                                CollectionDate = CollectionDate.AddMonths(3);
-                                                break;
-                                            case "Weekly":
-                                                CollectionDate = CollectionDate.AddDays(7);
-                                                break;
-                                            case "Half-Yearly":
-                                                CollectionDate = CollectionDate.AddMonths(6);
-                                                break;
-                                        }
-
-                                    } while (true);
-                                    myCmd.Parameters.Add("?CollectionDate", MySqlDbType.DateTime).Value = CollectionDate.ToString("yyyy-MM-dd");
-                                }
-                                myCmd.Parameters.Add("?DirectDebitReferenceNo", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.Directdebitreferencenumber) ? dbObj.Directdebitreferencenumber : null;
-                                myCmd.Parameters.Add("?Designation", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ApplicationDetailsDesignationPublicname) ? dbObj.ApplicationDetailsDesignationPublicname : null;
-                                myCmd.Parameters.Add("?NeedKey", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.ChildChildFirstname) ? dbObj.ChildChildFirstname : null;
-
-                                if (!string.IsNullOrEmpty(dbObj.ChildChildFirstname))
-                                {
-                                    myCmd.Parameters.Add("?PreferredChildName", MySqlDbType.VarChar).Value = GetChildPreferredName(dbObj.ChildChildFirstname);
-                                }
-                                else
-                                {
-                                    myCmd.Parameters.Add("?PreferredChildName", MySqlDbType.VarChar).Value = null;
-                                }
-                                myCmd.Parameters.Add("?Frequency", MySqlDbType.VarChar).Value = !string.IsNullOrWhiteSpace(dbObj.Installmentfrequency) ? dbObj.Installmentfrequency : null;
-                                myCmd.Parameters.Add("?TriggerType", MySqlDbType.VarChar).Value = "RecurringGift";
-                                if (!string.IsNullOrEmpty(dbObj.ConstituentAssignedSecurityGroupsSecuritygroupname))
-                                {
-                                    if (dbObj.ConstituentAssignedSecurityGroupsSecuritygroupname == "Irish constituents")
-                                    {
-                                        myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = "Ireland";
-                                        myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = "€";
-                                    }
-                                    else
-                                    {
-                                        myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = "UK";
-                                        myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = "£";
-                                    }
-                                }
-                                else
-                                {
-                                    myCmd.Parameters.Add("?CurrencySymbol", MySqlDbType.VarChar).Value = null;
-                                    myCmd.Parameters.Add("?Office", MySqlDbType.VarChar).Value = null;
-                                }
-                                if (IsDuplicate)
-                                {
-                                    myCmd.Parameters.Add("?Status", MySqlDbType.VarChar).Value = "Duplicate";
-                                }
-                                else
-                                {
-                                    myCmd.Parameters.Add("?Status", MySqlDbType.VarChar).Value = "Extracted";//"Incomplete";
-                                }
-                                myCmd.ExecuteNonQuery();
-                                appLogger.Info(rowCounter + " RecurringGift AdvanceNotice records inserted successfully");
-                            }
-                            rowCounter++;
-                            if (rowCounter % 1000 == 0)
-                            {
-                                appLogger.Info(rowCounter + " Recurring Advance Notice records inserted successfully");
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            appLogger.Error("Error in Recurring Advance Notice for row " + rowCounter + ", RevenueID " + dbObj.RevenueID);
-                            appLogger.Error("Error Message - " + e.Message);
-                            appLogger.Error("Stack Trace - " + e.StackTrace);
-                        }
-                    }
-                    if (rowCounter < 1000)
-                    {
-                        appLogger.Info(rowCounter + " Recurring Advance Notice records inserted successfully.");
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                appLogger.Error("Main - RecurringGift AdvanceNotice Error in getting data from CSV " + e.Message);
-                appLogger.Error("Main - Error for row " + rowCounter);
-                appLogger.Error("Main - Error Message - " + e.Message);
-                appLogger.Error("Main - Stack Trace - " + e.StackTrace);
-            }
-            appLogger.Info("Recurring Advance Notice Sync Ended...");
-        }
-
         public DateTime GetOneviewcirlBatchNextInstallmaneDate(string Office, string MandateType)
         {
             DateTime NextInstalmentDate = new DateTime();
@@ -11457,6 +11032,7 @@ namespace CukAutomationOperations
             appLogger.Info("Needkey :" + Needkey + " GetCorrectCommitmentIdBasedOnNeedKey ended...");
             return CommitmentID;
         }
+
         /*public void SyncWorthyCommitmentInOrg(long OrgID)
         {
             appLogger.Info("SyncWorthyCommitmentInOrg for OrgID: "+ OrgID + " started...");
@@ -12767,7 +12343,7 @@ namespace CukAutomationOperations
                         string Campaign_URL = "compassionuk.org/sponsorship/"; // CAMPAIGN_URL
                         string Campaign_Text_To_Sponsor = "SPONSOR "; // CAMPAIGN_TEXT_TO_SPONSOR
                         //string Campaign_Text_To_Sponsor = "SPONSOR to 07984377587"; // CAMPAIGN_TEXT_TO_SPONSOR
-                        string Campaign_Text_To_Sponsor = "SPONSOR"; // CAMPAIGN_TEXT_TO_SPONSOR
+                        Campaign_Text_To_Sponsor = "SPONSOR"; // CAMPAIGN_TEXT_TO_SPONSOR
 
                         string singleRow = "'" + Org_ID + "', '" + Campaign_ID + "', '" + Campaign_Name + "', '" + Campaign_Reference + "', '" + Qr_Code_Image_URL + "', '" + Campaign_URL + "', '" + Campaign_Text_To_Sponsor + "'";
 
@@ -13065,7 +12641,7 @@ namespace CukAutomationOperations
             string BarCodeUrl = Host + "/CukAutomationServices/QR-Code/QR-Code_" + Keyword + ".png";
             try
             {
-                string BarCodePath = @"D:/Compassion-UK/CukAutomationServices/CukAutomationServices/QR-Code/QR-Code_" + Keyword + ".png";
+                string BarCodePath = @""+ settings["QR_CODE_IMG_PATH"] + "QR-Code_" + Keyword + ".png";
                 var url = string.Format("http://chart.apis.google.com/chart?cht=qr&chs={1}x{2}&chl={0}", URL, "500", "500");
                 WebResponse response = default(WebResponse);
                 Stream remoteStream = default(Stream);
@@ -13096,7 +12672,7 @@ namespace CukAutomationOperations
             string BarCodeUrl = Host + "/CukAutomationServices/QR-Code/QR-Code_" + Keyword + ".png";
             try
             {
-                string BarCodePath = @"E:/Compassion-UK/CukAutomationServices/CukAutomationServices/QR-Code/QR-Code_" + Keyword + ".png";
+                string BarCodePath = @"" + settings["QR_CODE_IMG_PATH"] + "QR-Code_" + Keyword + ".png";
                 RestClient client = new RestClient("https://chart.apis.google.com/chart");
                 RestRequest request = new RestRequest("", Method.GET);
                 request.AddParameter("cht", "qr", ParameterType.QueryString);
@@ -14998,7 +14574,8 @@ namespace CukAutomationOperations
             return FDataList;
         }
 
-        
+        #endregion
+
         #region Cancel Sponsorship issue replicate section
         public void TransferSponserShip()
         {
@@ -15692,8 +15269,8 @@ namespace CukAutomationOperations
 
             byte[] fileData;
             head = rightNowSyncPortClient.GetFileData(info, api, go, new ID() { id = FileId, idSpecified = true }, true, out fileData);
-            string sFile = @"D:\Compassion-UK\RightNowFetchServices\RightNowFetchServices\ChildLetters\" + CorrespondenceId + "_" + FileId + ".pdf"; //Path
-            string sFileName = "https://staging.compassionuk.org/RightNowFetchServices/ChildLetters/" + CorrespondenceId + "_" + FileId + ".pdf"; //Path
+            string sFile = @""+ settings["B2S_LETTER_PATH"] + CorrespondenceId + "_" + FileId + ".pdf"; //Path
+            string sFileName = Host + "/RightNowFetchServices/ChildLetters/" + CorrespondenceId + "_" + FileId + ".pdf"; //Path
             System.IO.File.WriteAllBytes(sFile, fileData);
             return sFileName;
         }
@@ -15819,8 +15396,8 @@ namespace CukAutomationOperations
 
             byte[] fileData;
             head = rightNowSyncPortClient.GetFileData(info, api, go, new ID() { id = FileId, idSpecified = true }, true, out fileData);
-            string sFile = @"D:\Compassion-UK\RightNowFetchServices\RightNowFetchServices\LetterImages\" + letterId + "_" + FileId + ".png"; //Path
-            string sFileName = "https://staging.compassionuk.org/RightNowFetchServices/LetterImages/" + letterId + "_" + FileId + ".png"; //Path
+            string sFile = @""+ settings["LETTER_IMAGES_PATH"] + letterId + "_" + FileId + ".png"; //Path
+            string sFileName = Host+"/RightNowFetchServices/LetterImages/" + letterId + "_" + FileId + ".png"; //Path
             System.IO.File.WriteAllBytes(sFile, fileData);
             return sFileName;
         }
@@ -16466,147 +16043,8 @@ namespace CukAutomationOperations
             return supGrpObj;
         }
         #endregion
-
-
-
-        public void  GetRevenueDetailsForGiftUpdates(string RevenueID)
-        {
-            
-            try
-            {
-                DataListLoadRequest req = new DataListLoadRequest();
-                req.ClientAppInfo = GetRequestHeader();
-                req.DataListID = new Guid("8f9b24e2-e509-4d12-a0a1-ae98866842a8");//Data List: Get revenue details for gift updates
-                req.IncludeMetaData = true;
-                var fvSet = new DataFormFieldValueSet();
-                fvSet.Add("REVENUEID", RevenueID);
-                var dfi = new DataFormItem();
-                dfi.Values = fvSet;
-                req.Parameters = dfi;
-                var datareply = _service.DataListLoad(req);
-                if (datareply.TotalAvailableRows > 0)
-                {
-                    foreach (DataListResultRow row in datareply.Rows)
-                    {
-                        
-                    }
-                }
-                else
-                {
-                   
-                }
-            }
-            catch (Exception e)
-            {
-                appLogger.Error("Error in GetRevenueDetailsForGiftUpdates: " + e.Message);
-                appLogger.Error(e.StackTrace);
-                appLogger.Error(e.InnerException);
-            }
-        }
-
-        public void TestingCode()
-        {
-            string Body = "Good news, Winda?has received your birthday gift.";
-            Body = Body.Replace("<CHILDNAME>", "Ana");
-            Body = Body.Replace("<GIFTTYPE>", "birthday");
-            Body = Body.Replace("?", " ");
-
-
-        }
-
-
-        public void TestBBQuery()
-        {
-            BBTargetRepository.Model.Constant constant = new BBTargetRepository.Model.Constant();
-            try
-            {
-                string Query = "select distinct sum([V_QUERY_REVENUE\"Revenue Splits].[AMOUNT]) as SumAmount, [V_QUERY_REVENUE\"Constituent].[LOOKUPID] as ConstituentLookupID, [V_QUERY_REVENUE\"Revenue Splits].[BASECURRENCYID] as [Application Details\"Base currency ID] from [dbo].[V_QUERY_REVENUE] as [V_QUERY_REVENUE] inner join [dbo].[V_QUERY_REVENUESPLIT] as [V_QUERY_REVENUE\"Revenue Splits] on [V_QUERY_REVENUE].[ID] = [V_QUERY_REVENUE\"Revenue Splits].[REVENUEID] inner join [dbo].[V_QUERY_CONSTITUENT] as [V_QUERY_REVENUE\"Constituent] on [V_QUERY_REVENUE].[CONSTITUENTID] = [V_QUERY_REVENUE\"Constituent].[ID] where [V_QUERY_REVENUE].[TRANSACTIONTYPE] = N'Payment' and [V_QUERY_REVENUE\"Constituent].[LOOKUPID] in ('8-10004297') and /*SpecificDate*/ [V_QUERY_REVENUE].[DATE] between '2020-12-06T00:00:00.000' and '2021-12-06T23:59:59.997' and [V_QUERY_REVENUE\"Revenue Splits].[AMOUNT] > 0 group by [V_QUERY_REVENUE\"Constituent].[LOOKUPID], [V_QUERY_REVENUE\"Revenue Splits].[BASECURRENCYID]";
-
-
-                string Query1 = "select  distinct sum([V_QUERY_REVENUE\"Revenue Splits].[AMOUNT]) as [SUM(Application Details\"Amount)],	[V_QUERY_REVENUE\"Constituent].[LOOKUPID] as [Constituent\"Lookup ID],	[V_QUERY_REVENUE\"Revenue Splits].[BASECURRENCYID] as [Application Details\"Base currency ID]from [dbo].[V_QUERY_REVENUE] as [V_QUERY_REVENUE]inner join [dbo].[V_QUERY_REVENUESPLIT] as [V_QUERY_REVENUE\"Revenue Splits] on [V_QUERY_REVENUE].[ID] = [V_QUERY_REVENUE\"Revenue Splits].[REVENUEID]inner join [dbo].[V_QUERY_CONSTITUENT] as [V_QUERY_REVENUE\"Constituent] on [V_QUERY_REVENUE].[CONSTITUENTID] = [V_QUERY_REVENUE\"Constituent].[ID]where [V_QUERY_REVENUE].[TRANSACTIONTYPE] = N'Payment' and [V_QUERY_REVENUE\"Constituent].[LOOKUPID] = N'8-10004297' and /*SpecificDate*/[V_QUERY_REVENUE].[DATE] between '2020-12-08T00:00:00.000' and '2021-12-08T23:59:59.997' and [V_QUERY_REVENUE\"Revenue Splits].[AMOUNT] > 0group by [V_QUERY_REVENUE\"Constituent].[LOOKUPID], [V_QUERY_REVENUE\"Revenue Splits].[BASECURRENCYID]";
-
-                using (SqlConnection conn = new SqlConnection(constant.BB_CONNECTION_STRING))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(Query, conn);
-                    SqlDataReader sqlData = cmd.ExecuteReader();
-                    while (sqlData.Read())
-                    {
-                        FinancialDetails FObj = new FinancialDetails();
-                        FObj.financial_support_amount = sqlData["SumAmount"].ToString();
-                        FObj.bbid = sqlData["ConstituentLookupID"].ToString();
-                        //FDataList.Add(FObj);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                appLogger.Error("error in TestBBQuery : " + e.Message);
-                appLogger.Error(e.InnerException);
-                appLogger.Error(e.StackTrace);
-            }
-            //return FDataList;
-        }
-
         
-
-        public long getEmailValidated(string supId)
-        {
-            //string emailvalidation = "";     
-
-            int emailvalidation = 0;
-            try
-            {
-                ClientInfoHeader clientInfoHeader = new ClientInfoHeader();
-                clientInfoHeader.AppID = "Get EmailValidated from SupporterID";
-                APIAccessResponseHeaderType head = new APIAccessResponseHeaderType();
-                byte[] byteArray;
-                String queryString = "Select contact.CustomFields.c.email_validated from contact where contact.ID = " + supId + "";
-                CSVTableSet queryCSV = null;
-                head = rightNowSyncPortClient.QueryCSV(clientInfoHeader,api, queryString, 10000, ",", false, true,out queryCSV, out byteArray);
-                CSVTable[] csvTables = queryCSV.CSVTables;
-
-                if (csvTables[0].Rows.Length > 0)
-                    emailvalidation = Convert.ToInt32(csvTables[0].Rows[0]);
-
-            }
-            catch (Exception e)
-            {
-                appLogger.Error("Error for SupporterId : " + supId + " in getEmailValidated : " + e.Message);
-            }
-
-            return emailvalidation;
-        }
-
-        
-
-        
-
-        public void FinantialAccountTest(string lookup)
-        {
-            string constituentGuid = GetConstituentOnLookupID(lookup).Output.Rows[0].Values[0];
-
-            DataListLoadRequest req = new DataListLoadRequest();
-            req.ClientAppInfo = GetRequestHeader();
-            req.DataListID = new Guid("18adb86f-bb23-4b71-820c-a0d91d12c8b6");
-            req.ContextRecordID = constituentGuid;
-
-            Blackbaud.AppFx.Constituent.Catalog.WebApiClient.DataLists.Constituent.ConstituentFinancialAccountsListRow[] rows = Blackbaud.AppFx.Constituent.Catalog.WebApiClient.DataLists.Constituent.ConstituentFinancialAccountsList.GetRows(provider(), req);
-
-            // Changes for unmasked account number START
-            DataListLoadRequest request = new DataListLoadRequest();
-            request.ClientAppInfo = GetRequestHeader();
-            request.DataListName = "Constituent Financial Accounts List - unmasked";
-            request.ContextRecordID = constituentGuid;
-            //request.IncludeMetaData = true;
-            var result = _service.DataListLoad(request);
-            rows = rows.Select(x => { x.Account_number = result.Rows.Where(y => y.Values[10].Equals(x.ID.ToString())).First().Values[2]; return x; }).ToArray();
-            // Changes for unmasked account number END
-
-        }
-
         #region Send Notification
-
         public void SendNotificationOperation(string Type, string Env)
         {
             Notifications nObj = new Notifications();
@@ -16902,119 +16340,6 @@ namespace CukAutomationOperations
             return recordId;
         }
         #endregion
-
-        /*public SearchListLoadReply fetchRevenueRecordFromRevenueLookupID(string revenueLookupID)
-        {
-            SearchListLoadReply response = new SearchListLoadReply();
-            try
-            {
-                var searchreq = new SearchListLoadRequest();
-
-                searchreq.ClientAppInfo = GetRequestHeader();
-                searchreq.SearchListID = new Guid("78e403c2-f4d6-482e-a9f4-f53c5b3c8740");  // Search List: Transaction Search
-                searchreq.ReturnSearchFilters = true;
-                searchreq.MaxRecords = 500;
-
-                var fvSet = new DataFormFieldValueSet();
-                fvSet.Add("REVENUELOOKUPID", revenueLookupID);
-
-                var dfi = new DataFormItem();
-                dfi.Values = fvSet;
-                searchreq.Filter = dfi;
-                response = _service.SearchListLoad(searchreq);
-            }
-            catch (Exception e)
-            {
-                appLogger.Error("Error in fetching Revenue record from Revenue ID : " + revenueLookupID + " : " + e.Message);
-                appLogger.Error(e.InnerException);
-                appLogger.Error(e.StackTrace);
-            }
-            return response;
-        }*/
-
-        
-        public void TestCode()
-        {
-            var consId = GetConstituentOnLookupID("8-10116691");
-            //SearchListLoadReply revenueDetails = fetchRevenueRecordFromRevenueLookupID("rev-27582228");
-
-        }
-        
-        public TaxDeclarationListRow[] TaxDeclarationRowsList(string recordId)
-        {
-            try
-            {
-                DataListLoadRequest req = new DataListLoadRequest();
-                req.ClientAppInfo = GetRequestHeader();
-                req.DataListID = new Guid("407f15a7-c1a4-4b25-ba75-8718981ad894");
-                req.ContextRecordID = recordId;
-                TaxDeclarationListRow[] rows = TaxDeclarationList.GetRows(provider(), req);
-                return rows;
-            }
-            catch (Exception e)
-            {
-                appLogger.Error("Error while fetching TaxDeclarationRows from lookup id : " + e.Message);
-                appLogger.Error(e.StackTrace);
-                appLogger.Error(e.InnerException);
-                return null;
-            }
-        }
-
-
-        public void AddUkSecurity()
-        {
-            string recordid = GetConstituentOnLookupID("8-10547528").Output.Rows[0].Values[0];
-
-            /*ConstituentSecurityAttributeAssignAddFormData dataobj = new ConstituentSecurityAttributeAssignAddFormData();
-            dataobj.CONSTIT_SECURITY_ATTRIBUTEID = new Guid("1ca967eb-a7c8-4469-a461-4be858fd4727");
-            dataobj.ContextRecordID = recordid;
-
-            try
-            {
-                string result3 = dataobj.Save(provider());
-
-            }
-            catch (AppFxWebServiceException e)
-            {
-
-            }*/
-            /*
-            ConstituentSitesEditFormData Irsiteobj = new ConstituentSitesEditFormData();
-            Irsiteobj.RecordID = recordid;
-            Irsiteobj.SITES = new ConstituentSitesEditFormData.SITES_DATAITEM[1];
-            Irsiteobj.SITES[0] = new ConstituentSitesEditFormData.SITES_DATAITEM();
-            siteobj.SITES[0].ID = new Guid("8f0354eb-ceb7-47f1-9529-1f11ad238e51");//Compassion Ireland
-            Irsiteobj.SITES[0].SITEID = new Guid("27229a38-0452-4dcd-86d4-c6c2cc0d3b82");//Compassion Ireland
-            try
-            {
-                string result4 = Irsiteobj.Save(provider());
-            }
-            catch (AppFxWebServiceException e)
-            {
-
-            }*/
-
-
-
-
-            ConstituentSitesEditFormData siteobj = new ConstituentSitesEditFormData();
-            siteobj.RecordID = recordid;
-            siteobj.SITES = new ConstituentSitesEditFormData.SITES_DATAITEM[1];
-            siteobj.SITES[0] = new ConstituentSitesEditFormData.SITES_DATAITEM();
-            //siteobj.SITES[0].ID = new Guid("8f0354eb-ceb7-47f1-9529-1f11ad238e51");//Compassion Ireland
-            siteobj.SITES[0].SITEID = new Guid("527ff6cc-df5c-4de8-a363-6cd83944732e");//Compassion UK
-            try
-            {
-                string result4 = siteobj.Save(provider());
-            }
-            catch (AppFxWebServiceException e)
-            {
-
-            }
-
-        }
-
-
 
         #region Optimization of GetS2BDraft Tile
 
@@ -21169,33 +20494,6 @@ namespace CukAutomationOperations
         #endregion
 
         #region Cancel Recurring Gift
-
-
-        #region Designation live BB
-        Dictionary<string, string> FundsDesignation = new Dictionary<string, string>()
-        {
-            {"Child Survival Programme", "f577b412-8ca9-48ca-b92c-4a5c46958286"},
-            {"Complimentary Interventions","c1edd9b4-c51d-4189-9ffe-9e2e40ac7296"},
-            {"Christmas fund", "6814734e-b2f6-4643-a156-952ce65a6603"},
-            {"Disaster Relief Fund", "1e721faa-0a8b-4efe-87eb-70f0ad4e1850"},
-            {"HIV/AIDS Fund Sponsorship", "c5c7e3a8-fa8d-41ce-8cc7-cec9308c6412"},
-            {"Sponsorship Plus","b46dd026-22ad-4270-a8ba-7132e236d744"},
-            {"Unsponsored children fund", "493283c9-e115-4dbf-a511-35b385df399b"},
-            {"Most Needed FUND", "2aca790e-3056-4cb9-826f-c2a0708b01a8"},
-        };
-
-        Dictionary<string, string> CancelRGReasonDictionary = new Dictionary<string, string>() {
-        { "430","5cef84a7-b7c7-46a1-9b05-aef843216757"},
-        { "436","693a102a-2f7e-4bae-830f-56b24eb6fa76"},
-        { "Departure","902a5f60-9ab5-4aa6-903c-a6e43adb9172"},
-        { "Error","5aaa39fb-794d-4112-a3a0-30f1bb9c9cc2"},
-        { "443","7771fb49-2fbe-4883-8804-10f33645fe56"},
-        { "Other","b591cc02-0afc-4bb6-aab7-a115eab10a4f"},
-        { "Supporter requested cancellation","1104ece8-5007-45e8-b57a-3ca03de0984f"},
-        };
-
-        #endregion
-
         public List<cancelRecurringGift> CancelRecurringGift(List<cancelRecurringGift> rgobj, string delinkReason, string FundType, int DonationAmount, bool IsAssignToGeneralFund, string IncidentRefId, string DDiSource, string DDiSourceDate)
         {
             appLogger.Info($"CancelRecurringGift Process started with request: {SimpleJson.SerializeObject(rgobj)} delinkReason :{delinkReason} FundType :{FundType}  DonationAmount:{DonationAmount} IsAssignToGeneralFund:{IsAssignToGeneralFund} IncidentRefId:{IncidentRefId} DDiSource:{DDiSource} DDiSourceDate:{DDiSourceDate}");
@@ -22795,116 +22093,6 @@ namespace CukAutomationOperations
         }
 
         #endregion
-
-        public SearchListLoadReply GetConstituentHouseholdsDetails(string conid)
-        {
-
-            try
-            {
-                var searchreq = new SearchListLoadRequest();
-                searchreq.ClientAppInfo = GetRequestHeader();
-                searchreq.SearchListID = new Guid("fdf9d631-5277-4300-80b3-fdf5fb8850ec");//Search List: Constituent Search by Name or Lookup ID
-                searchreq.ReturnSearchFilters = true;
-                searchreq.MaxRecords = 1;
-
-                var fvSet = new DataFormFieldValueSet();
-                fvSet.Add("CONSTITUENTQUICKFIND", conid);
-                fvSet.Add("EXACTMATCHONLY", true);
-                fvSet.Add("CHECKALTERNATELOOKUPIDS", true);
-                fvSet.Add("INCLUDEINDIVIDUALS", false);
-
-                
-                var dfi = new DataFormItem();
-                dfi.Values = fvSet;
-
-                searchreq.Filter = dfi;
-                return _service.SearchListLoad(searchreq);
-            }
-            catch (Exception e)
-            {
-                appLogger.Error("Error in GetConstituentHouseholdsDetails: " + e.Message);
-                appLogger.Error(e.StackTrace);
-                appLogger.Error(e.InnerException);
-                return null;
-            }
-        }
-        public void UpdateSEFGUID(long IncidentId, string GUID)
-        {
-            try
-            {
-                Incident incident = new Incident
-                {
-                    ID = new ID
-                    {
-                        id = IncidentId,
-                        idSpecified = true
-                    },
-                };
-
-                DateTime Now = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);//GMT standard time
-                GenericField SetupGUIDGenericField = null;
-
-                
-                if (!string.IsNullOrEmpty(GUID))
-                {
-                    SetupGUIDGenericField = createGenericfield("setupguid", createStringdataValue(GUID), DataTypeEnum.STRING);
-                }
-                
-
-                GenericObject genericObject = new GenericObject();
-                genericObject.GenericFields = new GenericField[] { SetupGUIDGenericField };
-                genericObject.ObjectType = new RNObjectType() { TypeName = "CustomIncident" };
-
-                GenericField customFieldsPackage = new GenericField();
-                customFieldsPackage.name = "c";
-                customFieldsPackage.dataType = DataTypeEnum.NAMED_ID;
-                customFieldsPackage.dataTypeSpecified = true;
-                customFieldsPackage.DataValue = new DataValue();
-                customFieldsPackage.DataValue.Items = new[] { genericObject };
-                customFieldsPackage.DataValue.ItemsElementName = new[] { ItemsChoiceType.ObjectValue };
-
-                incident.CustomFields = new GenericObject();
-                incident.CustomFields.GenericFields = new GenericField[1];
-                incident.CustomFields.GenericFields[0] = customFieldsPackage;
-                incident.CustomFields.ObjectType = new RNObjectType();
-                incident.CustomFields.ObjectType.TypeName = "IncidentCustomFields";
-
-                RNObject[] createContact = new RNObject[] { incident };
-                rightNowSyncPortClient.Update(new ClientInfoHeader { AppID = "Update incident" }, api, new RNObject[] { incident },
-                new UpdateProcessingOptions { SuppressExternalEvents = false, SuppressRules = false });
-            }
-            catch (Exception ex)
-            {
-                appLogger.Error("Error in UpdateSetupStatusStartedField: " + ex.Message + " with incident id " + IncidentId);
-                appLogger.Error(ex.StackTrace);
-                appLogger.Error(ex.InnerException);
-            }
-        }
-        public void TestCode00()
-        {
-
-            string constituentId = GetConstituentOnLookupIDNew("8-10069725").Output.Rows[0].Values[0];
-            var rgdata = fetchRecurringGiftsNew(constituentId);
-
-            string yupupp = GetConstituentOnLookupIDNew("8-10534959").Output.Rows[0].Values[0];
-            string OldNeedkey = "PH050600071";
-            var SponsorshipRG = fetchRecurringGiftsForReassignSponsorshipnew(constituentId);
-            if (SponsorshipRG.Count > 0)
-            {
-                foreach (DataListResultRow row in SponsorshipRG)
-                {
-                    if (row.Values[4] == OldNeedkey)
-                    {
-                        string DDISource = !string.IsNullOrEmpty(row.Values[14]) ? row.Values[14] : "";
-                        OldNeedkey = row.Values[4];
-                        break;
-                    }
-                }
-            }
-        }
-
-
-
         public List<DataListResultRow> fetchRecurringGiftsNew(string constituentId)
         {
             List<DataListResultRow> responseList = new List<DataListResultRow>();
@@ -24397,8 +23585,6 @@ namespace CukAutomationOperations
 
             appLogger.Info("CreateOnlyConstituentProcess ended...");
         }
-
-
         #endregion
 
         #region Delete RN Task Records
@@ -24555,7 +23741,7 @@ namespace CukAutomationOperations
         }
 
 
-
+        #region TEST CODE - No Need to move in PROD
         public void CheckBBRecords()
         {
             appLogger.Info("CheckIfConstituentHasSponsorshipPlusRg started....");
@@ -24568,7 +23754,6 @@ namespace CukAutomationOperations
             }
             appLogger.Info("CheckIfConstituentHasSponsorshipPlusRg ended....");
         }
-
         public void CheckIfConstituentHasSponsorshipPlusRg(string bbid)
         {
             
@@ -24612,10 +23797,6 @@ namespace CukAutomationOperations
                 appLogger.Error(e.InnerException);
             }
         }
-
-
-
-
         public bool CheckIfGivenAmountIsMatchWithAllRgsAmount(string LookupId, string Amount)
         {
             bool isAmountMatched = false;
@@ -24657,7 +23838,6 @@ namespace CukAutomationOperations
             }
             return isAmountMatched;
         }
-
         public List<DataListResultRow> fetchRecurringGiftsforBOS(string constituentId)
         {
             List<DataListResultRow> responseList = new List<DataListResultRow>();
@@ -24695,7 +23875,6 @@ namespace CukAutomationOperations
             }
             return responseList;
         }
-
         public List<DataListResultRow> fetchOtherRecurringforBOS(string constituentId)
         {
             List<DataListResultRow> responseList = new List<DataListResultRow>();
@@ -24729,7 +23908,7 @@ namespace CukAutomationOperations
             return responseList;
         }
 
-
+        #endregion
 
     }
 }
